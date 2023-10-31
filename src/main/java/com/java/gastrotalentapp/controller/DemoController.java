@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DemoController {
 
-    private final AuthenticationService authenticationService;
+  private final AuthenticationService authenticationService;
 
-    @GetMapping
-    public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Hello form secured endpoint");
-    }
-
-
+  @GetMapping
+  public ResponseEntity<String> sayHello() {
+    return ResponseEntity.ok("Hello form secured endpoint");
+  }
 }

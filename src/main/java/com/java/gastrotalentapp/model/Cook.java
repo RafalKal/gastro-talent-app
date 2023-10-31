@@ -1,9 +1,8 @@
 package com.java.gastrotalentapp.model;
 
+import javax.persistence.Entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.Entity;
 
 @Getter
 @Setter
@@ -12,18 +11,15 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @SuperBuilder(toBuilder = true)
-
 @Entity
 public class Cook extends Employee {
-    private String speciality;
+  private String speciality;
 
-    public String getSpeciality() {
-        return speciality;
-    }
+  public String getSpeciality() {
+    return speciality;
+  }
 
-    public void setSpeciality(String speciality) {
-        this.speciality = speciality;
-    }
-
-
+  public void setSpeciality(String speciality) {
+    this.speciality = speciality;
+  }
 }

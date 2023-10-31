@@ -1,13 +1,11 @@
 package com.java.gastrotalentapp.model;
 
-import javax.persistence.Embeddable;
 import java.time.LocalDate;
+import javax.persistence.Embeddable;
 
 @Embeddable
 public class Education {
-    private String degree;
-    private String university;
-    private LocalDate graduationDate;
-
+  private String degree;
+  private String university;
+  private LocalDate graduationDate;
 }
-
