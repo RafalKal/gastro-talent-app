@@ -1,12 +1,14 @@
 package com.java.gastrotalentapp.model;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +21,29 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "_user")
 public class User implements UserDetails {
 
-  @Id @GeneratedValue private Integer id;
+  @Id @GeneratedValue
+  private Integer id;
+
+  @NotBlank
   private String firstname;
+
+  @NotBlank
   private String lastname;
+
+  @NotBlank
   private String email;
+
+  @NotBlank
   private String password;
+
+  @NotNull
+  private LocalDate dateOfBirth;
+
+  @Embedded
+  private Address address;
+
+  @Pattern(regexp = "[1-9]\\d{8}")
+  private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
   private Role role;

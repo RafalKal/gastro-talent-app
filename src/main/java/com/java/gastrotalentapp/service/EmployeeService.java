@@ -1,5 +1,6 @@
 package com.java.gastrotalentapp.service;
 
+import com.java.gastrotalentapp.controller.EmployeeRequest;
 import com.java.gastrotalentapp.model.Employee;
 import com.java.gastrotalentapp.repository.EmployeeRepository;
 import java.util.List;

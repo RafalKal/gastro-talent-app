@@ -1,5 +1,6 @@
 package com.java.gastrotalentapp.service;
 
+import com.java.gastrotalentapp.controller.WaiterRequest;
 import com.java.gastrotalentapp.model.Waiter;
 import com.java.gastrotalentapp.repository.WaitressRepository;
 import java.util.List;
@@ -25,7 +26,13 @@ public class WaiterService {
     return waitressRepository.findById(id);
   }
 
-  public Waiter createWaitress(Waiter waiter) {
+  public Waiter createWaiter(WaiterRequest request) {
+    Waiter waiter =
+        Waiter.builder()
+            .education(request.getEducation())
+            .professionalExperience(request.getProfessionalExperience())
+            .otherSpeciality(request.getOtherSpeciality())
+            .build();
     return waitressRepository.save(waiter);
   }
 

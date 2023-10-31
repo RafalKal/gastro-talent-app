@@ -4,7 +4,6 @@ import com.java.gastrotalentapp.config.JwtService;
 import com.java.gastrotalentapp.controller.authController.AuthenticationRequest;
 import com.java.gastrotalentapp.controller.authController.AuthenticationResponse;
 import com.java.gastrotalentapp.controller.authController.RegisterRequest;
-import com.java.gastrotalentapp.model.Role;
 import com.java.gastrotalentapp.model.User;
 import com.java.gastrotalentapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,8 @@ public class AuthenticationService {
             .lastname(request.getLastname())
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
-            .role(Role.POTENTIAL_EMPLOYEE)
+            .dateOfBirth(request.getDateOfBirth())
+            .role(request.getRole())
             .build();
     userRepository.save(user);
     var jwtToken = jwtService.generateToken(user);

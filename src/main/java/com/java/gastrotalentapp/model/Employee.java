@@ -1,9 +1,6 @@
 package com.java.gastrotalentapp.model;
 
-import java.time.LocalDate;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -22,20 +19,11 @@ public abstract class Employee {
   @GeneratedValue(strategy = GenerationType.AUTO)
   protected Long id;
 
-  @NotBlank private String firstName;
+  @Embedded 
+  private Education education;
 
-  @NotBlank private String lastName;
-
-  private LocalDate dateOfBirth;
-
-  @NotBlank private String address;
-
-  @Pattern(regexp = "[1-9]\\d{8}")
-  private String phoneNumber;
-
-  @Embedded private Education education;
-
-  @Embedded private ProfessionalExperience professionalExperience;
+  @Embedded
+  private ProfessionalExperience professionalExperience;
 
   public String getProfession() {
     String[] classNameParts = getClass().getCanonicalName().split("\\.");

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/waitresses")
+@RequestMapping("/api/v1/waiters")
 public class WaiterController {
 
   private final WaiterService waiterService;
@@ -29,8 +29,8 @@ public class WaiterController {
   }
 
   @PostMapping
-  public Waiter addWaitress(@RequestBody Waiter waiter) {
-    return waiterService.createWaitress(waiter);
+  public Waiter addWaitress(@RequestBody WaiterRequest request) {
+    return waiterService.createWaiter(request);
   }
 
   @PutMapping("/{id}")
