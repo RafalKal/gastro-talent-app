@@ -20,7 +20,7 @@ public class WaiterBuilder {
                 .orElseThrow(
                     () ->
                         new EntityNotFoundException(
-                            "Waiter not found with id: " + request.getUserId())))
+                            "User not found with id: " + request.getUserId())))
         .hasWineKnowledge(request.getHasWineKnowledge())
         .canHandleLargeParties(request.getCanHandleLargeParties())
         .isCertifiedSommelier(request.getIsCertifiedSommelier())
@@ -42,7 +42,7 @@ public class WaiterBuilder {
                 .orElseThrow(
                     () ->
                         new EntityNotFoundException(
-                            "Waiter not found with id: " + request.getUserId())))
+                            "User not found with id: " + request.getUserId())))
         .hasWineKnowledge(request.getHasWineKnowledge())
         .canHandleLargeParties(request.getCanHandleLargeParties())
         .isCertifiedSommelier(request.getIsCertifiedSommelier())

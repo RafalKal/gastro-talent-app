@@ -20,7 +20,7 @@ public class CookBuilder {
                 .orElseThrow(
                     () ->
                         new EntityNotFoundException(
-                            "Cook not found with id: " + request.getUserId())))
+                            "User not found with id: " + request.getUserId())))
         .cookingStyles(request.getCookingStyles())
         .canHandlePressure(request.getCanHandlePressure())
         .isCertifiedSousChef(request.getIsCertifiedSousChef())
@@ -42,7 +42,7 @@ public class CookBuilder {
                 .orElseThrow(
                     () ->
                         new EntityNotFoundException(
-                            "Cook not found with id: " + request.getUserId())))
+                            "User not found with id: " + request.getUserId())))
         .cookingStyles(request.getCookingStyles())
         .canHandlePressure(request.getCanHandlePressure())
         .isCertifiedSousChef(request.getIsCertifiedSousChef())

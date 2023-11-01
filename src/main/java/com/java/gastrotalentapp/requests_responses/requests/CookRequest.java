@@ -4,7 +4,6 @@ import com.java.gastrotalentapp.enums.CookingStyle;
 import com.java.gastrotalentapp.model.Education;
 import com.java.gastrotalentapp.model.ProfessionalExperience;
 import java.util.Set;
-import javax.persistence.*;
 import lombok.Getter;
 
 @Getter
@@ -14,7 +13,7 @@ public class CookRequest {
 
   private ProfessionalExperience professionalExperience;
 
-  private Integer userId;
+  private Long userId;
 
   private Set<CookingStyle> cookingStyles;
 
