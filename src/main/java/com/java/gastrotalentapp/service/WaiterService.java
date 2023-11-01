@@ -1,51 +1,54 @@
 package com.java.gastrotalentapp.service;
 
-import com.java.gastrotalentapp.controller.WaiterRequest;
-import com.java.gastrotalentapp.model.Waiter;
-import com.java.gastrotalentapp.repository.WaitressRepository;
+import com.java.gastrotalentapp.builders.WaiterBuilder;
+import com.java.gastrotalentapp.model.entity.Waiter;
+import com.java.gastrotalentapp.repository.UserRepository;
+import com.java.gastrotalentapp.repository.WaiterRepository;
+import com.java.gastrotalentapp.requests_responses.requests.WaiterRequest;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class WaiterService {
 
-  private final WaitressRepository waitressRepository;
+  private final WaiterRepository waiterRepository;
+  private final UserRepository userRepository;
 
-  @Autowired
-  public WaiterService(WaitressRepository waitressRepository) {
-    this.waitressRepository = waitressRepository;
+  public List<Waiter> getAllWaiters() {
+    return waiterRepository.findAll();
   }
 
-  public List<Waiter> getAllWaitresses() {
-    return waitressRepository.findAll();
-  }
-
-  public Optional<Waiter> getWaitressById(Long id) {
-    return waitressRepository.findById(id);
+  public Optional<Waiter> getWaiterById(Long id) {
+    return waiterRepository.findById(id);
   }
 
   public Waiter createWaiter(WaiterRequest request) {
-    Waiter waiter =
-        Waiter.builder()
-            .education(request.getEducation())
-            .professionalExperience(request.getProfessionalExperience())
-            .otherSpeciality(request.getOtherSpeciality())
-            .build();
-    return waitressRepository.save(waiter);
+    Waiter waiter = WaiterBuilder.buildUsingRequest(request, userRepository);
+    return waiterRepository.save(waiter);
   }
 
-  public Waiter updateWaitress(Long id, Waiter updatedWaiter) {
-    if (waitressRepository.existsById(id)) {
-      updatedWaiter.setId(id);
-      return waitressRepository.save(updatedWaiter);
+  public Waiter updateWaiter(Long id, WaiterRequest request) {
+    if (waiterRepository.existsById(id)) {
+      Waiter updatedWaiter =
+          WaiterBuilder.buildUsingRequest(
+              id, request, waiterRepository.findById(id).get().getUser().getId(), userRepository);
+      return waiterRepository.save(updatedWaiter);
     } else {
-      throw new IllegalArgumentException("Waitress with ID " + id + " not found.");
+      throw new IllegalArgumentException("Waiter with ID " + id + " not found.");
     }
   }
 
-  public void deleteWaitress(Long id) {
-    waitressRepository.deleteById(id);
+  public boolean deleteWaiter(Long id) {
+    if (waiterRepository.existsById(id)) {
+      waiterRepository.deleteById(id);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -1,5 +1,7 @@
 package com.java.gastrotalentapp.controller.authController;
 
+import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
+import com.java.gastrotalentapp.requests_responses.responses.AuthenticationResponse;
 import com.java.gastrotalentapp.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

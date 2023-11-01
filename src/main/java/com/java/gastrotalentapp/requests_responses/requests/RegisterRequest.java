@@ -1,12 +1,11 @@
-package com.java.gastrotalentapp.controller.authController;
+package com.java.gastrotalentapp.requests_responses.requests;
 
-import com.java.gastrotalentapp.model.Role;
+import com.java.gastrotalentapp.enums.Role;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @Builder

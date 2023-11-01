@@ -1,6 +1,6 @@
-package com.java.gastrotalentapp.controller.authController;
+package com.java.gastrotalentapp.requests_responses.responses;
 
-import com.java.gastrotalentapp.model.Role;
+import com.java.gastrotalentapp.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
+
   private Role role;
+
   private String token;
 }

@@ -2,9 +2,9 @@ package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.config.JwtService;
 import com.java.gastrotalentapp.controller.authController.AuthenticationRequest;
-import com.java.gastrotalentapp.controller.authController.AuthenticationResponse;
-import com.java.gastrotalentapp.controller.authController.RegisterRequest;
-import com.java.gastrotalentapp.model.User;
+import com.java.gastrotalentapp.requests_responses.responses.AuthenticationResponse;
+import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
+import com.java.gastrotalentapp.model.entity.User;
 import com.java.gastrotalentapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

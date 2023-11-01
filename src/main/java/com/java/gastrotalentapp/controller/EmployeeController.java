@@ -1,6 +1,6 @@
 package com.java.gastrotalentapp.controller;
 
-import com.java.gastrotalentapp.model.Employee;
+import com.java.gastrotalentapp.model.entity.EmployeeProfile;
 import com.java.gastrotalentapp.service.EmployeeService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +17,25 @@ public class EmployeeController {
   }
 
   @GetMapping("/")
-  public List<Employee> getAllEmployees() {
+  public List<EmployeeProfile> getAllEmployees() {
     return employeeService.getAllEmployees();
   }
 
   @GetMapping("/{id}")
-  public Employee getEmployeeById(@PathVariable Long id) {
+  public EmployeeProfile getEmployeeById(@PathVariable Long id) {
     return employeeService.getEmployeeById(id);
   }
 
   @PostMapping("/")
-  public Employee addEmployee(@RequestBody Employee employee) {
-    return employeeService.saveEmployee(employee);
+  public EmployeeProfile addEmployee(@RequestBody EmployeeProfile employeeProfile) {
+    return employeeService.saveEmployee(employeeProfile);
   }
 
   @PutMapping("/{id}")
-  public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
-    employee.setId(id);
-    return employeeService.saveEmployee(employee);
+  public EmployeeProfile updateEmployee(
+      @PathVariable Long id, @RequestBody EmployeeProfile employeeProfile) {
+    employeeProfile.setId(id);
+    return employeeService.saveEmployee(employeeProfile);
   }
 
   @DeleteMapping("/{id}")

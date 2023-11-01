@@ -1,14 +1,19 @@
-package com.java.gastrotalentapp.model;
+package com.java.gastrotalentapp.model.entity;
 
+import com.java.gastrotalentapp.enums.Role;
+import com.java.gastrotalentapp.model.Address;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 
   @Id @GeneratedValue
-  private Integer id;
+  private Long id;
 
   @NotBlank
   private String firstname;
@@ -47,6 +52,21 @@ public class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
+
+  @OneToMany(
+      mappedBy = "user",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private Set<EmployeeProfile> profiles;
+
+  @Column(name = "created_at", nullable = false, updatable = false)
+  @CreatedDate
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at", nullable = false)
+  @LastModifiedDate
+  private LocalDateTime updatedAt;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -81,5 +101,15 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @PrePersist
+  protected void onCreate() {
+    createdAt = updatedAt = LocalDateTime.now();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedAt = LocalDateTime.now();
   }
 }

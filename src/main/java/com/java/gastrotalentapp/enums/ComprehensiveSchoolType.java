@@ -1,9 +1,9 @@
-package com.java.gastrotalentapp;
+package com.java.gastrotalentapp.enums;
 
 public enum ComprehensiveSchoolType {
-  HIGH_SCHOOL("High school"),
-  TECHNICAL_SCHOOL("Technical School"),
-  VOCATIONAL_SCHOOL("Vocational school");
+  HIGH_SCHOOL("High school"),                 // LICEUM
+  TECHNICAL_SCHOOL("Technical School"),       // TECHNIKUM
+  VOCATIONAL_SCHOOL("Vocational school");     // SZKOŁA ZAWODOWA
 
   private final String displayName;
 

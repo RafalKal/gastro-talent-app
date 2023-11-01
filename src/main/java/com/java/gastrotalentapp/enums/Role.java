@@ -1,0 +1,8 @@
+package com.java.gastrotalentapp.enums;
+
+public enum Role {
+  VISITOR,              // ODWIEDZAJĄCY STRONĄ INTERNETOWĄ (NIEZALOGOWANY)
+  POTENTIAL_EMPLOYEE,   // POTENCJALNY PRACOWNIK / SZUKAJĄCY PRACY
+  POTENTIAL_EMPLOYER,   // POTENCJALNY PRACODAWCA / SZUKAJĄCY PRACOWNIKA
+  ADMIN                 // ADMIN
+}

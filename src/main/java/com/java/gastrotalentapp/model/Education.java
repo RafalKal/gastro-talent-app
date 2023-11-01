@@ -1,7 +1,6 @@
 package com.java.gastrotalentapp.model;
 
-import com.java.gastrotalentapp.ComprehensiveSchool;
-import com.java.gastrotalentapp.EducationLevel;
+import com.java.gastrotalentapp.enums.EducationLevel;
 import java.time.LocalDate;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
@@ -20,8 +19,12 @@ public class Education {
 
   @Enumerated(EnumType.STRING)
   private EducationLevel educationLevel;
+
   @Embedded
   private ComprehensiveSchool comprehensiveSchool;
-  private String university;
+
+  @Embedded
+  private University university;
+
   private LocalDate graduationDate;
 }

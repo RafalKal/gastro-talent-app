@@ -1,7 +1,6 @@
 package com.java.gastrotalentapp.service;
 
-import com.java.gastrotalentapp.controller.EmployeeRequest;
-import com.java.gastrotalentapp.model.Employee;
+import com.java.gastrotalentapp.model.entity.EmployeeProfile;
 import com.java.gastrotalentapp.repository.EmployeeRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +15,16 @@ public class EmployeeService {
     this.employeeRepository = employeeRepository;
   }
 
-  public List<Employee> getAllEmployees() {
+  public List<EmployeeProfile> getAllEmployees() {
     return employeeRepository.findAll();
   }
 
-  public Employee getEmployeeById(Long id) {
+  public EmployeeProfile getEmployeeById(Long id) {
     return employeeRepository.findById(id).orElse(null);
   }
 
-  public Employee saveEmployee(Employee employee) {
-    return employeeRepository.save(employee);
+  public EmployeeProfile saveEmployee(EmployeeProfile employeeProfile) {
+    return employeeRepository.save(employeeProfile);
   }
 
   public void deleteEmployee(Long id) {

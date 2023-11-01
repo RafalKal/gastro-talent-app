@@ -1,45 +1,62 @@
 package com.java.gastrotalentapp.controller;
 
-import com.java.gastrotalentapp.model.Waiter;
+import com.java.gastrotalentapp.model.entity.Waiter;
+import com.java.gastrotalentapp.requests_responses.requests.WaiterRequest;
 import com.java.gastrotalentapp.service.WaiterService;
 import java.util.List;
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/waiters")
 public class WaiterController {
 
   private final WaiterService waiterService;
 
-  @Autowired
-  public WaiterController(WaiterService waiterService) {
-    this.waiterService = waiterService;
-  }
-
   @GetMapping
-  public List<Waiter> getAllWaitresses() {
-    return waiterService.getAllWaitresses();
+  public ResponseEntity<List<Waiter>> getAllWaiters() {
+    List<Waiter> waiters = waiterService.getAllWaiters();
+    return new ResponseEntity<>(waiters, HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
-  public Optional<Waiter> getWaitressById(@PathVariable Long id) {
-    return waiterService.getWaitressById(id);
+  public ResponseEntity<Waiter> getWaiterById(@PathVariable Long id) {
+    return waiterService
+        .getWaiterById(id)
+        .map(waiter -> new ResponseEntity<>(waiter, HttpStatus.OK))
+        .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
   @PostMapping
-  public Waiter addWaitress(@RequestBody WaiterRequest request) {
-    return waiterService.createWaiter(request);
+  public ResponseEntity<Waiter> createWaiter(@RequestBody WaiterRequest request) {
+    Waiter createdWaiter = waiterService.createWaiter(request);
+    if (createdWaiter != null) {
+      return new ResponseEntity<>(createdWaiter, HttpStatus.CREATED);
+    } else {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @PutMapping("/{id}")
-  public Waiter updateWaitress(@PathVariable Long id, @RequestBody Waiter updatedWaiter) {
-    return waiterService.updateWaitress(id, updatedWaiter);
+  public ResponseEntity<Waiter> updateWaiter(
+      @PathVariable Long id, @RequestBody WaiterRequest request) {
+    Waiter updatedWaiter = waiterService.updateWaiter(id, request);
+    if (updatedWaiter != null) {
+      return new ResponseEntity<>(updatedWaiter, HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @DeleteMapping("/{id}")
-  public void deleteWaitress(@PathVariable Long id) {
-    waiterService.deleteWaitress(id);
+  public ResponseEntity<Void> deleteWaiter(@PathVariable Long id) {
+    if (waiterService.deleteWaiter(id)) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 }
