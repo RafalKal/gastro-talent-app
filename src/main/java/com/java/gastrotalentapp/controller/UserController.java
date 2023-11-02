@@ -1,8 +1,8 @@
 package com.java.gastrotalentapp.controller;
 
 import com.java.gastrotalentapp.model.entity.User;
+import com.java.gastrotalentapp.model.entity.criteria.UserSearchCriteria;
 import com.java.gastrotalentapp.model.entity.page.UserPage;
-import com.java.gastrotalentapp.model.entity.page.UserSearchCriteria;
 import com.java.gastrotalentapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
