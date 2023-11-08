@@ -2,6 +2,7 @@ package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.config.JwtService;
 import com.java.gastrotalentapp.controller.authController.AuthenticationRequest;
+import com.java.gastrotalentapp.exception.EmailExistsException;
 import com.java.gastrotalentapp.requests_responses.responses.AuthenticationResponse;
 import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
 import com.java.gastrotalentapp.model.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,13 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
-  public AuthenticationResponse register(RegisterRequest request) {
+  @Transactional
+  public AuthenticationResponse register(RegisterRequest request){
+
+    if (userRepository.existsByEmail(request.getEmail())){
+      throw new EmailExistsException("Email already exists: " + request.getEmail());
+    }
+
     var user =
         User.builder()
             .firstname(request.getFirstname())
