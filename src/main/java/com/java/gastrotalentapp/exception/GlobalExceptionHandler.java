@@ -30,7 +30,8 @@ public class GlobalExceptionHandler {
     response.put("error", "Bad Request");
     response.put("message", "Validation error");
 
-    List<String> validationErrors = ex.getFieldErrors().stream()
+    List<String> validationErrors =
+        ex.getFieldErrors().stream()
             .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
             .collect(Collectors.toList());
 
@@ -39,17 +40,10 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
-  // TODO trzeba tu pomyślec czy powinno zwracać szczegóły bledy czy tylko bad request TA METODA
-  // WYZEJ TEZ
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(
       HttpMessageNotReadableException ex) {
-    //        Map<String, String> errorMap = new HashMap<>();
-    //        errorMap.put("message", "Invalid JSON request");
-    //        errorMap.put("details", ex.getMessage());
-    //
-    //        return ResponseEntity.badRequest().body(errorMap);
     Map<String, Object> errorMap = new HashMap<>();
     errorMap.put("timestamp", LocalDateTime.now());
     errorMap.put("status", HttpStatus.BAD_REQUEST.value());

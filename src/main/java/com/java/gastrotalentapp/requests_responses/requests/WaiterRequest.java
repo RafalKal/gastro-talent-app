@@ -19,6 +19,7 @@ public class WaiterRequest {
 
   private Boolean isCertifiedSommelier;
 
+  //TODO enuma dorobić
   private String preferredServingStyle;
 
   private Boolean isTrainedInMixology;
