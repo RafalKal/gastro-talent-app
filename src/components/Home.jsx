@@ -8,21 +8,21 @@ import Filter from './Filter';
 function Home() {
     return (
         <Container fluid className="px-4">
-            <Row className="mt-5">
-                <Col>
+            <Row className="mt-5 topContainer ">
+                <Col className="welcomeDiv">
                     <h2 className="padding-items1">
                         Znajdź <span className="blue-text">nową pracę</span> już dzisiaj!
                     </h2>
                 </Col>
             </Row>
             <Row>
-                <Col>
+                <Col className="welcomeDiv">
                     <p className="padding-items2">Tysiące ofert pracy czeka na Ciebie!</p>
                 </Col>
             </Row>
-            <Row>
-                <InputGroup className="mb-3">
-                    <Form.Select aria-label="Default select example">
+            <Row className="searchTop">
+                <InputGroup className="mb-3 inputSearch" >
+                    <Form.Select aria-label="Default select example" >
                         <option >Jakiej pracy szukasz</option>
                         <option value="1">Kucharz</option>
                         <option value="2">Kelner</option>
@@ -42,7 +42,7 @@ function Home() {
                     </Button>
                 </InputGroup>
             </Row>
-            <Row className="px-4 customFilterRow">
+            <Row className="px-5 customFilterRow">
                 <Filter /> {/* Filter component */}
                 <Col>
                     <Row>

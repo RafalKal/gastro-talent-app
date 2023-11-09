@@ -9,7 +9,7 @@ import './navapp.css';
 const NavApp = () => {
     return (
         <Navbar expand="sm" className="bg-body-tertiary">
-            <Container fluid>
+            <Container fluid className="navContainer">
                 <Navbar.Brand href="#home">GastroTalent</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
