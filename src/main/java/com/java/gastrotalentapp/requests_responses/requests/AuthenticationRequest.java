@@ -1,4 +1,4 @@
-package com.java.gastrotalentapp.controller.authController;
+package com.java.gastrotalentapp.requests_responses.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

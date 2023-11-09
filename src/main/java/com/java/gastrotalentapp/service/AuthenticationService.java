@@ -1,7 +1,7 @@
 package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.config.JwtService;
-import com.java.gastrotalentapp.controller.authController.AuthenticationRequest;
+import com.java.gastrotalentapp.requests_responses.requests.AuthenticationRequest;
 import com.java.gastrotalentapp.exception.EmailExistsException;
 import com.java.gastrotalentapp.model.entity.User;
 import com.java.gastrotalentapp.repository.UserRepository;

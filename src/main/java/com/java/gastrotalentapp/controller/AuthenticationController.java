@@ -1,18 +1,15 @@
-package com.java.gastrotalentapp.controller.authController;
+package com.java.gastrotalentapp.controller;
 
+import com.java.gastrotalentapp.requests_responses.requests.AuthenticationRequest;
 import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
 import com.java.gastrotalentapp.requests_responses.responses.AuthenticationResponse;
 import com.java.gastrotalentapp.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")
