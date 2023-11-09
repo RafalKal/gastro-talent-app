@@ -48,7 +48,7 @@ function Register() {
                         <FaLinkedinIn />
                     </a>
                 </div>
-                <span>lub użyj swój email do rejestracji</span>
+                <span className="loginSpan">lub użyj swój email do rejestracji</span>
                 <input
                     className="loginInput"
                     type="text"
