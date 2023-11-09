@@ -25,25 +25,31 @@ public class GlobalExceptionHandler {
   @ExceptionHandler
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<?> handleValidationException(BindException ex) {
-    List<String> validationErrors =
-        ex.getFieldErrors().stream()
-            .map(FieldError::getDefaultMessage)
+    Map<String, Object> response = new HashMap<>();
+    response.put("status", HttpStatus.BAD_REQUEST.value());
+    response.put("error", "Bad Request");
+    response.put("message", "Validation error");
+
+    List<String> validationErrors = ex.getFieldErrors().stream()
+            .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
             .collect(Collectors.toList());
 
-    return ResponseEntity.badRequest().body(validationErrors);
+    response.put("errors", validationErrors);
+
+    return ResponseEntity.badRequest().body(response);
   }
 
-
-  //TODO trzeba tu pomyślec czy powinno zwracać szczegóły bledy czy tylko bad request TA METODA WYZEJ TEZ
+  // TODO trzeba tu pomyślec czy powinno zwracać szczegóły bledy czy tylko bad request TA METODA
+  // WYZEJ TEZ
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(
       HttpMessageNotReadableException ex) {
-    //    Map<String, String> errorMap = new HashMap<>();
-    //    errorMap.put("message", "Invalid JSON request");
-    //    errorMap.put("details", ex.getMessage());
+    //        Map<String, String> errorMap = new HashMap<>();
+    //        errorMap.put("message", "Invalid JSON request");
+    //        errorMap.put("details", ex.getMessage());
     //
-    //    return ResponseEntity.badRequest().body(errorMap);
+    //        return ResponseEntity.badRequest().body(errorMap);
     Map<String, Object> errorMap = new HashMap<>();
     errorMap.put("timestamp", LocalDateTime.now());
     errorMap.put("status", HttpStatus.BAD_REQUEST.value());
