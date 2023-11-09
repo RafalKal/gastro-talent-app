@@ -1,0 +1,75 @@
+.padding-items1{
+    text-align:left;
+    margin-left: 10px;
+    font-size: 40px;
+}
+
+.padding-items2{
+    text-align:left;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.blue-text {
+    color: rgb(76, 99, 199);
+  }
+
+div.col{
+    padding:0px;
+}
+
+h2{
+    font-family: Georgia, serif;
+}
+
+.FilterContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.form-check .form-check-input {
+    margin-right: 8px; 
+}
+
+.titleForm{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.checkElements{
+    font-weight: 500;
+    color:rgb(84, 84, 84)
+}
+
+.filtersSection{
+    background-color:#FFFFFF;
+    border-radius: 10px;
+    max-width: 350px;
+    margin-right:40px;
+}
+
+.customFilterRow{
+    padding-top:100px;
+    padding-bottom: 100px;
+    padding-left:100px;
+    background-color:#FAFAFA;
+}
+
+.customEmail{
+    background-color:#FFFFFF;
+    margin-left:40px;
+    border-radius: 20px;
+}
+
+.jobCount{
+    text-align: left;
+}

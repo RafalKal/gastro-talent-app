@@ -1,0 +1,50 @@
+.job-card {
+    display: flex;
+  }
+  
+.job-image{
+    max-width: 100px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
+}
+
+.jobTitle{
+    text-align: left;
+}
+
+.jobName{
+    text-align: left;
+}
+
+.job-info.ps-0 > * {
+    padding-left: 0;
+}
+
+.job-info.ps-0 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.aboutJob{
+    padding-top: 20px;
+    text-align: left;
+}
+
+.custom-card-body {
+    padding: 0.5em;
+    margin-top: 30px;
+    border: 1px solid #ffffff !important;
+}
+
+.iconText{
+    font-weight: 400;
+    text-decoration: none;
+    color:black;
+    margin-left: 3px;
+}
+
+.iconText:hover{
+    color: #000000;
+}
