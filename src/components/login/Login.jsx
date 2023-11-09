@@ -1,5 +1,6 @@
 import React from "react";
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function Login() {
 
@@ -20,7 +21,44 @@ function Login() {
         evt.preventDefault();
 
         const { email, password } = state;
-        alert(`Email: ${email} hasło: ${password}`);
+        fetch("http://localhost:8080/api/v1/auth/authenticate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem("id", data.id);
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("token", data.token);
+                Swal.fire({
+                    title: "Witaj z powrotem!",
+                    width: 600,
+                    padding: "3em",
+                    color: "#695F5F",
+                    background: "#fff",
+                    backdrop: `
+                      url("../../src/assets/major.gif")
+                      left top
+                      no-repeat
+                    `
+                })
+                setInterval(() => {
+                    window.location.href = "/";
+                }, 5000);
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    alert("Niepoprawne dane logowania");
+                } else if (error.response.status === 500) {
+                    alert("Błąd serwera");
+                }
+            });
 
         for (const key in state) {
             setState({

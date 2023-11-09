@@ -3,7 +3,7 @@
 .Login {
     font-family: sans-serif;
     text-align: center;
-    padding-top:200px;
+    padding-top:50px;
   }
   
   * {
@@ -110,6 +110,7 @@
     width: 900px !important; 
     max-width: 100%;
     min-height: 480px;
+    height:700px;
   }
   
   .form-container {

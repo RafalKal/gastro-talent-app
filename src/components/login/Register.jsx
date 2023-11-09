@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
+import Swal from 'sweetalert2';
 
 function Register() {
 
-    const [state, setState] = React.useState({
-        name: "",
+    const [state, setState] = useState({
+        dateOfBirth: "",
         email: "",
-        password: ""
+        firstname: "",
+        lastname: "",
+        password: "",
+        role: "",
+
     });
 
     const handleChange = evt => {
@@ -19,11 +24,48 @@ function Register() {
 
     const handleOnSubmit = evt => {
         evt.preventDefault();
-
-        const { name, email, password } = state;
-        alert(
-            `Imie: ${name} email: ${email} hasło: ${password}`
-        );
+        const { dateOfBirth, email, firstname, lastname, password, role } = state;
+        fetch("http://localhost:8080/api/v1/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                firstname,
+                lastname,
+                dateOfBirth,
+                role
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                Swal.fire({
+                    title: "Udało Ci się zarejestrować!",
+                    width: 600,
+                    padding: "3em",
+                    color: "#695F5F",
+                    background: "#fff",
+                    backdrop: `
+                      url("../../src/assets/major.gif")
+                      left top
+                      no-repeat
+                    `
+                })
+                setInterval(() => {
+                    window.location.reload();
+                }, 5000);
+            })
+            .catch(error => {
+                if (error.response.status === 400) {
+                    alert("Błędne dane rejestracji");
+                } else if (error.response.status === 500) {
+                    alert("Błąd serwera");
+                } else {
+                    alert("Nieznany błąd");
+                }
+            });
 
         for (const key in state) {
             setState({
@@ -52,10 +94,26 @@ function Register() {
                 <input
                     className="loginInput"
                     type="text"
-                    name="name"
-                    value={state.name}
+                    name="firstname"
+                    value={state.firstname}
                     onChange={handleChange}
                     placeholder="Imię"
+                />
+                <input
+                    className="loginInput"
+                    type="text"
+                    name="lastname"
+                    value={state.lastname}
+                    onChange={handleChange}
+                    placeholder="Nazwisko"
+                />
+                <input
+                    className="loginInput"
+                    type="date"
+                    name="dateOfBirth"
+                    value={state.dateOfBirth}
+                    onChange={handleChange}
+                    placeholder="Data urodzenia"
                 />
                 <input
                     className="loginInput"
@@ -73,6 +131,11 @@ function Register() {
                     onChange={handleChange}
                     placeholder="Hasło"
                 />
+                <select name="role" value={state.role} onChange={handleChange} className="loginInput">
+                    <option value="" disabled selected hidden>Wybierz rolę</option>
+                    <option value="POTENTIAL_EMPLOYEE">Pracownik</option>
+                    <option value="POTENTIAL_EMPLOYER">Pracodawca</option>
+                </select>
                 <button className="loginButton">Zarejestruj się</button>
             </form>
         </div>
