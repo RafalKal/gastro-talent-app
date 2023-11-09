@@ -17,13 +17,9 @@ const NavApp = () => {
                         <Nav.Link href="/" className="ms-3">Home</Nav.Link>
                         <Nav.Link href="/user" className="ms-3">User</Nav.Link>
                     </Nav>
-                    <Nav.Link href="/login" className="me-3 login-link d-flex align-items-center">
-                        <FaSignInAlt className="nav-icon" />
-                        <span className="ms-1">Login</span>
-                    </Nav.Link>
-                    <Nav.Link href="/signup" className="me-3 signup-link d-flex align-items-center">
+                    <Nav.Link href="/login" className="me-3 signup-link d-flex align-items-center">
                         <FaUser className="nav-icon" />
-                        <span className="ms-1">SignUp</span>
+                        <span className="ms-1">Login/SignUp</span>
                     </Nav.Link>
                 </Navbar.Collapse>
             </Container>
