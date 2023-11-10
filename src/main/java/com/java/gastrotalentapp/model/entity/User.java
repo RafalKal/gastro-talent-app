@@ -123,6 +123,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
@@ -130,30 +131,23 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "_user")
-public class User implements UserDetails {
+@SuperBuilder(toBuilder = true)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
+public abstract class User implements UserDetails {
 
   @Id @GeneratedValue
   private Long id;
-
-  @NotBlank
-  private String firstname;
-
-  @NotBlank
-  private String lastname;
 
   @NotBlank
   private String email;
 
   @NotBlank
   private String password;
-
-  @NotNull
-  private LocalDate dateOfBirth;
 
   @Embedded
   private Address address;
@@ -163,13 +157,13 @@ public class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
-
-  @OneToMany(
-      mappedBy = "user",
-      cascade = CascadeType.ALL,
-      orphanRemoval = true,
-      fetch = FetchType.LAZY)
-  private Set<EmployeeProfile> profiles;
+// tego tu raczej nie bedzie
+//  @OneToMany(
+//      mappedBy = "user",
+//      cascade = CascadeType.ALL,
+//      orphanRemoval = true,
+//      fetch = FetchType.LAZY)
+//  private Set<EmployeeProfile> profiles;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreatedDate

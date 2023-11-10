@@ -1,42 +1,39 @@
-//package com.java.gastrotalentapp.model.entity;
-//
-//import java.time.LocalDate;
-//import java.util.Set;
-//import javax.persistence.CascadeType;
-//import javax.persistence.Entity;
-//import javax.persistence.FetchType;
-//import javax.persistence.OneToMany;
-//import javax.validation.constraints.NotBlank;
-//import javax.validation.constraints.NotNull;
-//import lombok.*;
-//import lombok.experimental.SuperBuilder;
-//
-//@Getter
-//@Setter
-//@ToString
-//@EqualsAndHashCode
-//@AllArgsConstructor
-//@RequiredArgsConstructor
-//@SuperBuilder(toBuilder = true)
-//@Entity
-//public class Employer extends User {
-//
-//  @NotBlank
-//  private String name;
-//
-//  @NotBlank
-//  private String NIP;
-//
-//  @NotBlank
-//  private String REGON;
-//
-//  @NotNull
-//  private LocalDate dateEstablishmentCompany;
-//
-////  @OneToMany(
-////      mappedBy = "employer",
-////      cascade = CascadeType.ALL,
-////      orphanRemoval = true,
-////      fetch = FetchType.LAZY)
-////  private Set<JobPosting> jobPostings;
-//}
+package com.java.gastrotalentapp.model.entity;
+
+import java.time.LocalDate;
+import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@RequiredArgsConstructor
+@SuperBuilder(toBuilder = true)
+@Entity
+public class Employer extends User {
+
+  @NotBlank
+  private String companyName;
+
+  @NotBlank
+  private String NIP;
+
+  @NotBlank
+  private String REGON;
+
+  @NotNull
+  private LocalDate dateEstablishmentCompany;
+
+//  @OneToMany(
+//      mappedBy = "employer",
+//      cascade = CascadeType.ALL,
+//      orphanRemoval = true,
+//      fetch = FetchType.LAZY)
+//  private Set<JobPosting> jobPostings;
+}
