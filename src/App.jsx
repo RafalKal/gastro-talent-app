@@ -1,58 +1,52 @@
 import './App.css'
-import React, { useState } from 'react';
+import React from 'react';
 import User from './components/User';
-import userdata from './userdata';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
-import NavApp from './components/NavApp';
-import Footer from './components/Footer';
-import Login from './components/login/Login';
-import Register from './components/login/Register';
 import LoginRegister from './components/login/LoginRegister';
+import Layout from './components/Layout';
+import Admin from './components/Admin';
+import Employer from './components/Employer';
+import Unathorized from './components/Unathorized';
+import Missing from './components/Missing';
+import RequireAuth from './components/RequireAuth';
+
+const ROLES = {
+  VISITOR: 'VISITOR',
+  ADMIN: 'ADMIN',
+  POTENTIAL_EMPLOYEE: 'POTENTIAL_EMPLOYEE',
+  POTENTIAL_EMPLOYER: 'POTENTIAL_EMPLOYER'
+}
+
 
 function App() {
-  const users = userdata.map(item => (
-    <User
-      key={item.id}
-      {...item}
-    />
-  ));
-
-  const [type, setType] = useState("signIn");
-  const handleOnClick = text => {
-    if (text !== type) {
-      setType(text);
-      return;
-    }
-  };
-  const containerClass =
-    "container " + (type === "signUp" ? "right-panel-active" : "");
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <NavApp />
-              <Outlet />
-              <Footer />
-            </div>
-          }>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+
+        {/*Public routes*/}
+        <Route path="/" element={<Home />} />
+        <Route path="/unauthorized" element={<Unathorized />} />
+
+        {/*Protected routes*/}
+        <Route element={<RequireAuth allowedRoles={[ROLES.VISITOR, ROLES.POTENTIAL_EMPLOYEE]} />}>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/user"
-            element={
-              <div>
-                <section className="user-list">{users}</section>
-              </div>
-            }
-          />
         </Route>
-        <Route path="/login" element={<LoginRegister />} />
-      </Routes>
-    </BrowserRouter>
+        <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
+          <Route path="admin" element={<Admin />} />
+        </Route>
+        <Route element={<RequireAuth allowedRoles={[ROLES.POTENTIAL_EMPLOYEE]} />}>
+          <Route path="user" element={<User />} />
+        </Route>
+        <Route element={<RequireAuth allowedRoles={['POTENTIAL_EMPLOYER']} />}>
+          <Route path="employer" element={<Employer />} />
+        </Route>
+
+        {/*Catch all*/}
+        <Route path="*" element={<Missing />} />
+      </Route>
+      <Route path="/login" element={<LoginRegister />} />
+    </Routes>
   );
 }
 

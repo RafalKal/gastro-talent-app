@@ -3,6 +3,7 @@ import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
 import Swal from 'sweetalert2';
 
 function Register() {
+
     const [state, setState] = useState({
         dateOfBirth: "",
         email: "",

@@ -1,76 +1,73 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
-import Swal from "sweetalert2";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function Login() {
+import axios from "../../api/axios";
+const LOGIN_URL = '/api/v1/auth/authenticate'
 
-    const [state, setState] = React.useState({
-        email: "",
-        password: ""
-    });
+const Login = () => {
+    const { setAuth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
-    const handleChange = evt => {
-        const value = evt.target.value;
-        setState({
-            ...state,
-            [evt.target.name]: value
-        });
-    };
+    const userRef = useRef();
+    const errorRef = useRef();
 
-    const handleOnSubmit = evt => {
-        evt.preventDefault();
+    const [user, setUser] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
 
-        const { email, password } = state;
-        fetch("http://localhost:8080/api/v1/auth/authenticate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email,
-                password
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                localStorage.setItem("id", data.id);
-                localStorage.setItem("role", data.role);
-                localStorage.setItem("token", data.token);
-                Swal.fire({
-                    title: "Witaj z powrotem!",
-                    width: 600,
-                    padding: "3em",
-                    color: "#695F5F",
-                    background: "#fff",
-                    backdrop: `
-                      url("../../src/assets/major.gif")
-                      left top
-                      no-repeat
-                    `
-                })
-                setInterval(() => {
-                    window.location.href = "/";
-                }, 5000);
-            })
-            .catch(error => {
-                if (error.response.status === 401) {
-                    alert("Niepoprawne dane logowania");
-                } else if (error.response.status === 500) {
-                    alert("Błąd serwera");
-                }
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
+
+    useEffect(() => {
+        setErrorMsg("");
+    }, [user, password]);
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(LOGIN_URL, JSON.stringify({ email: user, password }), {
+                headers: { 'Content-Type': 'application/json' },
             });
+            console.log(JSON.stringify(response?.data));
 
-        for (const key in state) {
-            setState({
-                ...state,
-                [key]: ""
-            });
+            const token = response?.data?.token;
+            const role = response?.data?.role;
+            const id = response?.data?.id;
+
+            setAuth({ user, password, role, token, id });
+            setUser("");
+            setPassword("");
+
+            localStorage.setItem("id", response?.data?.id);
+            localStorage.setItem("role", response?.data?.role);
+            localStorage.setItem("token", response?.data?.token);
+
+            navigate(from, { replace: true });
+
+        } catch (error) {
+            if (!error?.response) {
+                setErrorMsg("Brak odpowiedzi serwera");
+            } else if (error.response?.status === 401) {
+                setErrorMsg("Nieupoważniony");
+            } else if (error.response?.status === 403) {
+                setErrorMsg("Niepoprawne dane logowania");
+            } else {
+                setErrorMsg("Login nie zadziałał");
+            }
+            errorRef.current.focus();
         }
-    };
+    }
 
     return (
         <div className="form-container sign-in-container">
-            <form onSubmit={handleOnSubmit} className="loginForm">
+            <form onSubmit={handleSubmit} className="loginForm">
+                <p ref={errorRef} className={errorMsg ? "errmsg" : "offscreen"} aria-live="assertive"> {errorMsg} </p>
                 <h1>Logowanie</h1>
                 <div className="social-container">
                     <a href="#" className="social">
@@ -89,16 +86,18 @@ function Login() {
                     type="email"
                     placeholder="Email"
                     name="email"
-                    value={state.email}
-                    onChange={handleChange}
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                    ref={userRef}
+                    required
                 />
                 <input
                     className="loginInput"
                     type="password"
                     name="password"
                     placeholder="••••••••••"
-                    value={state.password}
-                    onChange={handleChange}
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
                 />
                 <a href="#" className="loginA">Zapomniałeś hasła?</a>
                 <button className="loginButton">Zaloguj się</button>
