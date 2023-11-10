@@ -29,30 +29,8 @@ public class EmployeeProfileController {
         .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
-  //  @PostMapping
-  //  public ResponseEntity<EmployeeProfile> createCook(@RequestBody EmployeeProfileRequest request)
-  // {
-  //    Cook createdCook = employeeProfileService.createEmployeeProfile(request);
-  //    if (createdCook != null) {
-  //      return new ResponseEntity<>(createdCook, HttpStatus.CREATED);
-  //    } else {
-  //      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-  //    }
-  //  }
-  //
-  //  @PutMapping("/{id}")
-  //  public ResponseEntity<Cook> updateCook(@PathVariable Long id, @RequestBody CookRequest
-  // request) {
-  //    Cook updatedCook = employeeProfileService.updateEmployeeProfile(id, request);
-  //    if (updatedCook != null) {
-  //      return new ResponseEntity<>(updatedCook, HttpStatus.OK);
-  //    } else {
-  //      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-  //    }
-  //  }
-
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteWaiter(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteEmployeeProfile(@PathVariable Long id) {
     if (employeeProfileService.deleteEmployeeProfile(id)) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } else {

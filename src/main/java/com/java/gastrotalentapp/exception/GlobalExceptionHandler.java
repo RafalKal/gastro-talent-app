@@ -1,25 +1,35 @@
 package com.java.gastrotalentapp.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(EmailExistsException.class)
   public ResponseEntity<?> handleEmailExistsException(EmailExistsException e) {
     return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(InvalidRoleException.class)
+  public ResponseEntity<?> handleInvalidRoleException(InvalidRoleException e) {
+    Map<String, Object> response = new HashMap<>();
+    response.put("timestamp", LocalDateTime.now());
+    response.put("status", HttpStatus.FORBIDDEN.value());
+    response.put("error", "Forbidden");
+    response.put("message", e.getMessage());
+    response.put("path", "/api/v1/auth/register");
+
+    return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler

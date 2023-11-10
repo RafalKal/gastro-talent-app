@@ -1,10 +1,11 @@
 package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.config.JwtService;
-import com.java.gastrotalentapp.requests_responses.requests.AuthenticationRequest;
 import com.java.gastrotalentapp.exception.EmailExistsException;
+import com.java.gastrotalentapp.exception.InvalidRoleException;
 import com.java.gastrotalentapp.model.entity.User;
 import com.java.gastrotalentapp.repository.UserRepository;
+import com.java.gastrotalentapp.requests_responses.requests.AuthenticationRequest;
 import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
 import com.java.gastrotalentapp.requests_responses.responses.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class AuthenticationService {
   @Transactional
   public AuthenticationResponse register(RegisterRequest request) {
 
+    if (!request.getRole().isTypeEnablesRegistration()) {
+      throw new InvalidRoleException("Account could not be created with the specified role.");
+    }
+
     if (userRepository.existsByEmail(request.getEmail())) {
       throw new EmailExistsException("Email already exists: " + request.getEmail());
     }
@@ -41,12 +46,8 @@ public class AuthenticationService {
             .role(request.getRole())
             .build();
     userRepository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    return AuthenticationResponse.builder()
-        .token(jwtToken)
-        .role(request.getRole())
-        .id(user.getId())
-        .build();
+
+    return authenticationResponse(user);
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -56,7 +57,12 @@ public class AuthenticationService {
         userRepository
             .findByEmail(request.getEmail())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    var jwtToken = jwtService.generateToken(user);
+
+    return authenticationResponse(user);
+  }
+
+  private AuthenticationResponse authenticationResponse(User user) {
+    String jwtToken = jwtService.generateToken(user);
     return AuthenticationResponse.builder()
         .token(jwtToken)
         .role(user.getRole())
