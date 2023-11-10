@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.java.gastrotalentapp.model.Education;
 import com.java.gastrotalentapp.model.ProfessionalExperience;
 import java.time.LocalDateTime;
+import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -35,6 +36,10 @@ public abstract class EmployeeProfile {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
+
+//  @JsonIgnore
+//  @ManyToMany(mappedBy = "applicants", fetch = FetchType.LAZY)
+//  private Set<JobPosting> jobApplications;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreatedDate

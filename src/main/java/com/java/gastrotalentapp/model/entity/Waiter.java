@@ -14,13 +14,13 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Waiter extends EmployeeProfile {
 
-  private Boolean hasWineKnowledge;           // Czy posiada wiedzę o winach
+  private Boolean hasWineKnowledge;
 
-  private Boolean canHandleLargeParties;      // Czy potrafi obsłużyć duże grupy gości
+  private Boolean canHandleLargeParties;
 
-  private Boolean isCertifiedSommelier;       // Czy jest certyfikowanym sommelierem
+  private Boolean isCertifiedSommelier;
 
-  private String preferredServingStyle;       // Ulubiony styl obsługi kelnerskiej
+  private String preferredServingStyle;
 
-  private Boolean isTrainedInMixology;        // Czy jest przeszkolony w mixologii (miksowanie drinków)
+  private Boolean isTrainedInMixology;
 }
