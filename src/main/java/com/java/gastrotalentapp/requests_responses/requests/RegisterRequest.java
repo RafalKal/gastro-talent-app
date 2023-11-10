@@ -3,6 +3,7 @@ package com.java.gastrotalentapp.requests_responses.requests;
 import com.java.gastrotalentapp.enums.Role;
 import java.time.LocalDate;
 
+import com.java.gastrotalentapp.validation.ValidRole;
 import com.java.gastrotalentapp.validation.UniqueEmail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +29,8 @@ public class RegisterRequest {
   @Email(message = "Invalid email address")
   @Pattern(
       regexp = "^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$",
-      message = "Invalid email address")
-  @UniqueEmail(message = "Email already exists")
+      message = "Invalid domain name")
+  @UniqueEmail
   private String email;
 
   @NotBlank(message = "Password cannot be blank")
@@ -43,7 +44,7 @@ public class RegisterRequest {
   @Past(message = "Date of birth must be in the past")
   private LocalDate dateOfBirth;
 
-  @NotNull(message = "Role cannot be null")
   @Enumerated(EnumType.STRING)
+  @ValidRole
   private Role role;
 }
