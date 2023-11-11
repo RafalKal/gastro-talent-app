@@ -26,7 +26,7 @@ public class UserCriteriaRepository {
     this.criteriaBuilder = entityManager.getCriteriaBuilder();
   }
 
-  public Page<User> findAllwithFilters(UserPage userPage, UserSearchCriteria userSearchCriteria) {
+  public Page<User> findAllWithFilters(UserPage userPage, UserSearchCriteria userSearchCriteria) {
     CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
     Root<User> userRoot = criteriaQuery.from(User.class);
     Predicate predicate = getPredicate(userSearchCriteria, userRoot);

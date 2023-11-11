@@ -17,6 +17,6 @@ public class UserService {
   private final UserCriteriaRepository userCriteriaRepository;
 
   public Page<User> getUsers(UserPage userPage, UserSearchCriteria userSearchCriteria) {
-    return userCriteriaRepository.findAllwithFilters(userPage, userSearchCriteria);
+    return userCriteriaRepository.findAllWithFilters(userPage, userSearchCriteria);
   }
 }

@@ -14,5 +14,5 @@ public class UserPage {
 
   private Sort.Direction sortDirection = Sort.Direction.ASC;
 
-  private String sortBy = "lastname";
+  private String sortBy = "role";
 }
