@@ -7,7 +7,6 @@ import com.java.gastrotalentapp.exception.InvalidRoleException;
 import com.java.gastrotalentapp.model.entity.Employee;
 import com.java.gastrotalentapp.model.entity.Employer;
 import com.java.gastrotalentapp.model.entity.User;
-import com.java.gastrotalentapp.repository.EmployerRepository;
 import com.java.gastrotalentapp.repository.UserRepository;
 import com.java.gastrotalentapp.requests_responses.requests.AuthenticationRequest;
 import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
@@ -32,10 +31,6 @@ public class AuthenticationService {
   @Transactional
   public AuthenticationResponse register(RegisterRequest request) {
 
-    if (!request.getRole().isTypeEnablesRegistration()) {
-      throw new InvalidRoleException("Account could not be created with the specified role.");
-    }
-
     if (userRepository.existsByEmail(request.getEmail())) {
       throw new EmailExistsException("Email already exists: " + request.getEmail());
     }
@@ -58,37 +53,23 @@ public class AuthenticationService {
         userRepository.save(employer);
         user = employer;
         break;
-              case POTENTIAL_EMPLOYEE:
-                User employee =
-                    Employee.builder()
-                        .firstname(request.getFirstname())
-                        .lastname(request.getLastname())
-                        .email(request.getEmail())
-                        .password(passwordEncoder.encode(request.getPassword()))
-                        .dateOfBirth(request.getDateOfBirth())
-                        .role(role)
-                        .build();
-                userRepository.save(employee);
-                user = employee;
-                break;
+      case POTENTIAL_EMPLOYEE:
+        User employee =
+            Employee.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .dateOfBirth(request.getDateOfBirth())
+                .role(role)
+                .build();
+        userRepository.save(employee);
+        user = employee;
+        break;
       default:
         throw new InvalidRoleException("Provided role is not supported for registration.");
     }
     return authenticationResponse(user);
-
-    //    var user =
-    //            User.builder()
-    //                    //.firstname(request.getFirstname())
-    //                    //.lastname(request.getLastname())
-    //                    .email(request.getEmail())
-    //                    .password(passwordEncoder.encode(request.getPassword()))
-    //                    //.dateOfBirth(request.getDateOfBirth())
-    //                    .role(request.getRole())
-    //                    .build();
-    //    userRepository.save(user);
-    //
-    //    return authenticationResponse(user);
-
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
