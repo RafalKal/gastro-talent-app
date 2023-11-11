@@ -1,14 +1,14 @@
 import './App.css'
 import React from 'react';
-import User from './components/User';
+import User from './components/employee/User';
 import { Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
+import Home from './components/home/Home';
 import LoginRegister from './components/login/LoginRegister';
 import Layout from './components/Layout';
-import Admin from './components/Admin';
-import Employer from './components/Employer';
-import Unathorized from './components/Unathorized';
-import Missing from './components/Missing';
+import Admin from './components/admin/Admin';
+import Employer from './components/employer/Employer';
+import Unathorized from './components/errorpages/Unathorized';
+import Missing from './components/errorpages/Missing';
 import RequireAuth from './components/RequireAuth';
 
 const ROLES = {
@@ -27,11 +27,9 @@ function App() {
         {/*Public routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/unauthorized" element={<Unathorized />} />
+        <Route path="/" element={<Home />} />
 
         {/*Protected routes*/}
-        <Route element={<RequireAuth allowedRoles={[ROLES.VISITOR, ROLES.POTENTIAL_EMPLOYEE]} />}>
-          <Route path="/" element={<Home />} />
-        </Route>
         <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<Admin />} />
         </Route>

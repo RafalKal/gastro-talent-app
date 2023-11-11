@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from "react";
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = useState(null);
+    const [auth, setAuth] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
 
         setLoading(false);
     }, []);
+
 
     return <AuthContext.Provider value={{ auth, setAuth }}>{!loading && children}</AuthContext.Provider>;
 };
