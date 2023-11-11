@@ -1,126 +1,12 @@
-//package com.java.gastrotalentapp.model.entity;
-//
-//import com.java.gastrotalentapp.enums.Role;
-//import com.java.gastrotalentapp.model.Address;
-//import java.time.LocalDate;
-//import java.time.LocalDateTime;
-//import java.util.Collection;
-//import java.util.List;
-//import java.util.Set;
-//import javax.persistence.*;
-//import javax.validation.constraints.NotBlank;
-//import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.Pattern;
-//import lombok.*;
-//import lombok.experimental.SuperBuilder;
-//import org.springframework.data.annotation.CreatedDate;
-//import org.springframework.data.annotation.LastModifiedDate;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
-//
-//@Getter
-//@Setter
-//@ToString
-//@EqualsAndHashCode
-//@AllArgsConstructor
-//@RequiredArgsConstructor
-//@SuperBuilder(toBuilder = true)
-//@Table(name = "_user")
-//@Entity
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-//@DiscriminatorColumn(name = "userType")
-//public abstract class User implements UserDetails {
-//
-//  @Id @GeneratedValue
-//  private Long id;
-//
-//  @NotBlank
-//  private String email;
-//
-//  @NotBlank
-//  private String password;
-//
-//  @Embedded
-//  private Address address;
-//
-//  @Pattern(regexp = "[1-9]\\d{8}")
-//  private String phoneNumber;
-//
-//  @Enumerated(EnumType.STRING)
-//  private Role role;
-//
-//  @Column(name = "created_at", nullable = false, updatable = false)
-//  @CreatedDate
-//  private LocalDateTime createdAt;
-//
-//  @Column(name = "updated_at", nullable = false)
-//  @LastModifiedDate
-//  private LocalDateTime updatedAt;
-//
-//  @Override
-//  public Collection<? extends GrantedAuthority> getAuthorities() {
-//    return List.of(new SimpleGrantedAuthority(role.name()));
-//  }
-//
-//  @Override
-//  public String getPassword() {
-//    return password;
-//  }
-//
-//  @Override
-//  public String getUsername() {
-//    return email;
-//  }
-//
-//  @Override
-//  public boolean isAccountNonExpired() {
-//    return true;
-//  }
-//
-//  @Override
-//  public boolean isAccountNonLocked() {
-//    return true;
-//  }
-//
-//  @Override
-//  public boolean isCredentialsNonExpired() {
-//    return true;
-//  }
-//
-//  @Override
-//  public boolean isEnabled() {
-//    return true;
-//  }
-//
-//  @PrePersist
-//  protected void onCreate() {
-//    createdAt = updatedAt = LocalDateTime.now();
-//  }
-//
-//  @PreUpdate
-//  protected void onUpdate() {
-//    updatedAt = LocalDateTime.now();
-//  }
-//
-//  public String getUserType() {
-//    String[] classNameParts = getClass().getCanonicalName().split("\\.");
-//    return classNameParts[classNameParts.length - 1];
-//  }
-//}
-
 package com.java.gastrotalentapp.model.entity;
 
 import com.java.gastrotalentapp.enums.Role;
 import com.java.gastrotalentapp.model.Address;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -157,14 +43,7 @@ public abstract class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
-// tego tu raczej nie bedzie
-//  @OneToMany(
-//      mappedBy = "user",
-//      cascade = CascadeType.ALL,
-//      orphanRemoval = true,
-//      fetch = FetchType.LAZY)
-//  private Set<EmployeeProfile> profiles;
-
+  
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreatedDate
   private LocalDateTime createdAt;

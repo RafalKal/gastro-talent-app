@@ -27,10 +27,10 @@ public class Employee extends User {
   @NotBlank
   private String lastname;
 
-//  @OneToMany(
-//      mappedBy = "user",
-//      cascade = CascadeType.ALL,
-//      orphanRemoval = true,
-//      fetch = FetchType.LAZY)
-//  private Set<EmployeeProfile> profiles;
+  @OneToMany(
+      mappedBy = "employee",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private Set<EmployeeProfile> profiles;
 }
