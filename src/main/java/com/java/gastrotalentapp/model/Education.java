@@ -26,5 +26,5 @@ public class Education {
   @Embedded
   private University university;
 
-  private LocalDate graduationDate;
+  private LocalDate educationGraduationDate;
 }

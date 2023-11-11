@@ -18,7 +18,7 @@ public class ComprehensiveSchool {
   @Enumerated(EnumType.STRING)
   private ComprehensiveSchoolType comprehensiveSchoolType;
 
-  private String schoolName;
+  private String comprehensiveSchoolName;
 
-  private String city;
+  private String comprehensiveSchoolCity;
 }
