@@ -1,6 +1,7 @@
 package com.java.gastrotalentapp.requests_responses.requests;
 
 import com.java.gastrotalentapp.enums.Role;
+import com.java.gastrotalentapp.validation.RegisterCheck;
 import com.java.gastrotalentapp.validation.UniqueEmail;
 import com.java.gastrotalentapp.validation.ValidRole;
 import java.time.LocalDate;
@@ -16,13 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@RegisterCheck
 public class RegisterRequest {
-
-  @NotBlank(message = "First name cannot be blank")
-  private String firstname;
-
-  @NotBlank(message = "Last name cannot be blank")
-  private String lastname;
 
   @Email(message = "Invalid email address")
   @Pattern(
@@ -38,24 +34,21 @@ public class RegisterRequest {
           "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one digit")
   private String password;
 
-  @NotNull(message = "Date of birth cannot be null")
-  @Past(message = "Date of birth must be in the past")
-  private LocalDate dateOfBirth;
-
   @Enumerated(EnumType.STRING)
   @ValidRole
   private Role role;
 
-  @NotBlank(message = "Company name cannot be blank")
+  private String firstname;
+
+  private String lastname;
+
+  private LocalDate dateOfBirth;
+
   private String companyName;
 
-  @NotBlank(message = "REGON cannot be blank")
   private String REGON;
 
-  @NotBlank(message = "NIP cannot be blank")
   private String NIP;
 
-  @NotNull(message = "Date of establishment of company cannot be null")
-  @Past(message = "Date of establishment of company be in the past")
   private LocalDate dateEstablishmentCompany;
 }
