@@ -1,7 +1,6 @@
 package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.config.JwtService;
-import com.java.gastrotalentapp.enums.Role;
 import com.java.gastrotalentapp.exception.EmailExistsException;
 import com.java.gastrotalentapp.exception.InvalidRoleException;
 import com.java.gastrotalentapp.model.entity.Employee;
@@ -36,10 +35,9 @@ public class AuthenticationService {
     }
 
     User user;
-    Role role = request.getRole();
-    switch (role) {
+    switch (request.getRole()) {
       case POTENTIAL_EMPLOYER:
-        User employer =
+        user =
             Employer.builder()
                 .companyName(request.getCompanyName())
                 .NIP(request.getNIP())
@@ -50,21 +48,19 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .build();
 
-        userRepository.save(employer);
-        user = employer;
+        userRepository.save(user);
         break;
       case POTENTIAL_EMPLOYEE:
-        User employee =
+        user =
             Employee.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .dateOfBirth(request.getDateOfBirth())
-                .role(role)
+                .role(request.getRole())
                 .build();
-        userRepository.save(employee);
-        user = employee;
+        userRepository.save(user);
         break;
       default:
         throw new InvalidRoleException("Provided role is not supported for registration.");
