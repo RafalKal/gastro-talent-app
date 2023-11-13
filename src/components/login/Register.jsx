@@ -1,255 +1,408 @@
-import React, { useState } from "react";
+import { useRef, useState, useEffect } from "react";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
 import Swal from 'sweetalert2';
+import axios from "../../api/axios";
 
-function Register() {
+const USER_REGEX = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]{3,20}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{4,20}$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-    const [state, setState] = useState({
-        dateOfBirth: "",
-        email: "",
-        firstname: "",
-        lastname: "",
-        password: "",
-        role: "",
-    });
+const REGISTER_URL = "/api/v1/auth/register";
+const Register = () => {
 
-    const [errorMessages, setErrorMessages] = useState([]);
+    const [selectedTab, setSelectedTab] = useState('Pracownik');
 
-    const handleChange = (evt) => {
-        const { name, value } = evt.target;
-        setErrorMessages(prevErrors => prevErrors.filter(error => !error.includes(name)));
-        setState({
-            ...state,
-            [name]: value,
-        });
+    const handleTabChange = (event) => {
+        setSelectedTab(event.target.value);
     };
+    // {selectedTab === 'hourly' && ()}
 
-    const validateForm = () => {
-        const errors = [];
+    const userRef = useRef();
+    const errorRef = useRef();
 
-        if (!state.firstname.trim()) {
-            errors.push("Imię nie może być puste.");
-        }
+    const [firstName, setFirstName] = useState("");
+    const [validFirstName, setValidFirstName] = useState(false);
+    const [FirstNameFocus, setFirstNameFocus] = useState(false);
 
-        if (!state.lastname.trim()) {
-            errors.push("Nazwisko nie może być puste.");
-        }
+    const [lastName, setLastName] = useState("");
+    const [validLastName, setValidLastName] = useState(false);
+    const [LastNameFocus, setLastNameFocus] = useState(false);
 
-        if (!state.dateOfBirth) {
-            errors.push("Data urodzenia nie może być pusta.");
-        } else {
-            const birthDate = new Date(state.dateOfBirth);
-            const currentDate = new Date();
+    const [email, setEmail] = useState("");
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
 
-            if (birthDate >= currentDate) {
-                errors.push("Data urodzenia musi być w przeszłości.");
-            }
-        }
+    const [birth, setBirth] = useState("");
+    const [validBirth, setValidBirth] = useState(false);
+    const [birthFocus, setBirthFocus] = useState(false);
 
-        if (!state.email.trim()) {
-            errors.push("Email nie może być pusty.");
-        } else if (!/\S+@\S+\.\S+/.test(state.email)) {
-            errors.push("Nieprawidłowy adres Email.");
-        }
+    const [role, setRole] = useState("");
+    const [validRole, setValidRole] = useState(false);
+    const [roleFocus, setRoleFocus] = useState(false);
 
-        if (!state.password.trim()) {
-            errors.push("Hasło nie może być puste.");
-        } else if (state.password.length < 8) {
-            errors.push("Hasło musi mieć co najmniej 8 znaków.");
-        } else if (!/[A-Z]/.test(state.password)) {
-            errors.push("Hasło musi zawierać przynajmniej jedną wielką literę.");
-        } else if (!/\d/.test(state.password)) {
-            errors.push("Hasło musi zawierać przynajmniej jedną cyfrę.");
-        }
+    const [password, setPassword] = useState("");
+    const [validPassword, setValidPassword] = useState(false);
+    const [passwordFocus, setPasswordFocus] = useState(false);
 
-        if (!state.role) {
-            errors.push("Wybierz rolę.");
-        } else if (!["POTENTIAL_EMPLOYEE", "POTENTIAL_EMPLOYER"].includes(state.role)) {
-            errors.push("Wybierz poprawną rolę.");
-        }
+    const [matchPassword, setMatchPassword] = useState("");
+    const [validMatch, setValidMatch] = useState(false);
+    const [matchFocus, setMatchFocus] = useState(false);
 
-        setErrorMessages(errors);
+    const [companyName, setCompanyName] = useState("");
+    const [validCompanyName, setValidCompanyName] = useState(false);
+    const [companyNameFocus, setCompanyNameFocus] = useState(false);
 
-        return errors.length === 0;
-    };
+    const [nip, setNip] = useState("");
+    const [validNip, setValidNip] = useState(false);
+    const [nipFocus, setNipFocus] = useState(false);
 
-    const handleOnSubmit = async (evt) => {
-        evt.preventDefault();
+    const [errorMsg, setErrorMsg] = useState("");
 
-        if (!validateForm()) {
+    useEffect(() => {
+        userRef.current.focus();
+    }, [])
+
+    useEffect(() => {
+        const result = USER_REGEX.test(firstName);
+        console.log('Valid First Name:', result);
+        console.log('First Name:', firstName);
+        setValidFirstName(result);
+    }, [firstName]);
+
+    useEffect(() => {
+        const result = USER_REGEX.test(lastName);
+        console.log(result);
+        console.log(lastName);
+        setValidLastName(USER_REGEX.test(lastName));
+    }, [lastName]);
+
+    useEffect(() => {
+        const result = EMAIL_REGEX.test(email);
+        console.log(result);
+        console.log(email);
+        setValidEmail(EMAIL_REGEX.test(email));
+    }, [email]);
+
+    useEffect(() => {
+        const isValidDate = birth !== "";
+        const currentDate = new Date();
+        const selectedDate = new Date(birth);
+        const isDateValid = selectedDate <= currentDate;
+        setValidBirth(isValidDate && isDateValid);
+    }, [birth]);
+
+    useEffect(() => {
+        console.log(role);
+    }, [role]);
+
+    useEffect(() => {
+        const result = USER_REGEX.test(companyName);
+        setValidCompanyName(result);
+    }, [companyName]);
+
+    useEffect(() => {
+        const result = USER_REGEX.test(nip);
+        setValidNip(result);
+    }, [nip]);
+
+
+    useEffect(() => {
+        const result = PASSWORD_REGEX.test(password);
+        console.log(result);
+        console.log(password);
+        setValidPassword(PASSWORD_REGEX.test(password));
+        setValidMatch(password === matchPassword);
+        console.log(matchPassword);
+    }, [password, matchPassword])
+
+    useEffect(() => {
+        setErrorMsg("");
+    }, [firstName, lastName, email, password, matchPassword]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+
+        if (!validFirstName || !validLastName || !validEmail || !validBirth || !validPassword || !validMatch || !validRole) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Błąd',
+                text: 'Niepoprawne dane logowania',
+            });
             return;
         }
 
         try {
-            const { dateOfBirth, email, firstname, lastname, password, role } = state;
-            const response = await fetch("http://localhost:8080/api/v1/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                    firstname,
-                    lastname,
-                    dateOfBirth,
-                    role,
-                }),
+            const response = await axios.post(REGISTER_URL, JSON.stringify({ firstname: firstName, lastname: lastName, email, password, dateOfBirth: birth, role }), {
+                headers: { 'Content-Type': 'application/json' }
             });
 
-            if (!response.ok) {
-                try {
-                    const errorData = await response.json();
-                    if (response.status === 400 && errorData.errors) {
-                        const errorMessages = errorData.errors.map((error) => {
-                            const [field, errorMessage] = error.split(": ");
-                            switch (errorMessage) {
-                                case "Last name cannot be blank":
-                                    return `Nazwisko nie może być puste.`;
-                                case "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one digit":
-                                    return `Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej jedną małą literę, jedną dużą literę i jedną cyfrę.`;
-                                case "First name cannot be blank":
-                                    return `Imię nie może być puste.`;
-                                case "Password cannot be blank":
-                                    return `Hasło nie może być puste.`;
-                                case "Date of birth cannot be null":
-                                    return `Data urodzenia nie może być pusta.`;
-                                case "Email already exists":
-                                    return `Podany email już istnieje.`;
-                                case "Invalid email address":
-                                    return `Nieprawidłowy adres email.`;
-                                default:
-                                    return `${field}: ${errorMessage}`;
-                            }
-                        });
-                        alert(`${errorMessages.join("\n")}`);
-                        setErrorMessages(errorMessages);
-                    }
-                } catch (jsonError) {
-                    console.error("Błąd parsowania JSON:", jsonError);
-                    alert("Wystąpił nieprawidłowy format odpowiedzi z serwera.");
-                }
+            console.log(response.data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Rejestracja udana!',
+                text: 'Teraz możesz się zalogować.',
+            });
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } catch (err) {
+            if (!err?.response) {
+                setErrorMsg("Brak odpowiedzi serwera");
+            } else if (err.response?.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd',
+                    text: 'Email jest już zajęty',
+                });
+            } else if (err.response?.status === 409) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Błąd',
+                    text: 'Błąd rejestracji',
+                });
             } else {
                 Swal.fire({
-                    title: "Udało Ci się zarejestrować!",
-                    width: 600,
-                    padding: "3em",
-                    color: "#695F5F",
-                    background: "#fff",
-                    backdrop: `
-                        url("../../src/assets/major.gif")
-                        left top
-                        no-repeat
-                    `,
+                    icon: 'error',
+                    title: 'Błąd',
+                    text: 'Błąd',
                 });
-
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-
-                const emptyState = {};
-                for (const key in state) {
-                    emptyState[key] = "";
-                }
-                setState(emptyState);
-                setErrorMessages([]);
             }
-        } catch (error) {
-            console.error("Wystąpił błąd:", error);
-            alert("Wystąpił błąd. Spróbuj ponownie.");
         }
     };
 
     return (
         <div className="form-container sign-up-container">
-            <form onSubmit={handleOnSubmit} className="loginForm">
+            <form onSubmit={handleSubmit} className="loginForm">
                 <h1>Rejestracja</h1>
-                <div className="social-container">
-                    <a href="#" className="social">
-                        <FaFacebookF />
-                    </a>
-                    <a href="#" className="social">
-                        <FaGooglePlusG />
-                    </a>
-                    <a href="#" className="social">
-                        <FaLinkedinIn />
-                    </a>
-                </div>
-                <span className="loginSpan">lub użyj swojego emaila do rejestracji</span>
+                <label htmlFor="role">
+                    Rola:
+                    {validRole && (
+                        <FontAwesomeIcon icon={faCheck} className="valid loginIcons" />
+                    )}
+                    {!validRole && role && (
+                        <FontAwesomeIcon icon={faTimes} className={role ? "invalid" : "hide"} />
+                    )}
+                </label>
+                <select
+                    name="role"
+                    value={role}
+                    ref={userRef}
+                    onChange={(e) => {
+                        setRole(e.target.value);
+                        setValidRole(e.target.value !== "");
+                    }}
+                    className="loginInput"
+                    required
+                    aria-invalid={!validRole}
+                    aria-describedby="roleNote"
+                    onFocus={() => setRoleFocus(true)}
+                    onBlur={() => setRoleFocus(false)}
+                >
+                    <option value="" disabled hidden>
+                        Wybierz rolę
+                    </option>
+                    <option value="POTENTIAL_EMPLOYEE">Employee</option>
+                    <option value="POTENTIAL_EMPLOYER">Employer</option>
+                </select>
+                <p id="roleNote" className={roleFocus && role && !validRole ? "instructions" : "offscreen"}>
+                    {!validRole && role && (
+                        <>
+                            <FontAwesomeIcon icon={faTimes} className="invalid" />
+                            <span id="registerFormSpan">Wybierz rolę</span>
+                        </>
+                    )}
+                </p>
+
+
+                <label htmlFor="firstName">
+                    Imię:
+                    {validFirstName && (
+                        <FontAwesomeIcon icon={faCheck} className="valid" />
+                    )}
+                    {!validFirstName && firstName && (
+                        <FontAwesomeIcon icon={faTimes} className={firstName ? "invalid" : "hide"} />
+                    )}
+                </label>
                 <input
                     className="loginInput"
                     type="text"
-                    name="firstname"
-                    value={state.firstname}
-                    onChange={handleChange}
-                    placeholder="Imię"
-                />{errorMessages.filter(error => error.includes("Imię")).map((error, index) => (
-                    <div key={index} className="error-container">
-                        <p className="error-message">{error}</p>
-                    </div>
-                ))}
+                    id="firstName"
+                    autoComplete="off"
+                    onChange={(e) => setFirstName(e.target.value)}
+                    value={firstName}
+                    required
+                    aria-invalid={validFirstName ? "false" : "true"}
+                    aria-describedby="firstNameNote"
+                    onFocus={() => setFirstNameFocus(true)}
+                    onBlur={() => setFirstNameFocus(false)}
+                /><p id="firstNameNote" className={FirstNameFocus && firstName && !validFirstName ? "instructions" : "offscreen"}>
+                    {!validFirstName && firstName && (
+                        <>
+                            <span id="registerFormSpan">Imię musi mieć co najmniej 4 znaki</span>
+                        </>
+                    )}
+                </p>
+
+
+                <label htmlFor="email">
+                    Nazwisko
+                    {validLastName && (
+                        <FontAwesomeIcon icon={faCheck} className="valid" />
+                    )}
+                    {!validLastName && lastName && (
+                        <FontAwesomeIcon icon={faTimes} className={lastName ? "invalid" : "hide"} />
+                    )}
+                </label>
                 <input
                     className="loginInput"
                     type="text"
-                    name="lastname"
-                    value={state.lastname}
-                    onChange={handleChange}
-                    placeholder="Nazwisko"
-                /> {errorMessages.filter(error => error.includes("Nazwisko")).map((error, index) => (
-                    <div key={index} className="error-container">
-                        <p className="error-message">{error}</p>
-                    </div>
-                ))}
+                    id="lastName"
+                    autoComplete="off"
+                    onChange={(e) => setLastName(e.target.value)}
+                    value={lastName}
+                    required
+                    aria-invalid={validLastName ? "false" : "true"}
+                    aria-describedby="lastNameNote"
+                    onFocus={() => setLastNameFocus(true)}
+                    onBlur={() => setLastNameFocus(false)}
+                />
+                <p id="lastNameNote" className={LastNameFocus && lastName && !validLastName ? "instructions" : "offscreen"}>
+                    {!validLastName && lastName && (
+                        <>
+                            <span id="registerFormSpan">Nazwisko musi mieć co najmniej 4 znaki</span>
+                        </>
+                    )}
+                </p>
+
+                <label htmlFor="email">
+                    Email
+                    {validEmail && (
+                        <FontAwesomeIcon icon={faCheck} className="valid" />
+                    )}
+                    {!validEmail && email && (
+                        <FontAwesomeIcon icon={faTimes} className={email ? "invalid" : "hide"} />
+                    )}
+                </label>
+                <input
+                    className="loginInput"
+                    type="text"
+                    id="email"
+                    autoComplete="off"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    required
+                    aria-invalid={validEmail ? "false" : "true"}
+                    aria-describedby="emailNote"
+                    onFocus={() => setEmailFocus(true)}
+                    onBlur={() => setEmailFocus(false)}
+                />
+                <p id="emailNote" className={emailFocus && !validEmail ? "instructions" : "offscreen"}>
+                    {!validEmail && email && (
+                        <>
+                            <span id="registerFormSpan">Email musi być w formacie example@example.com</span>
+                        </>
+                    )}
+                </p>
+
+                <label htmlFor="birth">
+                    Data urodzenia:
+                    {validBirth && (
+                        <FontAwesomeIcon icon={faCheck} className="valid" />
+                    )}
+                    {!validBirth && birth && (
+                        <FontAwesomeIcon icon={faTimes} className="invalid" />
+                    )}
+                </label>
                 <input
                     className="loginInput"
                     type="date"
-                    name="dateOfBirth"
-                    value={state.dateOfBirth}
-                    onChange={handleChange}
-                    placeholder="Data urodzenia"
+                    id="birth"
+                    autoComplete="off"
+                    onChange={(e) => setBirth(e.target.value)}
+                    value={birth}
+                    required
+                    aria-invalid={validBirth ? "false" : "true"}
+                    aria-describedby="birthNote"
+                    onFocus={() => setBirthFocus(true)}
+                    onBlur={() => setBirthFocus(false)}
                 />
-                {errorMessages.filter(error => error.includes("Data urodzenia")).map((error, index) => (
-                    <div key={index} className="error-container">
-                        <p className="error-message">{error}</p>
-                    </div>
-                ))}
-                <input
-                    className="loginInput"
-                    type="email"
-                    name="email"
-                    value={state.email}
-                    onChange={handleChange}
-                    placeholder="Email"
-                />
-                {errorMessages.filter(error => error.includes("Email")).map((error, index) => (
-                    <div key={index} className="error-container">
-                        <p className="error-message">{error}</p>
-                    </div>
-                ))}
+                <p id="birthNote" className={birthFocus && birth && !validBirth ? "instructions" : "offscreen"}>
+                    {!validBirth && birth && (
+                        <>
+                            <span id="registerFormSpan">Data urodzenia nie może być w przyszłości</span>
+                        </>
+                    )}
+
+                </p>
+
+
+
+                <label htmlFor="password">
+                    Hasło:
+                    {validPassword && (
+                        <FontAwesomeIcon icon={faCheck} className="valid" />
+                    )}
+                    {!validPassword && password && (
+                        <FontAwesomeIcon icon={faTimes} className={password ? "invalid" : "hide"} />
+
+                    )}
+                </label>
                 <input
                     className="loginInput"
                     type="password"
-                    name="password"
-                    value={state.password}
-                    onChange={handleChange}
-                    placeholder="Hasło"
+                    id="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    required
+                    aria-invalid={validPassword ? "false" : "true"}
+                    aria-describedby="passwordNote"
+                    onFocus={() => setPasswordFocus(true)}
+                    onBlur={() => setPasswordFocus(false)}
                 />
-                {errorMessages.filter(error => error.includes("Hasło")).map((error, index) => (
-                    <div key={index} className="error-container">
-                        <p className="error-message">{error}</p>
-                    </div>
-                ))}
-                <select name="role" value={state.role} onChange={handleChange} className="loginInput">
-                    <option value="" disabled hidden>Wybierz rolę</option>
-                    <option value="POTENTIAL_EMPLOYEE">Pracownik</option>
-                    <option value="POTENTIAL_EMPLOYER">Pracodawca</option>
-                </select>
-                {errorMessages.filter(error => error.includes("Wybierz rolę")).map((error, index) => (
-                    <div key={index} className="error-container">
-                        <p className="error-message">{error}</p>
-                    </div>
-                ))}
-                <button className="loginButton">Zarejestruj się</button>
+                <p id="passwordNote" className={passwordFocus && password && !validPassword ? "instructions" : "offscreen"}>
+                    {!validPassword && password && (
+                        <>
+                            <span id="registerFormSpan">Hasło musi się składać z co najmniej 8 słów, 1 dużego wyrazu oraz 1 cyfry</span>
+                        </>
+                    )}
+                </p>
+
+
+                <label htmlFor="confirmPassword">
+                    Potwierdź hasło:
+                    {validMatch && matchPassword && (
+                        <FontAwesomeIcon icon={faCheck} className="valid" />
+                    )}
+                    {!validMatch && matchPassword && (
+                        <FontAwesomeIcon icon={faTimes} className="invalid" />
+                    )
+
+                    }
+                </label>
+                <input
+                    className="loginInput"
+                    type="password"
+                    id="confirmPassword"
+                    onChange={(e) => setMatchPassword(e.target.value)}
+                    value={matchPassword}
+                    required
+                    aria-invalid={validMatch ? "false" : "true"}
+                    aria-describedby="confirmNote"
+                    onFocus={() => setMatchFocus(true)}
+                    onBlur={() => setMatchFocus(false)}
+                />
+                <p id="confirmNote" className={matchFocus && matchPassword && !validMatch ? "instructions" : "offscreen"}>
+                    {!validMatch && matchPassword && (
+                        <>
+                            <span id="registerFormSpan">Hasla muszą się zgadzać</span>
+                        </>
+                    )}
+                </p>
+                <button disabled={!validFirstName || !validLastName || !validEmail || !validBirth || !validPassword || !validMatch || !validRole ? true : false} className="loginButton">Zarejestruj się</button>
             </form>
         </div>
     );
