@@ -10,6 +10,10 @@ import Employer from './components/employer/Employer';
 import Unathorized from './components/errorpages/Unathorized';
 import Missing from './components/errorpages/Missing';
 import RequireAuth from './components/RequireAuth';
+import Users from './components/admin/userspage/Users';
+import Profile from './components/admin/profile/Profile';
+import Jobs from './components/admin/jobs/Jobs';
+import UserIdProfile from './components/admin/userspage/UserIdProfile';
 
 const ROLES = {
   VISITOR: 'VISITOR',
@@ -27,11 +31,14 @@ function App() {
         {/*Public routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/unauthorized" element={<Unathorized />} />
-        <Route path="/" element={<Home />} />
 
         {/*Protected routes*/}
         <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<Admin />} />
+          <Route path="admin/users" element={<Users />} />
+          <Route path="admin/users/:id" element={<UserIdProfile />} />
+          <Route path="admin/jobs" element={<Jobs />} />
+          <Route path="admin/profile" element={<Profile />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={[ROLES.POTENTIAL_EMPLOYEE]} />}>
           <Route path="user" element={<User />} />

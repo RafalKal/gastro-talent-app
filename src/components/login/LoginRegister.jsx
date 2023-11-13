@@ -4,8 +4,10 @@ import Login from './Login';
 import Register from './Register';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
+
+
+
 const LoginRegister = () => {
     const [type, setType] = useState("signIn");
 

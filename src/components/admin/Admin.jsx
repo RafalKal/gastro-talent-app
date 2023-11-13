@@ -2,7 +2,9 @@
 
 const Admin = () => {
     return (
-        <div>ADMIN</div>
+        <div>
+            <div>Strona główna Admina</div>
+        </div>
     );
 };
 
