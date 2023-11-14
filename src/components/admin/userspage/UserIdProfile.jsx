@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from "../../../api/axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+
 const UserIdProfile = () => {
 
     const { id } = useParams();
-    const [usersData, setUsersData] = useState([]);
+    const [employeesData, setEmployeesData] = useState([]);
     const navigate = useNavigate();
+    const effectRan = useRef(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -19,48 +21,61 @@ const UserIdProfile = () => {
                     return;
                 }
 
-                const response = await axios.get(`/api/v1/users/${id}`, {
+                const response = await axios.get(`/api/employees/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
                 });
 
-                setUsersData(response.data.content);
-                console.log(response.data.content);
+                setEmployeesData(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
 
-        fetchUserData();
-    }, [id]);
+        if (effectRan.current === false) {
+            fetchUserData();
+            effectRan.current = true;
+        }
+    }, [id, effectRan]);
 
     return (
         <div>
             <Button variant="primary" onClick={() => navigate(-1)}>
-                Go Back
+                Wróć do poprzedniej strony
             </Button>
             <Table responsive="sm">
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Email</th>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Role</th>
-                        <th>Akcje</th>
+                        <th>Imię nazwisko</th>
+                        <th>Data urodzenia</th>
+                        <th>Numer telefonu</th>
+                        <th>Adres zamieszkania</th>
+                        <th>Profile</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {usersData.map((user, index) => (
-                        <tr key={index}>
-                            <td>{user.id}</td>
-                            <td>{user.email}</td>
-                            <td>{user.firstname}</td>
-                            <td>{user.lastname}</td>
-                            <td>{user.role}</td>
-                        </tr>
-                    ))}
+                    <tr>
+                        <td>{employeesData.email}</td>
+                        <td>{employeesData.firstname} {employeesData.lastname}</td>
+                        <td>{employeesData.dateOfBirth}</td>
+                        <td>{employeesData.phoneNumber}</td>
+                        <td>
+                            {employeesData.address ? (
+                                <div>
+                                    <p>Ulica: {employeesData.address.street}</p>
+                                    <p>Numer domu: {employeesData.address.houseNumber}</p>
+                                    <p>Miasto: {employeesData.address.city}</p>
+                                    <p>Kod pocztowy: {employeesData.address.postalCode}</p>
+                                </div>
+                            ) : (
+                                <p>Nie ma adresu</p>
+                            )}
+                        </td>
+                        <td>{employeesData.profiles}pewno nic bo nie ma</td>
+                    </tr>
                 </tbody>
             </Table>
         </div>
@@ -68,3 +83,4 @@ const UserIdProfile = () => {
 };
 
 export default UserIdProfile;
+

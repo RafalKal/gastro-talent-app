@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 

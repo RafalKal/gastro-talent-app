@@ -1,8 +1,11 @@
+import JobCard from "../../home/JobCard";
+
 const Jobs = () => {
     return (
         <div>
-            <div>Lista</div>
-            <div>Prac</div>
+            <JobCard />
+            <JobCard />
+            <JobCard />
         </div>
     );
 };

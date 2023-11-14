@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { Container, Row, Col, Form, InputGroup, Dropdown, Button, Card } from 'react-bootstrap';
-import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
+import React from 'react'
+import { Container, Row, Col, Form, InputGroup, Dropdown, Button } from 'react-bootstrap';
 import './home.css';
 import JobCard from './JobCard';
 import Filter from './Filter';

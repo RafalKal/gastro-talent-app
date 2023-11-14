@@ -1,13 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from "react-icons/fa";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import Swal from 'sweetalert2';
 import axios from "../../api/axios";
 
 const USER_REGEX = /^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ][a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]{3,20}$/;
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{4,20}$/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const NIP_REGEX = /^[0-9]{10}$/;
 const REGON_9_REGEX = /^[0-9]{9}$/;
@@ -17,7 +16,6 @@ const REGISTER_URL = "/api/v1/auth/register";
 const Register = () => {
 
     const userRef = useRef();
-    const errorRef = useRef();
 
     const [firstName, setFirstName] = useState("");
     const [validFirstName, setValidFirstName] = useState(false);
@@ -62,8 +60,6 @@ const Register = () => {
     const [dateEstablishmentCompany, setDateEstablishmentCompany] = useState("");
     const [validDateEstablishmentCompany, setValidDateEstablishmentCompany] = useState(false);
     const [dateEstablishmentCompanyFocus, setDateEstablishmentCompanyFocus] = useState(false);
-
-    const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
         userRef.current.focus();
@@ -135,40 +131,33 @@ const Register = () => {
         console.log(matchPassword);
     }, [password, matchPassword])
 
-    useEffect(() => {
-        setErrorMsg("");
-    }, [firstName, lastName, email, password, matchPassword]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
-        if (!validFirstName || !validLastName || !validEmail || !validBirth || !validPassword || !validMatch || !validRole) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Błąd',
-                text: 'Niepoprawne dane logowania',
-            });
-            return;
-        }
-
         try {
-            const userData = {
-                firstname: firstName,
-                lastname: lastName,
+            let userData = {
                 email,
                 password,
-                dateOfBirth: birth,
                 role,
             };
 
-            if (role === "POTENTIAL_EMPLOYER") {
-                userData.nip = nip;
-                userData.dateEstablishmentCompany = dateEstablishmentCompany;
-                userData.companyName = companyName;
-                userData.regon = regon;
+            if (role === "POTENTIAL_EMPLOYEE") {
+                userData = {
+                    ...userData,
+                    firstname: firstName,
+                    lastname: lastName,
+                    dateOfBirth: birth,
+                };
+            } else if (role === "POTENTIAL_EMPLOYER") {
+                userData = {
+                    ...userData,
+                    nip,
+                    dateEstablishmentCompany,
+                    companyName,
+                    regon,
+                };
             }
-            console.log("User Data:", userData); // Dodaj to logowanie
+            console.log(userData);
             const response = await axios.post(REGISTER_URL, JSON.stringify(userData), {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -211,7 +200,6 @@ const Register = () => {
         <div className="form-container sign-up-container">
             <form onSubmit={handleSubmit} className="loginForm">
                 <h1>Rejestracja</h1>
-
                 <label htmlFor="role">
                     Rola
                     {validRole && (
@@ -251,10 +239,6 @@ const Register = () => {
                     )}
                 </p>
 
-
-
-
-                {/* Sekcja dla POTENTIAL_EMPLOYEE */}
                 {role === "POTENTIAL_EMPLOYEE" && (
                     <>
                         <label htmlFor="firstName">
@@ -317,6 +301,7 @@ const Register = () => {
                             )}
                         </p>
 
+
                         <label htmlFor="email">
                             Email
                             {validEmail && (
@@ -346,6 +331,7 @@ const Register = () => {
                                 </>
                             )}
                         </p>
+
 
                         <label htmlFor="birth">
                             Data urodzenia
@@ -443,69 +429,8 @@ const Register = () => {
                     </>
                 )}
 
-                {/* Sekcja dla POTENTIAL_EMPLOYER */}
                 {role === "POTENTIAL_EMPLOYER" && (
                     <>
-                        <label htmlFor="firstName">
-                            Imię
-                            {validFirstName && (
-                                <FontAwesomeIcon icon={faCheck} className="valid" />
-                            )}
-                            {!validFirstName && firstName && (
-                                <FontAwesomeIcon icon={faTimes} className={firstName ? "invalid" : "hide"} />
-                            )}
-                        </label>
-                        <input
-                            className="loginInput"
-                            type="text"
-                            id="firstName"
-                            autoComplete="off"
-                            onChange={(e) => setFirstName(e.target.value)}
-                            value={firstName}
-                            required
-                            aria-invalid={validFirstName ? "false" : "true"}
-                            aria-describedby="firstNameNote"
-                            onFocus={() => setFirstNameFocus(true)}
-                            onBlur={() => setFirstNameFocus(false)}
-                        /><p id="firstNameNote" className={FirstNameFocus && firstName && !validFirstName ? "instructions" : "offscreen"}>
-                            {!validFirstName && firstName && (
-                                <>
-                                    <span id="registerFormSpan">Imię musi mieć co najmniej 4 znaki</span>
-                                </>
-                            )}
-                        </p>
-
-
-                        <label htmlFor="email">
-                            Nazwisko
-                            {validLastName && (
-                                <FontAwesomeIcon icon={faCheck} className="valid" />
-                            )}
-                            {!validLastName && lastName && (
-                                <FontAwesomeIcon icon={faTimes} className={lastName ? "invalid" : "hide"} />
-                            )}
-                        </label>
-                        <input
-                            className="loginInput"
-                            type="text"
-                            id="lastName"
-                            autoComplete="off"
-                            onChange={(e) => setLastName(e.target.value)}
-                            value={lastName}
-                            required
-                            aria-invalid={validLastName ? "false" : "true"}
-                            aria-describedby="lastNameNote"
-                            onFocus={() => setLastNameFocus(true)}
-                            onBlur={() => setLastNameFocus(false)}
-                        />
-                        <p id="lastNameNote" className={LastNameFocus && lastName && !validLastName ? "instructions" : "offscreen"}>
-                            {!validLastName && lastName && (
-                                <>
-                                    <span id="registerFormSpan">Nazwisko musi mieć co najmniej 4 znaki</span>
-                                </>
-                            )}
-                        </p>
-
                         <label htmlFor="email">
                             Email
                             {validEmail && (
@@ -532,36 +457,6 @@ const Register = () => {
                             {!validEmail && email && (
                                 <>
                                     <span id="registerFormSpan">Email musi być w formacie example@example.com</span>
-                                </>
-                            )}
-                        </p>
-
-                        <label htmlFor="birth">
-                            Data urodzenia
-                            {validBirth && (
-                                <FontAwesomeIcon icon={faCheck} className="valid" />
-                            )}
-                            {!validBirth && birth && (
-                                <FontAwesomeIcon icon={faTimes} className="invalid" />
-                            )}
-                        </label>
-                        <input
-                            className="loginInput"
-                            type="date"
-                            id="birth"
-                            autoComplete="off"
-                            onChange={(e) => setBirth(e.target.value)}
-                            value={birth}
-                            required
-                            aria-invalid={validBirth ? "false" : "true"}
-                            aria-describedby="birthNote"
-                            onFocus={() => setBirthFocus(true)}
-                            onBlur={() => setBirthFocus(false)}
-                        />
-                        <p id="birthNote" className={birthFocus && birth && !validBirth ? "instructions" : "offscreen"}>
-                            {!validBirth && birth && (
-                                <>
-                                    <span id="registerFormSpan">Data urodzenia nie może być w przyszłości</span>
                                 </>
                             )}
                         </p>
@@ -597,6 +492,7 @@ const Register = () => {
                             )}
                         </p>
 
+
                         <label htmlFor="regon">
                             Numer REGON
                             {validRegon && (
@@ -627,7 +523,7 @@ const Register = () => {
                             )}
                         </p>
 
-                        {/* Data założenia firmy */}
+
                         <label htmlFor="dateEstablishmentCompany">
                             Data założenia firmy
                             {validDateEstablishmentCompany && (
@@ -658,6 +554,7 @@ const Register = () => {
                             )}
                         </p>
 
+
                         <label htmlFor="nip">
                             NIP
                             {validNip && (
@@ -687,6 +584,7 @@ const Register = () => {
                                 </>
                             )}
                         </p>
+
 
                         <label htmlFor="password">
                             Hasło
@@ -750,7 +648,7 @@ const Register = () => {
                             )}
                         </p>
 
-                        <button disabled={!validFirstName || !validLastName || !validEmail || !validBirth || !validPassword || !validMatch || !validRole || !validCompanyName || !validDateEstablishmentCompany || !validNip || !validRegon ? true : false} className="loginButton">Zarejestruj się</button>
+                        <button disabled={!validEmail || !validPassword || !validMatch || !validRole || !validCompanyName || !validDateEstablishmentCompany || !validNip || !validRegon ? true : false} className="loginButton">Zarejestruj się</button>
                     </>
                 )}
 

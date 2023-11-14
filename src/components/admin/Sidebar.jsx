@@ -1,16 +1,16 @@
 // Importujemy potrzebne komponenty i funkcje
 import React from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
-import { Outlet, Link, Route } from 'react-router-dom';
+import { Outlet, Link, } from 'react-router-dom';
+import './sidebar.css';
 
-// Komponent reprezentujący pojedynczy element sidebaru
 const SidebarItem = ({ to, label }) => (
     <Nav.Link as={Link} to={to}>{label}</Nav.Link>
 );
 
 const SidebarPage = () => {
     return (
-        <Container fluid className="h-100">
+        <Container fluid className="adminContainer">
             <Row className="h-100">
                 <Col md={3} className="bg-light sidebar h-100">
                     <Nav defaultActiveKey="/home" className="flex-column">

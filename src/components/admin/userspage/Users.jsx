@@ -1,39 +1,47 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-
 import axios from "../../../api/axios";
-const USERS_URL = '/api/v1/users'
+import Pagination from '../../Pagination';
+
+import "./users.css";
+
+const USERS_URL = '/api/v1/users';
 
 const Users = () => {
-
     const [usersData, setUsersData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const effectRan = useRef(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (effectRan.current === false) {
-            const fetchData = async () => {
-                try {
-                    const token = localStorage.getItem('token');
-                    const response = await axios.get(USERS_URL, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        },
-                    });
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${USERS_URL}?pageNumber=${currentPage}&pageSize=5`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                });
 
-                    setUsersData(response.data.content);
-                    console.log(response.data.content);
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                }
-            };
+                setUsersData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                console.log(response.data.content);
+                console.log(response.data.totalPages);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        if (effectRan.current === false) {
             fetchData();
-            return () => {
-                effectRan.current = true;
-            };
+            effectRan.current = true;
+        } else {
+            fetchData();
         }
-    }, []);
+    }, [currentPage]);
 
     const handleEdit = (userId) => {
         alert(`Edit user with ID: ${userId}`);
@@ -48,15 +56,19 @@ const Users = () => {
         navigate(`/admin/users/${userId}`);
     };
 
+    const handlePageChange = (newPage) => {
+        if (newPage >= 0 && newPage < totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
 
     return (
-        <div>
-            <Table responsive="sm">
+        <div className="table-container" >
+            <Table responsive="sm" className="table">
                 <thead>
-                    <tr>
+                    <tr className="table-header">
                         <th>Id</th>
                         <th>Email</th>
-                        <th>Imię i nazwisko</th>
                         <th>Rola</th>
                         <th>Akcje</th>
                     </tr>
@@ -66,8 +78,7 @@ const Users = () => {
                         <tr key={index}>
                             <td>{user.id}</td>
                             <td>{user.email}</td>
-                            <td>{user.firstname} {user.lastname}</td>
-                            <td>{user.role}</td>
+                            <td>{user.role === "POTENTIAL_EMPLOYEE" ? "Employee" : user.role === "POTENTIAL_EMPLOYER" ? "Employer" : "Admin"}</td>
                             <td>
                                 <button onClick={() => handleEdit(user.id)}>Edit</button>
                                 <button onClick={() => handleDelete(user.id)}>Delete</button>
@@ -77,6 +88,13 @@ const Users = () => {
                     ))}
                 </tbody>
             </Table>
+
+
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 };

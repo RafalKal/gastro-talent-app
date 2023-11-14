@@ -32,7 +32,6 @@ function App() {
         {/*Public routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/unauthorized" element={<Unathorized />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
         {/*Protected routes*/}
         <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<Admin />} />
@@ -52,6 +51,7 @@ function App() {
         <Route path="*" element={<Missing />} />
       </Route>
       <Route path="/login" element={<LoginRegister />} />
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
     </Routes>
   );
 }

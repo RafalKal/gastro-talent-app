@@ -1,0 +1,31 @@
+/* Users.css */
+
+/* Stylizacja tabeli */
+.table-container {
+    margin-top: 20px;
+  }
+  
+  .table-header {
+    background-color: #4293e5;
+  }
+  
+  .table th, .table td {
+    text-align: center;
+  }
+  
+  /* Paginacja */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    margin: 0 5px;
+  }
+  
+  .pagination span {
+    margin: 0 10px;
+  }
+  

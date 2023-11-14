@@ -1,0 +1,13 @@
+.adminContainer{
+    height:1000px;
+
+}
+
+.bg-light.sidebar{
+    height:1000px;
+    width:250px;   
+}
+
+.main-content{
+    margin-left:90px;
+}
