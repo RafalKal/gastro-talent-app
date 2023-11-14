@@ -61,6 +61,11 @@ public class UserCriteriaRepository {
           criteriaBuilder.like(userRoot.get("email"), "%" + userSearchCriteria.getEmail() + "%"));
     }
 
+    if (Objects.nonNull(userSearchCriteria.getRole())) {
+      predicates.add(
+              criteriaBuilder.equal(userRoot.get("role"), userSearchCriteria.getRole()));
+    }
+
     if (Objects.nonNull(userSearchCriteria.getPhoneNumber())) {
       predicates.add(
           criteriaBuilder.equal(userRoot.get("phoneNumber"), userSearchCriteria.getPhoneNumber()));
