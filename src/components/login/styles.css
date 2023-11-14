@@ -286,3 +286,11 @@ span#registerFormSpan{
   font-size:14px;
   color:rgb(255, 50, 50);
 }
+
+.loginInput1{
+  margin-top:15px;
+  background-color: #eee;
+    border: none;
+    padding: 6px 2px;
+    width: 100%;
+}

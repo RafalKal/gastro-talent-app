@@ -64,7 +64,7 @@ const Users = () => {
                 <tbody>
                     {usersData.map((user, index) => (
                         <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{user.id}</td>
                             <td>{user.email}</td>
                             <td>{user.firstname} {user.lastname}</td>
                             <td>{user.role}</td>

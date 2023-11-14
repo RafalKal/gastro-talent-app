@@ -69,20 +69,8 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="loginForm">
                 <p ref={errorRef} className={errorMsg ? "errmsg" : "offscreen"} aria-live="assertive"> {errorMsg} </p>
                 <h1>Logowanie</h1>
-                <div className="social-container">
-                    <a href="#" className="social">
-                        <FaFacebookF />
-                    </a>
-                    <a href="#" className="social">
-                        <FaGooglePlusG />
-                    </a>
-                    <a href="#" className="social">
-                        <FaLinkedinIn />
-                    </a>
-                </div>
-                <span className="loginSpan">lub użyj swojego konta</span>
                 <input
-                    className="loginInput"
+                    className="loginInput1"
                     type="email"
                     placeholder="Email"
                     name="email"
@@ -92,14 +80,14 @@ const Login = () => {
                     required
                 />
                 <input
-                    className="loginInput"
+                    className="loginInput1"
                     type="password"
                     name="password"
                     placeholder="••••••••••"
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
-                <a href="#" className="loginA">Zapomniałeś hasła?</a>
+                <a href="/forgotpassword" className="loginA">Zapomniałeś hasła?</a>
                 <button className="loginButton">Zaloguj się</button>
             </form>
         </div>

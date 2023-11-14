@@ -14,7 +14,7 @@ import Users from './components/admin/userspage/Users';
 import Profile from './components/admin/profile/Profile';
 import Jobs from './components/admin/jobs/Jobs';
 import UserIdProfile from './components/admin/userspage/UserIdProfile';
-import Register from './components/Register';
+import ForgotPassword from './components/login/ForgotPassword';
 
 const ROLES = {
   VISITOR: 'VISITOR',
@@ -32,7 +32,7 @@ function App() {
         {/*Public routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/unauthorized" element={<Unathorized />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
         {/*Protected routes*/}
         <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<Admin />} />
