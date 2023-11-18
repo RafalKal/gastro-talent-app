@@ -11,9 +11,14 @@ import com.java.gastrotalentapp.repository.EmployeeRepository;
 import com.java.gastrotalentapp.repository.EmployerRepository;
 import com.java.gastrotalentapp.repository.UserRepository;
 import com.java.gastrotalentapp.repository.criteria.UserCriteriaRepository;
+import com.java.gastrotalentapp.requests_responses.requests.UserPasswordRequest;
 import com.java.gastrotalentapp.requests_responses.requests.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,6 +31,9 @@ public class UserService {
   private final UserCriteriaRepository userCriteriaRepository;
   private final EmployeeRepository employeeRepository;
   private final EmployerRepository employerRepository;
+  private final AuthenticationManager authenticationManager;
+  private final PasswordEncoder passwordEncoder;
+
 
   public Page<User> getUsers(UserPage userPage, UserSearchCriteria userSearchCriteria) {
     return userCriteriaRepository.findAllWithFilters(userPage, userSearchCriteria);
@@ -71,4 +79,15 @@ public class UserService {
   }
 
   public void deleteUser(Long id) { userRepository.deleteById(id);}
+
+  public void updatePassword(UserPasswordRequest request) {
+    authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getOldPassword()));
+    var user =
+            userRepository
+                    .findByEmail(request.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    userRepository.save(user);
+  }
 }

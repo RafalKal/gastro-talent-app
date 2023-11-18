@@ -5,6 +5,7 @@ import com.java.gastrotalentapp.model.entity.User;
 import com.java.gastrotalentapp.model.entity.criteria.UserSearchCriteria;
 import com.java.gastrotalentapp.model.entity.page.UserPage;
 import com.java.gastrotalentapp.repository.UserRepository;
+import com.java.gastrotalentapp.requests_responses.requests.UserPasswordRequest;
 import com.java.gastrotalentapp.requests_responses.requests.UserUpdateRequest;
 import com.java.gastrotalentapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -55,15 +56,22 @@ public class UserController {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  @PutMapping
+  public ResponseEntity<?> updatePassword(
+      @Valid @RequestBody UserPasswordRequest userPasswordRequest) {
+      userService.updatePassword(userPasswordRequest);
+      return ResponseEntity.ok().build();
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-      return userService
-              .getUserById(id)
-              .map(
-                      existingEmployee -> {
-                          userService.deleteUser(id);
-                          return ResponseEntity.ok().build();
-                      })
-              .orElseGet(() -> ResponseEntity.notFound().build());
+    return userService
+        .getUserById(id)
+        .map(
+            existingEmployee -> {
+              userService.deleteUser(id);
+              return ResponseEntity.ok().build();
+            })
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 }
