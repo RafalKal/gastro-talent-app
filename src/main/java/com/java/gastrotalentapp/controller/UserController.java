@@ -59,8 +59,8 @@ public class UserController {
   @PutMapping
   public ResponseEntity<?> updatePassword(
       @Valid @RequestBody UserPasswordRequest userPasswordRequest) {
-      userService.updatePassword(userPasswordRequest);
-      return ResponseEntity.ok().build();
+    userService.updatePassword(userPasswordRequest);
+    return ResponseEntity.ok().build();
   }
 
   @DeleteMapping("/{id}")

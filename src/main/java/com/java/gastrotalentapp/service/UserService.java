@@ -34,7 +34,6 @@ public class UserService {
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
 
-
   public Page<User> getUsers(UserPage userPage, UserSearchCriteria userSearchCriteria) {
     return userCriteriaRepository.findAllWithFilters(userPage, userSearchCriteria);
   }
@@ -56,37 +55,39 @@ public class UserService {
         updatedUser = employer;
         break;
       case POTENTIAL_EMPLOYEE:
-        Employee employee= employeeRepository.getById(user.getId());
+        Employee employee = employeeRepository.getById(user.getId());
         employee.setFirstname(request.getFirstname());
         employee.setLastname(request.getLastname());
         employee.setDateOfBirth(request.getDateOfBirth());
 
         updatedUser = employee;
         break;
-//      case ADMIN:
-//        user =
-//            Admin.builder()
-//                .firstname(request.getFirstname())
-//                .lastname(request.getLastname())
-//                .dateOfBirth(request.getDateOfBirth())
-//                .build();
-//
-//        break;
+        //      case ADMIN:
+        //        user =
+        //            Admin.builder()
+        //                .firstname(request.getFirstname())
+        //                .lastname(request.getLastname())
+        //                .dateOfBirth(request.getDateOfBirth())
+        //                .build();
+        //
+        //        break;
       default:
         throw new InvalidRoleException("Provided role is not supported.");
     }
     return userRepository.save(updatedUser);
   }
 
-  public void deleteUser(Long id) { userRepository.deleteById(id);}
+  public void deleteUser(Long id) {
+    userRepository.deleteById(id);
+  }
 
   public void updatePassword(UserPasswordRequest request) {
     authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getOldPassword()));
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getOldPassword()));
     var user =
-            userRepository
-                    .findByEmail(request.getEmail())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        userRepository
+            .findByEmail(request.getEmail())
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userRepository.save(user);
   }
