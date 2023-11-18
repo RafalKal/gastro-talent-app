@@ -1,37 +1,41 @@
 package com.java.gastrotalentapp.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.java.gastrotalentapp.model.Education;
 import com.java.gastrotalentapp.model.ProfessionalExperience;
 import java.time.LocalDateTime;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Data
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@SuperBuilder(toBuilder = true)
 @Entity
 public abstract class EmployeeProfile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  protected Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
-    private Employee employee;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "employee_id")
+  private Employee employee;
 
-    @Embedded
-    private Education education;
+  @Embedded private Education education;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "employee_professional_experiences", joinColumns = @JoinColumn(name = "employee_id"))
-    private Set<ProfessionalExperience> professionalExperiences;
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(
+      name = "employee_professional_experiences",
+      joinColumns = @JoinColumn(name = "employee_id"))
+  private Set<ProfessionalExperience> professionalExperiences;
 
-  //  @JsonIgnore
-  //  @ManyToMany(mappedBy = "applicants", fetch = FetchType.LAZY)
-  //  private Set<JobPosting> jobApplications;
+  @JsonIgnore
+  @ManyToMany(mappedBy = "applicants", fetch = FetchType.LAZY)
+  private Set<JobPosting> jobApplications;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreatedDate

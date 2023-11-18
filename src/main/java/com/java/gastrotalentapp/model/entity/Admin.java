@@ -15,10 +15,9 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Admin extends User {
 
-    @NotBlank
-    private String firstname;
+  @NotBlank
+  private String firstname;
 
-    @NotBlank
-    private String lastname;
-
+  @NotBlank 
+  private String lastname;
 }

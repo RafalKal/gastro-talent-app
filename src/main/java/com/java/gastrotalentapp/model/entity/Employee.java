@@ -24,7 +24,7 @@ public class Employee extends User {
   @NotBlank
   private String firstname;
 
-  @NotBlank
+  @NotBlank 
   private String lastname;
 
   @OneToMany(

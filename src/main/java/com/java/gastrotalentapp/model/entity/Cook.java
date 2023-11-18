@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-// @SuperBuilder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @Entity
 public class Cook extends EmployeeProfile {
 
@@ -18,18 +18,18 @@ public class Cook extends EmployeeProfile {
   @CollectionTable(name = "cook_cooking_styles", joinColumns = @JoinColumn(name = "cook_id"))
   @Enumerated(EnumType.STRING)
   @Column(name = "cooking_style")
-  private Set<CookingStyle> cookingStyles; // Zbiór stylów gotowania
+  private Set<CookingStyle> cookingStyles;                // Zbiór stylów gotowania
 
-  private Integer yearsOfExperience; // Lata doświadczenia w zawodzie
+  private Integer yearsOfExperience;                      // Lata doświadczenia w zawodzie
 
-  private Boolean isCertifiedSousChef; // Czy jest certyfikowanym szefem kuchni
+  private Boolean isCertifiedSousChef;                    // Czy jest certyfikowanym szefem kuchni
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "cook_signature_dishes", joinColumns = @JoinColumn(name = "cook_id"))
   @Column(name = "signature_dish")
   @Size(min = 1, max = 3)
   private Set<String>
-      signatureDishes; // Zbiór sygnaturowych (popisowych) dań kucharza ograniczony do 3 pozycji
+      signatureDishes;                                   // Zbiór sygnaturowych (popisowych) dań kucharza ograniczony do 3 pozycji
 
-  private Boolean canHandlePressure; // Czy potrafi pracować pod presją
+  private Boolean canHandlePressure;                     // Czy potrafi pracować pod presją
 }

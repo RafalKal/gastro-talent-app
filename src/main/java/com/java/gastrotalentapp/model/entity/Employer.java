@@ -30,10 +30,10 @@ public class Employer extends User {
   @NotNull
   private LocalDate dateEstablishmentCompany;
 
-//  @OneToMany(
-//      mappedBy = "employer",
-//      cascade = CascadeType.ALL,
-//      orphanRemoval = true,
-//      fetch = FetchType.LAZY)
-//  private Set<JobPosting> jobPostings;
+    @OneToMany(
+        mappedBy = "employer",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY)
+    private Set<JobPosting> jobPostings;
 }

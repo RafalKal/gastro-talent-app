@@ -26,7 +26,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @DiscriminatorColumn(name = "user_type")
 public abstract class User implements UserDetails {
 
-  @Id @GeneratedValue
+  @Id
+  @GeneratedValue
   private Long id;
 
   @NotBlank
@@ -43,7 +44,7 @@ public abstract class User implements UserDetails {
 
   @Enumerated(EnumType.STRING)
   private Role role;
-  
+
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreatedDate
   private LocalDateTime createdAt;
@@ -97,4 +98,3 @@ public abstract class User implements UserDetails {
     updatedAt = LocalDateTime.now();
   }
 }
-

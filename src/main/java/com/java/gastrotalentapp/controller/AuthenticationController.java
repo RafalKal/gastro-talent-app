@@ -4,12 +4,11 @@ import com.java.gastrotalentapp.requests_responses.requests.AuthenticationReques
 import com.java.gastrotalentapp.requests_responses.requests.RegisterRequest;
 import com.java.gastrotalentapp.requests_responses.responses.AuthenticationResponse;
 import com.java.gastrotalentapp.service.AuthenticationService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/auth")

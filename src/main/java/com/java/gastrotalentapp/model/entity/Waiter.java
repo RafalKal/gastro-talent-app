@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-// @SuperBuilder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @Entity
 public class Waiter extends EmployeeProfile {
   private Boolean hasWineKnowledge;
