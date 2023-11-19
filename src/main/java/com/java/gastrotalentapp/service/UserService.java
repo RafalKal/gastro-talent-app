@@ -7,6 +7,7 @@ import com.java.gastrotalentapp.model.entity.Employer;
 import com.java.gastrotalentapp.model.entity.User;
 import com.java.gastrotalentapp.model.entity.criteria.UserSearchCriteria;
 import com.java.gastrotalentapp.model.entity.page.UserPage;
+import com.java.gastrotalentapp.repository.AdminRepository;
 import com.java.gastrotalentapp.repository.EmployeeRepository;
 import com.java.gastrotalentapp.repository.EmployerRepository;
 import com.java.gastrotalentapp.repository.UserRepository;
@@ -31,6 +32,7 @@ public class UserService {
   private final UserCriteriaRepository userCriteriaRepository;
   private final EmployeeRepository employeeRepository;
   private final EmployerRepository employerRepository;
+  private final AdminRepository adminRepository;
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
 
@@ -62,15 +64,14 @@ public class UserService {
 
         updatedUser = employee;
         break;
-        //      case ADMIN:
-        //        user =
-        //            Admin.builder()
-        //                .firstname(request.getFirstname())
-        //                .lastname(request.getLastname())
-        //                .dateOfBirth(request.getDateOfBirth())
-        //                .build();
-        //
-        //        break;
+      case ADMIN:
+        Admin admin = adminRepository.getById(user.getId());
+        admin.setFirstname(request.getFirstname());
+        admin.setLastname(request.getLastname());
+        admin.setDateOfBirth(request.getDateOfBirth());
+
+        updatedUser = admin;
+        break;
       default:
         throw new InvalidRoleException("Provided role is not supported.");
     }
