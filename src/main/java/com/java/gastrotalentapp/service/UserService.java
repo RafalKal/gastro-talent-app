@@ -44,7 +44,7 @@ public class UserService {
     return userRepository.findById(id);
   }
 
-  public User saveUser(User user, UserUpdateRequest request) {
+  public User updateUser(User user, UserUpdateRequest request) {
     User updatedUser;
     switch (user.getRole()) {
       case POTENTIAL_EMPLOYER:
