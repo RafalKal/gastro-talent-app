@@ -15,6 +15,7 @@ import Profile from './components/admin/profile/Profile';
 import Jobs from './components/admin/jobs/Jobs';
 import UserIdProfile from './components/admin/userspage/UserIdProfile';
 import ForgotPassword from './components/login/ForgotPassword';
+import JobView from './components/home/JobView';
 
 const ROLES = {
   VISITOR: 'VISITOR',
@@ -32,6 +33,7 @@ function App() {
         {/*Public routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/unauthorized" element={<Unathorized />} />
+        <Route path="/jobs/:id" element={<JobView />} />
         {/*Protected routes*/}
         <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<Admin />} />
