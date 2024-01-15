@@ -1,0 +1,52 @@
+.job-image {
+    width: 100%;
+    height: 100%; /* Wysokość 100% dostosowuje się do kontenera */
+    object-fit: cover; /* Przycina obraz do kontenera, zachowując proporcje */
+}
+
+.job-info-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.job-view-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.employee-details {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.details-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.experience,
+.skills,
+.about-me {
+    width: 30%; /* Ustaw szerokość sekcji, możesz dostosować według potrzeb */
+    margin-top: 20px;
+}
+
+.skills ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.skills li {
+    margin-bottom: 5px;
+}

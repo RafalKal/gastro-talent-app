@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Navigate, useNavigate } from 'react-router-dom';
 import './jobcard.css';
 import { FaSignInAlt } from 'react-icons/fa';
 import { GrLocation } from 'react-icons/gr';
@@ -7,13 +8,16 @@ import { HiOutlineClock } from 'react-icons/hi';
 import { TbPigMoney } from 'react-icons/tb';
 import { BiCalendarCheck } from 'react-icons/bi';
 
-function JobCard() {
+function JobCard({jobId}) {
+     const navigate = useNavigate();
+
+     const handleCardClick = () => {
+         navigate(`/jobs/${jobId}`)
+     }
+    
     return (
-        <Card className="custom-card-body">
+        <Card className="custom-card-body" onClick={handleCardClick}>
             <Row>
-                <Col md={3} className="d-flex justify-content-center align-items-center" >
-                    <Card.Img src="src/assets/major.jpeg" alt="Job Image" className="job-image" />
-                </Col>
                 <Col md={9}>
                     <Card.Body>
                         <Card.Title className="jobTitle">Szkolna 17</Card.Title>
@@ -32,6 +36,7 @@ function JobCard() {
                                     <span className="mx-2"></span>
                                     <BiCalendarCheck className="nav-icon mb-1" />
                                     <a className="iconText">1 dzień temu</a>
+                                    <Button className="jobApply">Aplikuj</Button>
                                 </Col>
                             </Row>
                         </div>
