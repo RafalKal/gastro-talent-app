@@ -1,5 +1,6 @@
 package com.java.gastrotalentapp.controller;
 
+import com.java.gastrotalentapp.enums.Profession;
 import com.java.gastrotalentapp.model.entity.EmployeeProfile;
 import com.java.gastrotalentapp.service.EmployeeProfileService;
 import java.util.List;
@@ -37,4 +38,10 @@ public class EmployeeProfileController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
+
+//  @GetMapping("/test/{id}")
+//  public ResponseEntity<List<EmployeeProfile>> test() {
+//    employeeProfileService.
+//    return new ResponseEntity<>(employees, HttpStatus.OK);
+//  }
 }

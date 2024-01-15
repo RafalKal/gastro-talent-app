@@ -1,6 +1,7 @@
 package com.java.gastrotalentapp.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.java.gastrotalentapp.enums.Profession;
 import com.java.gastrotalentapp.model.Education;
 import com.java.gastrotalentapp.model.ProfessionalExperience;
 import java.time.LocalDateTime;
@@ -25,7 +26,8 @@ public abstract class EmployeeProfile {
   @JoinColumn(name = "employee_id")
   private Employee employee;
 
-  @Embedded private Education education;
+  @Embedded
+  private Education education;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(
@@ -44,6 +46,10 @@ public abstract class EmployeeProfile {
   @Column(name = "updated_at", nullable = false)
   @LastModifiedDate
   private LocalDateTime updatedAt;
+
+  @Column(name = "profession")
+  @Enumerated
+  private Profession profession;
 
   public String getProfession() {
     String[] classNameParts = getClass().getCanonicalName().split("\\.");

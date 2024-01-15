@@ -1,5 +1,6 @@
 package com.java.gastrotalentapp.builders;
 
+import com.java.gastrotalentapp.enums.Profession;
 import com.java.gastrotalentapp.model.entity.Cook;
 import com.java.gastrotalentapp.repository.UserRepository;
 import com.java.gastrotalentapp.requests_responses.requests.CookRequest;
@@ -26,6 +27,7 @@ public class CookBuilder {
         .isCertifiedSousChef(request.getIsCertifiedSousChef())
         .signatureDishes(request.getSignatureDishes())
         .yearsOfExperience(request.getYearsOfExperience())
+        .profession(Profession.COOK)
         .build();
   }
 

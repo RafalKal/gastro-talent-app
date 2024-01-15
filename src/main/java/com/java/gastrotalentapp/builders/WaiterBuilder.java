@@ -1,5 +1,6 @@
 package com.java.gastrotalentapp.builders;
 
+import com.java.gastrotalentapp.enums.Profession;
 import com.java.gastrotalentapp.model.entity.Waiter;
 import com.java.gastrotalentapp.repository.UserRepository;
 import com.java.gastrotalentapp.requests_responses.requests.WaiterRequest;
@@ -26,6 +27,7 @@ public class WaiterBuilder {
         .isCertifiedSommelier(request.getIsCertifiedSommelier())
         .isTrainedInMixology(request.getIsTrainedInMixology())
         .preferredServingStyle(request.getPreferredServingStyle())
+        .profession(Profession.WAITER)
         .build();
   }
 

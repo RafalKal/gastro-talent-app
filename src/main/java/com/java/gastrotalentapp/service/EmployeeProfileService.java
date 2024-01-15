@@ -1,18 +1,16 @@
 package com.java.gastrotalentapp.service;
 
-//import com.java.gastrotalentapp.builders.CookBuilder;
-import com.java.gastrotalentapp.builders.CookBuilder;
-import com.java.gastrotalentapp.model.entity.Cook;
+import com.java.gastrotalentapp.model.entity.Employee;
 import com.java.gastrotalentapp.model.entity.EmployeeProfile;
-//import com.java.gastrotalentapp.repository.CookRepository;
+import com.java.gastrotalentapp.model.entity.Waiter;
 import com.java.gastrotalentapp.repository.EmployeeProfileRepository;
+import com.java.gastrotalentapp.repository.EmployeeRepository;
 import com.java.gastrotalentapp.repository.UserRepository;
-import com.java.gastrotalentapp.requests_responses.requests.CookRequest;
 import java.util.List;
 import java.util.Optional;
-
-import com.java.gastrotalentapp.requests_responses.requests.EmployeeProfileRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeProfileService {
 
   private final EmployeeProfileRepository employeeProfileRepository;
-  private final UserRepository userRepository;
+  private final EmployeeRepository employeeRepository;
 
   public List<EmployeeProfile> getAllEmployeeProfiles() {
     return employeeProfileRepository.findAll();
@@ -39,5 +37,27 @@ public class EmployeeProfileService {
     } else {
       return false;
     }
+  }
+
+  @EventListener(ContextRefreshedEvent.class)
+  public void onApplicationEvent(ContextRefreshedEvent event) {
+    // TODO: getAllEmployeeProfiles();
+    // TODO: getEmployeeProfile(Long id);
+    // TODO: getEmployeeProfilesByProfession();
+    // TODO: getEmployeeProfilesBy[...]]();
+    // List<EmployeeProfile> employeeProfiles = employeeProfileRepository.
+//    Waiter waiter =
+//        Waiter.builder()
+//            .employee(employeeRepository.findById(null))
+//            .education()
+//            .professionalExperiences()
+//            .canHandleLargeParties()
+//            .hasWineKnowledge()
+//            .isTrainedInMixology()
+//            .isCertifiedSommelier()
+//            .preferredServingStyle()
+//            .canHandleLargeParties()
+//            .profession()
+//            .build();
   }
 }
