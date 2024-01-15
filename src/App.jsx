@@ -1,6 +1,7 @@
 import './App.css'
 import React from 'react';
 import User from './components/employee/User';
+import Settings from './components/employee/Settings';
 import { Routes, Route } from 'react-router-dom';
 import Home from './components/home/Home';
 import LoginRegister from './components/login/LoginRegister';
@@ -44,6 +45,7 @@ function App() {
         </Route>
         <Route element={<RequireAuth allowedRoles={[ROLES.POTENTIAL_EMPLOYEE]} />}>
           <Route path="user" element={<User />} />
+          <Route path="user/settings" element={<Settings />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['POTENTIAL_EMPLOYER']} />}>
           <Route path="employer" element={<Employer />} />

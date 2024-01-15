@@ -1,44 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './user.css';
+import 'font-awesome/css/font-awesome.min.css';
+import { Link } from 'react-router-dom';
+
+function createRatingStars(rating) {
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rating) {
+      stars.push(<i key={i} className="fa fa-star yellow-star"></i>);
+    } else {
+      stars.push(<i key={i} className="fa fa-star text-secondary"></i>);
+    }
+  }
+  return stars;
+}
 
 function User() {
-  useEffect(() => {
-    // Dodaj Bootstrap CSS do nagłówka dokumentu
-    const bootstrapCss = document.createElement('link');
-    bootstrapCss.href = '//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css';
-    bootstrapCss.rel = 'stylesheet';
-    document.head.appendChild(bootstrapCss);
-
-    // Dodaj jQuery i Bootstrap JS na końcu dokumentu
-    const jqueryScript = document.createElement('script');
-    jqueryScript.src = '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js';
-    document.body.appendChild(jqueryScript);
-
-    const bootstrapJs = document.createElement('script');
-    bootstrapJs.src = '//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js';
-    document.body.appendChild(bootstrapJs);
-
-    // Czyszczenie po odmontowaniu komponentu
-    return () => {
-      document.head.removeChild(bootstrapCss);
-      document.body.removeChild(jqueryScript);
-      document.body.removeChild(bootstrapJs);
-    };
-  }, []);
-
-  // Funkcja do tworzenia gwiazdek oceny
-  const createRatingStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      if (i <= rating) {
-        stars.push(<span key={i} className="fa fa-star checked"></span>);
-      } else {
-        stars.push(<span key={i} className="fa fa-star"></span>);
-      }
-    }
-    return stars;
-  };
-
+    
   return (
     <div className="container emp-profile">
       <form method="post">
@@ -54,7 +32,7 @@ function User() {
           </div>
           <div className="col-md-6">
             <div className="profile-head">
-              <h5>Kshiti Ghelani</h5>
+              <h5>Arek Karek</h5>
               <h6>Web Developer i Designer</h6>
               <p className="proile-rating">RANKING: <span>8/10</span></p>
               <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -62,13 +40,13 @@ function User() {
                   <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">O mnie</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Historia</a>
+                  <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Wymagania</a>
                 </li>
               </ul>
             </div>
           </div>
           <div className="col-md-2">
-            <input type="submit" className="profile-edit-btn" name="btnAddMore" value="Edytuj profil"/>
+            <Link to="/user/settings" className="profile-edit-btn">Edytuj profil</Link>
           </div>
         </div>
         <div className="row">
