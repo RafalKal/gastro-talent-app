@@ -1,6 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function  Settings() {
+function Ustawienia() {
+  const [formData, setFormData] = useState({
+    imie: 'Grażyna',
+    nazwisko: 'Kowalska',
+    email: 'grazyna.kowalska@gmail.com',
+    numerTelefonu: '123 456 789',
+    zawod: 'kucharz',
+    umiejetnosci: {
+      projektowanieStron: 4,
+      programowanieWeb: 5,
+      wordpress: 3,
+      wooCommerce: 4,
+      phpDotNet: 3,
+    },
+    wymagania: 'Wymagania użytkownika',
+    zdjecieProfilowe: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSkillChange = (nazwaUmiejetnosci, nowaWartosc) => {
+    setFormData({
+      ...formData,
+      umiejetnosci: {
+        ...formData.umiejetnosci,
+        [nazwaUmiejetnosci]: nowaWartosc,
+      },
+    });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({ ...formData, zdjecieProfilowe: reader.result });
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Przetwarzaj dane formularza lub wysyłaj je na serwer
+  };
+
   return (
     <div className="container rounded bg-white mt-5 mb-5">
       <div className="row">
@@ -9,69 +57,140 @@ function  Settings() {
             <img
               className="rounded-circle mt-5"
               width="150px"
-              src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+              src={formData.zdjecieProfilowe}
               alt="Profile"
             />
-            <span className="font-weight-bold">Edogaru</span>
-            <span className="text-black-50">edogaru@mail.com.my</span>
+            <input
+              type="file"
+              className="file btn btn-lg btn-primary"
+              onChange={handleFileChange}
+              accept="image/*"
+            />
           </div>
+        </div>
+       <div className="col-md-3 border-right">
+          {/* Zdjęcie profilowe i dane użytkownika */}
         </div>
         <div className="col-md-5 border-right">
           <div className="p-3 py-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="text-right">Profile Settings</h4>
+              <h4 className="text-right">Ustawienia profilu</h4>
             </div>
-            <div className="row mt-2">
-              <div className="col-md-6">
-                <label className="labels">Name</label>
-                <input type="text" className="form-control" placeholder="first name" value="" />
+            <form onSubmit={handleSubmit}>
+              <div className="row mt-2">
+                <div className="col-md-6">
+                  <label className="labels">Imię</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Imię"
+                    name="imie"
+                    value={formData.imie}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="labels">Nazwisko</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Nazwisko"
+                    name="nazwisko"
+                    value={formData.nazwisko}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
-              <div className="col-md-6">
-                <label className="labels">Surname</label>
-                <input type="text" className="form-control" value="" placeholder="surname" />
+              <div className="row mt-3">
+                <div className="col-md-12">
+                  <label className="labels">Numer Telefonu</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Wprowadź numer telefonu"
+                    name="numerTelefonu"
+                    value={formData.numerTelefonu}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="row mt-3">
-              <div className="col-md-12">
-                <label className="labels">Mobile Number</label>
-                <input type="text" className="form-control" placeholder="enter phone number" value="" />
+              <div className="row mt-4">
+                <div className="col-md-12">
+                  <label className="labels">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Wprowadź adres email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
-              <div className="col-md-12">
-                <label className="labels">Address Line 2</label>
-                <input type="text" className="form-control" placeholder="enter address line 1" value="" />
+              <div className="row mt-4">
+                <div className="col-md-12">
+                  <label className="labels">Zawód</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Wprowadź zawód"
+                    name="zawod"
+                    value={formData.zawod}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
-              {/* Pozostałe pola formularza */}
-            </div>
-            <div className="mt-5 text-center">
-              <button className="btn btn-primary profile-button" type="button">
-                Save Profile
-              </button>
-            </div>
+              <div className="row mt-5">
+                <div className="col-md-12">
+                  <label className="labels">Umiejętności</label>
+                  <div>
+                    <div className="d-flex align-items-center">
+                      <span className="mr-2"> kuchnia:</span>
+                      <input
+                        type="number"
+                        className="form-control"
+                        name="projektowanieStron"
+                        value={formData.umiejetnosci.projektowanieStron}
+                        onChange={(e) =>
+                          handleSkillChange('projektowanieStron', parseInt(e.target.value, 10))
+                        }
+                        min="0"
+                        max="5"
+                      />
+                    </div>
+                    {/* Powtórz powyższy blok dla innych umiejętności */}
+                  </div>
+                </div>
+              </div>
+              <div className="row mt-4">
+                <div className="col-md-12">
+                  <label className="labels">Wymagania</label>
+                  <textarea
+                    className="form-control"
+                    placeholder="Wymagania użytkownika"
+                    name="wymagania"
+                    value={formData.wymagania}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="mt-5 text-center">
+                <button className="btn btn-primary profile-button" type="submit">
+                  Zapisz profil
+                </button>
+              </div>
+            </form>
           </div>
         </div>
         <div className="col-md-4">
-          <div className="p-3 py-5">
-            <div className="d-flex justify-content-between align-items-center experience">
-              <span>Edit Experience</span>
-              <span className="border px-3 p-1 add-experience">
-                <i className="fa fa-plus"></i>&nbsp;Experience
-              </span>
-            </div>
-            <br />
-            <div className="col-md-12">
-              <label className="labels">Experience in Designing</label>
-              <input type="text" className="form-control" placeholder="experience" value="" />
-            </div>
-            <br />
-            <div className="col-md-12">
-              <label className="labels">Additional Details</label>
-              <input type="text" className="form-control" placeholder="additional details" value="" />
-            </div>
-          </div>
+          {/* Edycja doświadczenia lub innych informacji */}
+        </div>
+        <div className="col-md-4">
+          {/* Edycja doświadczenia lub innych informacji */}
         </div>
       </div>
     </div>
   );
 }
 
-export default Settings;
+export default Ustawienia;

@@ -32,15 +32,11 @@ function User() {
           </div>
           <div className="col-md-6">
             <div className="profile-head">
-              <h5>Arek Karek</h5>
-              <h6>Web Developer i Designer</h6>
-              <p className="proile-rating">RANKING: <span>8/10</span></p>
+              <h5>Grazyna Kowalska</h5>
+              <h6> kucharz</h6>
               <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                   <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">O mnie</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Wymagania</a>
                 </li>
               </ul>
             </div>
@@ -53,15 +49,15 @@ function User() {
           <div className="col-md-4">
             <div className="profile-work">
               <p>LINKI DO PRAC</p>
-              <a href="">Link do strony internetowej</a><br/>
-              <a href="">Profil Bootsnipp</a><br/>
-              <a href="">Profil Bootply</a>
+              <a href="">Link do swoich dań</a><br/>
+              <a href="">linkedin</a><br/>
+              <a href="">facebook</a>
               <p>UMIEJĘTNOŚCI</p>
-              <p>Web Designer: {createRatingStars(4)}</p>
-              <p>Web Developer: {createRatingStars(5)}</p>
-              <p>WordPress: {createRatingStars(3)}</p>
-              <p>WooCommerce: {createRatingStars(4)}</p>
-              <p>PHP, .Net: {createRatingStars(3)}</p>
+              <p>kuchnia polska: {createRatingStars(4)}</p>
+              <p>kuchnia włoska: {createRatingStars(5)}</p>
+              <p>kuchnia niemiecka: {createRatingStars(3)}</p>
+              <p>kuchnia tajska: {createRatingStars(4)}</p>
+              <p>kuchnia indysjska: {createRatingStars(3)}</p>
             </div>
           </div>
           <div className="col-md-8">
@@ -69,18 +65,18 @@ function User() {
               <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div className="row">
                   <div className="col-md-6">
-                    <label>Id użytkownika</label>
+                    <label>Imie</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Kshiti123</p>
+                    <p>Grazyna</p>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-6">
-                    <label>Imię</label>
+                    <label>Nazwisko</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Kshiti Ghelani</p>
+                    <p>Kowalska</p>
                   </div>
                 </div>
                 <div className="row">
@@ -88,7 +84,7 @@ function User() {
                     <label>Email</label>
                   </div>
                   <div className="col-md-6">
-                    <p>kshitighelani@gmail.com</p>
+                    <p>Grazyna@gmail.com</p>
                   </div>
                 </div>
                 <div className="row">
@@ -96,7 +92,7 @@ function User() {
                     <label>Telefon</label>
                   </div>
                   <div className="col-md-6">
-                    <p>123 456 7890</p>
+                    <p>123 456 789</p>
                   </div>
                 </div>
                 <div className="row">
@@ -104,7 +100,7 @@ function User() {
                     <label>Zawód</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Web Developer i Designer</p>
+                    <p>kucharz</p>
                   </div>
                 </div>
               </div>
@@ -114,7 +110,7 @@ function User() {
                     <label>Doświadczenie</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Ekspert</p>
+                    <p>4 lata</p>
                   </div>
                 </div>
                 <div className="row">
@@ -122,15 +118,7 @@ function User() {
                     <label>Stawka za godzinę</label>
                   </div>
                   <div className="col-md-6">
-                    <p>10$/hr</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Liczba projektów</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>230</p>
+                    <p>30zł/h</p>
                   </div>
                 </div>
                 <div className="row">
@@ -146,7 +134,7 @@ function User() {
                     <label>Dostępność</label>
                   </div>
                   <div className="col-md-6">
-                    <p>6 miesięcy</p>
+                    <p>pół etatu</p>
                   </div>
                 </div>
                 <div className="row">
