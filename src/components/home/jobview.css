@@ -1,104 +1,55 @@
-.job-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.job-info-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
-
 .job-view-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
-    box-sizing: border-box;
-    position: relative; 
+    display: flex;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.Row-container {
+    width: 100%;
+}
+
+.employee-details,
+.details-container,
+.form-container {
+    height: 100%;
 }
 
 .employee-details {
-    max-width: 40%;
-    margin: 0 auto;
-    text-align: center;
+    width: 25%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-}
-
-.employee-details h1 {
-    margin-right: 20px; 
-    margin-left: 20px;
-}
-
-.employee-details img {
-    margin-left: 20px; 
-    max-width: 200px; 
-    max-height: 200px; 
 }
 
 .details-container {
     width: 50%;
-}
-
-.email,
-.experience,
-.skills,
-.about-me {
-    width: 30%;
-    margin-top: 20px;
-}
-
-.skills ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.skills li {
-    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .form-container {
-    max-width: 300px;
-    box-sizing: border-box;
-    position: absolute;
-    margin-right: 150px;
-    top: 50%;
-    right: 0;
-    transform: translate(0, -50%);
-    margin-top: -50px; 
-}
-
-.form-container form {
+    width: 25%;
     display: flex;
-    text-align: center;
     flex-direction: column;
-    height: 100%; 
-    justify-content: center; 
+    justify-content: center;
+    align-items: center;
 }
 
-.form-container label {
-    margin-bottom: 10px;
-}
-
+/* Dodane style dla elementów wewnątrz .form-container */
+.form-container label,
+.form-container button,
+.form-container input,
 .form-container select {
+    width: 100%; /* Ustawienie szerokości na 100% dla elementów wewnątrz .form-container */
+    max-width: 300px; /* Przykładowa maksymalna szerokość dla elementów formularza */
     margin-bottom: 10px;
-}
-
-.form-container button {
-    background-color: #3498db;
-    color: #fff;
-    font-size: 16px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-right: 20vh;
+    display: grid; /* Dodatkowy margines dla lepszego odstępu między elementami formularza */
 }
