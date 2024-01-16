@@ -1,6 +1,7 @@
 import './App.css'
 import React from 'react';
 import User from './components/employee/User';
+import Settings from './components/employee/settings';
 import { Routes, Route } from 'react-router-dom';
 import Home from './components/home/Home';
 import LoginRegister from './components/login/LoginRegister';
@@ -16,6 +17,7 @@ import Jobs from './components/admin/jobs/Jobs';
 import UserIdProfile from './components/admin/userspage/UserIdProfile';
 import ForgotPassword from './components/login/ForgotPassword';
 import JobView from './components/home/JobView';
+import Profession from './components/employee/Profession';
 
 const ROLES = {
   VISITOR: 'VISITOR',
@@ -44,6 +46,8 @@ function App() {
         </Route>
         <Route element={<RequireAuth allowedRoles={[ROLES.POTENTIAL_EMPLOYEE]} />}>
           <Route path="user" element={<User />} />
+          <Route path="user/settings" element={<Settings />} />
+          <Route path="profession" element={<Profession />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['POTENTIAL_EMPLOYER']} />}>
           <Route path="employer" element={<Employer />} />
