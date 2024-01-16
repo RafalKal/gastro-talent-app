@@ -60,25 +60,25 @@ function JobView() {
     };
 
     return (
-        <Container fluid className="job-view-container px-3">
-            <Row className="Row-container">
-                <Col className="employee-details">
+        <Container fluid className="px-3">
+            <Row className="mb-4">
+                <Col className="">
                     <img src={employeeInfo.avatarUrl} alt="Avatar" className="avatar" />
                     <h1>{employeeInfo.name}</h1>
                     <h3>{employeeInfo.position}</h3>
                     <h2>E-mail kandydata:</h2>
                     <h2>{employeeInfo.email}</h2>
                 </Col>
-                <Col className="details-container">
+                <Col className="">
                     <Container>
                         <Row>
-                            <Col className="experience">
+                            <Col className="">
                                 <h4>Experience:</h4>
                                 <p>{employeeInfo.experience}</p>
                             </Col>
                         </Row>
                         <Row>
-                            <Col className="skills">
+                            <Col className="">
                                 <h4>Skills:</h4>
                                 <ul>
                                     {employeeInfo.skills.map((skill, index) => (
@@ -98,14 +98,14 @@ function JobView() {
                             </Col>
                         </Row>
                         <Row>
-                            <Col className="about-me">
+                            <Col className="">
                                 <h4>About Me:</h4>
                                 <p>{employeeInfo.aboutMe}</p>
                             </Col>
                         </Row>
                     </Container>
                 </Col>
-                <Col className="form-container">
+                <Col className="">
                     <Form>
                         <label htmlFor="selectOption">Zaplanuj spotkanie z kandydatem:</label>
                         <Form.Select

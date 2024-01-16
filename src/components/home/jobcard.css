@@ -18,7 +18,7 @@
 }
 
 
-.jobApply {
+.jobDetails {
     background-color: #3498db;
     color: #fff;
     font-size: 16px;
@@ -27,6 +27,7 @@
     border-radius: 5px;
     cursor: pointer;
     margin-left: 40px;
+    align-items: self-end;
   }
 
 .job-info.ps-0 > * {

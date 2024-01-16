@@ -36,7 +36,7 @@ function JobCard({jobId}) {
                                     <span className="mx-2"></span>
                                     <BiCalendarCheck className="nav-icon mb-1" />
                                     <a className="iconText">1 dzień temu</a>
-                                    <Button className="jobApply">Aplikuj</Button>
+                                    <Button className="jobDetails">Więcej</Button>
                                 </Col>
                             </Row>
                         </div>
