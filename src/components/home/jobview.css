@@ -1,7 +1,7 @@
 .job-image {
     width: 100%;
-    height: 100%; /* Wysokość 100% dostosowuje się do kontenera */
-    object-fit: cover; /* Przycina obraz do kontenera, zachowując proporcje */
+    height: 100%;
+    object-fit: cover;
 }
 
 .job-info-container {
@@ -21,23 +21,38 @@
     align-items: center;
     height: 100vh;
     box-sizing: border-box;
+    position: relative; 
 }
 
 .employee-details {
-    max-width: 600px;
+    max-width: 40%;
     margin: 0 auto;
     text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.employee-details h1 {
+    margin-right: 20px; 
+    margin-left: 20px;
+}
+
+.employee-details img {
+    margin-left: 20px; 
+    max-width: 200px; 
+    max-height: 200px; 
 }
 
 .details-container {
-    display: flex;
-    justify-content: space-between;
+    width: 50%;
 }
 
+.email,
 .experience,
 .skills,
 .about-me {
-    width: 30%; /* Ustaw szerokość sekcji, możesz dostosować według potrzeb */
+    width: 30%;
     margin-top: 20px;
 }
 
@@ -49,4 +64,41 @@
 
 .skills li {
     margin-bottom: 5px;
+}
+
+.form-container {
+    max-width: 300px;
+    box-sizing: border-box;
+    position: absolute;
+    margin-right: 150px;
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    margin-top: -50px; 
+}
+
+.form-container form {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    height: 100%; 
+    justify-content: center; 
+}
+
+.form-container label {
+    margin-bottom: 10px;
+}
+
+.form-container select {
+    margin-bottom: 10px;
+}
+
+.form-container button {
+    background-color: #3498db;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
