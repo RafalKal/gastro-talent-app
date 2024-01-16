@@ -121,6 +121,7 @@ function User() {
                     <p>30zł/h</p>
                   </div>
                 </div>
+                
                 <div className="row">
                   <div className="col-md-6">
                     <label>Poziom języka angielskiego</label>
