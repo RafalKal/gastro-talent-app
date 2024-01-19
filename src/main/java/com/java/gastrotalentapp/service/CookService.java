@@ -44,7 +44,7 @@ public class CookService {
     if (cookRepository.existsById(id)) {
       Cook updatedCook =
           CookBuilder.buildUsingRequest(
-              id, request, cookRepository.findById(id).get().getEmployee().getId(), userRepository);
+              id, request, cookRepository.findById(id).get().getEmpId(), userRepository);
       return cookRepository.save(updatedCook);
     } else {
       throw new IllegalArgumentException("Cook with ID " + id + " not found.");
