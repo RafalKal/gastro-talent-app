@@ -1,32 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import './jobview.css';
+import { Container, Row, Col, Form, Table } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function JobView() {
-    const { jobid } = useParams();
-
-    const employeeInfo = {
-        name: 'Stasiu Karwala',
-        position: 'Frontend Developer',
-        experience: '5 years',
-        email: 'onesaremissing@gmail.com',
-        skills: [
-            { skill: 'React', rating: 5 },
-            { skill: 'JavaScript', rating: 5 },
-            { skill: 'HTML', rating: 4 },
-            { skill: 'CSS', rating: 3 },
-            { skill: 'Zaspokajanie mamusi', rating: 1 }
-        ],
-        aboutMe: 'Passionate about creating user-friendly and visually appealing web applications.',
-        avatarUrl: '/public/avatar.jpg',
-    };
+    const { id } = useParams();
+    const [employeeInfo, setEmployeeInfo] = useState({
+        name: '',
+        position: '',
+        experience: {
+            company: '',
+            start_date: '',
+            end_date: '',
+            job_description: '',
+            position: '',
+            profession: '',
+        },
+        email: '',
+        skills: [],
+        aboutMe: '',
+        is_certified_sous_chef: false,
+        can_handle_pressure: false,
+        cooking_style: '',
+    });
 
     const [selectedOption, setSelectedOption] = useState('');
     const [CompanyEmail, setEmail] = useState('');
     const [meetingDate, setMeetingDate] = useState(null);
+
+    useEffect(() => {
+        const fetchEmployeeData = async () => {
+            try {
+                const response = await axios.get(`/api/v1/users/${id}`);
+                const data = response.data;
+                setEmployeeInfo(data);
+            } catch (error) {
+                console.error('Error fetching employee data:', error);
+            }
+        };
+
+        fetchEmployeeData();
+    }, [id]);
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -40,7 +57,11 @@ function JobView() {
         if (date >= new Date()) {
             setMeetingDate(date);
         } else {
-            alert('Nie można ustawić daty wstecz!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Błąd',
+                text: 'Nie można ustawić daty wstecz!',
+            });
         }
     };
 
@@ -55,55 +76,57 @@ function JobView() {
                 console.log('Decyzja anulowana');
             }
         } else {
-            alert('Wypełnij wszystkie pola formularza!');
+            Swal.fire({
+                icon: 'error',
+                title: 'Błąd',
+                text: 'Wypełnij wszystkie pola formularza!',
+            });
         }
     };
 
     return (
         <Container fluid className="px-3">
-            <Row className="mb-4">
+            <Row className="mb-4 align-items-center">
                 <Col className="">
-                    <img src={employeeInfo.avatarUrl} alt="Avatar" className="avatar" />
-                    <h1>{employeeInfo.name}</h1>
-                    <h3>{employeeInfo.position}</h3>
-                    <h2>E-mail kandydata:</h2>
-                    <h2>{employeeInfo.email}</h2>
+                    <strong>Imie i Nazwisko:</strong><h1>{employeeInfo.name}</h1>
+                    <strong>Stanowisko:</strong><h3>{employeeInfo.position}</h3>
+                    <strong>Email:</strong><h2>{employeeInfo.email}</h2>
                 </Col>
-                <Col className="">
-                    <Container>
-                        <Row>
-                            <Col className="">
-                                <h4>Experience:</h4>
-                                <p>{employeeInfo.experience}</p>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className="">
-                                <h4>Skills:</h4>
-                                <ul>
-                                    {employeeInfo.skills.map((skill, index) => (
-                                        <li key={index}>
-                                            {skill.skill}
-                                            {' '}
-                                            {Array.from({ length: 5 }, (_, i) => (
-                                                i < skill.rating ? (
-                                                    <span key={i} className="star" role="img" aria-label="star">⭐</span>
-                                                ) : (
-                                                    <span key={i} className="star-outline" role="img" aria-label="star outline">⚫</span>
-                                                )
-                                            ))}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className="">
-                                <h4>About Me:</h4>
-                                <p>{employeeInfo.aboutMe}</p>
-                            </Col>
-                        </Row>
-                    </Container>
+                <Col className="col-6">
+                <h4>Doświadczenie:</h4>
+                <Table striped bordered hover style={{ width: '80%', margin: 'auto' }}>
+                    <tbody>
+                        <tr>
+                            <td style={{ width: '20%' }}><strong>Miejsce pracy:</strong></td>
+                            <td>{employeeInfo.experience.company}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Opis pracy:</strong></td>
+                            <td>{employeeInfo.experience.job_description}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data rozpoczęcia:</strong></td>
+                            <td>{employeeInfo.experience.start_date}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data zakończenia:</strong></td>
+                            <td>{employeeInfo.experience.end_date}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stanowisko:</strong></td>
+                            <td>{employeeInfo.experience.profession}</td>
+                        </tr>
+                    </tbody>
+                </Table>
+                    <h4>Umiejętności:</h4>
+                    <ul>
+                        {employeeInfo.skills.map((skill, index) => (
+                            <li key={index}>{skill}</li>
+                        ))}
+                    </ul>
+                    <h4>O mnie:</h4>
+                    <p>{employeeInfo.aboutMe}</p>
+
                 </Col>
                 <Col className="">
                     <Form>
@@ -114,9 +137,9 @@ function JobView() {
                             onChange={handleOptionChange}
                         >
                             <option value="">-- Select --</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            <option value="option3">Option 3</option>
+                            <option value="option1">Umów rozmowę</option>
+                            <option value="option2">Odrzuć kandydata</option>
+                            <option value="option3">Zaakceptuj kandydata</option>
                         </Form.Select>
                         <label htmlFor="CompanyEmail">E-mail firmy:</label>
                         <Form.Control
