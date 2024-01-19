@@ -12,10 +12,14 @@ function Settings() {
     firstName: "",
     lastName: "",
     email: "",
+    dateOfBirth: "",
     phoneNumber: "",
-    street: "",
+  address: {
     city: "",
-    postal_code: "",
+    postalCode: "",
+    street: "",
+    houseNumber: ""
+  }
     // Dodaj inne pola, jeśli są dostępne
   });
 
@@ -26,6 +30,7 @@ function Settings() {
   useEffect(() => {
     // Tutaj możesz użyć tokena do uwierzytelnienia i pobrania danych użytkownika
     const userId = auth.id;
+    
     axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
       headers: {
         'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
@@ -43,38 +48,61 @@ function Settings() {
   
 
   // Obsługa zmiany danych użytkownika
-  const handleUserDataChange = (e) => {
-    const { name, value } = e.target;
+ const handleUserDataChange = (e) => {
+  const { name, value } = e.target;
+  if (name.startsWith("address.")) {
+    // Obsługa zagnieżdżonych pól adresu
+    const addressKey = name.split(".")[1];
+    setUserData(prevUserData => ({
+      ...prevUserData,
+      address: {
+        ...prevUserData.address,
+        [addressKey]: value
+      }
+    }));
+  } else {
+    // Obsługa pozostałych pól
     setUserData(prevUserData => ({
       ...prevUserData,
       [name]: value
     }));
-  };
+  }
+};
+
 
   // Obsługa zmiany danych zawodu
   
 
   // Obsługa przycisku "Submit" do zapisu zmian
   const handleFormSubmit = () => {
-     const userId = auth.id;
-    // Tutaj możesz wysłać dane do serwera, aby zapisać zmiany
-    // Przykład użycia axios do wysłania danych
-    axios.put(`http://localhost:8080/api/v1/users/${userId}`, {
-      userData, // Dane użytkownik
-    }, {
-      headers: {
-        'Authorization': `Bearer ${auth.token}`
-      }
-    })
-      .then(response => {
-        console.log("Zapisano zmiany!", response.data);
-        // Możesz dodać logikę do obsługi sukcesu zapisu
-      })
-      .catch(error => {
-        console.error("Błąd przy zapisywaniu zmian", error);
-        // Możesz dodać logikę do obsługi błędów zapisu
-      });
+  const userId = auth.id;
+  const payload = {
+    ...userData,
+    address: {
+      ...userData.address,
+      houseNumber: parseInt(userData.address.houseNumber),
+    },
+    // Usuń lub zakomentuj pola, które nie są potrzebne lub powodują problemy
+    // authorities: undefined,
+    // profiles: undefined,
+    // role: undefined,
   };
+console.log(userData);
+  axios.put(`http://localhost:8080/api/v1/employees/${userId}`, payload, {
+    headers: {
+      'Authorization': `Bearer ${auth.token}`
+    }
+  })
+  .then(response => {
+    console.log("Zapisano zmiany!", response.data);
+    // Logika po udanej aktualizacji
+  })
+  .catch(error => {
+    console.error("Błąd przy zapisywaniu zmian", error);
+    // Logika obsługi błędów
+  });
+};
+
 
   return (
     <div className="container emp-profile">
@@ -143,8 +171,59 @@ function Settings() {
                   </div>
                    
                 </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>data urodzin</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input
+  type="date"
+  className="form-control"
+  placeholder="data"
+  value={userData.dateOfBirth}
+  onChange={handleUserDataChange}
+  name="dateOfBirth" // Zmień tutaj
+/>
+                  </div>
+                   {/* Pole numeru telefonu */}
+  
+
+  {/* Pole miasta */}
+ {/* Pole miasta */}
+<div className="col-md-6">
+  <label>Miasto</label>
+</div>
+<div className="col-md-6">
+  <input type="text" className="form-control" placeholder="Miasto" value={userData.address.city} onChange={handleUserDataChange} name="address.city"/>
+</div>
+
+{/* Pole ulicy */}
+<div className="col-md-6">
+  <label>Ulica</label>
+</div>
+<div className="col-md-6">
+  <input type="text" className="form-control" placeholder="Ulica" value={userData.address.street} onChange={handleUserDataChange} name="address.street"/>
+</div>
+
+{/* Pole numeru domu */}
+<div className="col-md-6">
+  <label>Numer domu</label>
+</div>
+<div className="col-md-6">
+  <input type="text" className="form-control" placeholder="Numer domu" value={userData.address.houseNumber} onChange={handleUserDataChange} name="address.houseNumber"/>
+</div>
+
+{/* Pole kodu pocztowego */}
+<div className="col-md-6">
+  <label>Kod pocztowy</label>
+</div>
+<div className="col-md-6">
+  <input type="text" className="form-control" placeholder="Kod pocztowy" value={userData.address.postalCode} onChange={handleUserDataChange} name="address.postalCode"/>
+</div>
+
+                </div>
                 
-                {/* Pozostałe pola do zmiany */}
+               
               </div>
               <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 {/* Dodaj inne dane użytkownika do zmiany, jeśli są dostępne */}

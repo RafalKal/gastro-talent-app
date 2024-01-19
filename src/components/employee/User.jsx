@@ -8,20 +8,23 @@ import { Link } from 'react-router-dom';
 function User() {
 const { auth } = useContext(AuthContext);
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    street: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  address: {
     city: "",
     postalCode: "",
+    street: "",
+    houseNumber: ""
+  }
     
     
   });
 
 const [chiefData, setChiefData] = useState({
+  professionalexperiences:{
     profession: "",
-   
+  }
   });
 
   useEffect(() => {
@@ -136,7 +139,7 @@ useEffect(() => {
                     <label>Miasto</label>
                   </div>
                   <div className="col-md-6">
-                    <p>{userData.city}</p>
+                    <p>{userData.address.city}</p>
                   </div>
                 </div>
                  <div className="row">
@@ -144,7 +147,7 @@ useEffect(() => {
                     <label>Kod pocztowy</label>
                   </div>
                   <div className="col-md-6">
-                    <p>{userData.postalCode}</p>
+                    <p>{userData.address.postalCode}</p>
                   </div>
                 </div>
                  <div className="row">
@@ -152,7 +155,7 @@ useEffect(() => {
                     <label>Ulica</label>
                   </div>
                   <div className="col-md-6">
-                    <p>{userData.street}</p>
+                    <p>{userData.address.street}</p>
                   </div>
                 </div>
                  <div className="row">
@@ -160,7 +163,7 @@ useEffect(() => {
                     <label>nr domu</label>
                   </div>
                   <div className="col-md-6">
-                    <p>{userData.houseNumber}</p>
+                    <p>{userData.address.houseNumber}</p>
                   </div>
                 </div>
                 
