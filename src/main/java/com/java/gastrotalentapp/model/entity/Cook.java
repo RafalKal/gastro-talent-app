@@ -14,6 +14,9 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Cook extends EmployeeProfile {
 
+
+  private Long empId;
+
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "cook_cooking_styles", joinColumns = @JoinColumn(name = "cook_id"))
   @Enumerated(EnumType.STRING)

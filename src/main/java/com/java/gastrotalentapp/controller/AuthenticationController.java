@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @Validated
 @Api(
-        tags = "Authentitacion Controller",
+        tags = "Authentication Controller",
         description = "Endpoints for user authentication and registration")
 public class AuthenticationController {
 

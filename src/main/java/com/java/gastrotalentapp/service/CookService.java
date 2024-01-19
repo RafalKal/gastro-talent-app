@@ -3,6 +3,7 @@ package com.java.gastrotalentapp.service;
 import com.java.gastrotalentapp.builders.CookBuilder;
 import com.java.gastrotalentapp.model.entity.Cook;
 import com.java.gastrotalentapp.repository.CookRepository;
+import com.java.gastrotalentapp.repository.EmployeeRepository;
 import com.java.gastrotalentapp.repository.UserRepository;
 import com.java.gastrotalentapp.requests_responses.requests.CookRequest;
 import java.util.List;
@@ -18,6 +19,7 @@ public class CookService {
 
   private final CookRepository cookRepository;
   private final UserRepository userRepository;
+  private final EmployeeRepository employeeRepository;
 
   public List<Cook> getAllCooks() {
     return cookRepository.findAll();
@@ -27,8 +29,14 @@ public class CookService {
     return cookRepository.findById(id);
   }
 
+  public Optional<Cook> getCookByUserId(Long id) {
+    return cookRepository.findByEmpId(id);
+  }
+
+
+
   public Cook createCook(CookRequest request) {
-    Cook cook = CookBuilder.buildUsingRequest(request, userRepository);
+    Cook cook = CookBuilder.buildUsingRequest(request, userRepository, employeeRepository);
     return cookRepository.save(cook);
   }
 

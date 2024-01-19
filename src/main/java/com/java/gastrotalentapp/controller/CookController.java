@@ -50,6 +50,20 @@ public class CookController {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
+  @GetMapping("/by-user-id/{id}")
+  @ApiOperation(value = "Get Cook by user ID", notes = "Retrieve information about a cook by user ID")
+  @ApiResponses(value = {
+          @ApiResponse(code = 200, message = "Cook found"),
+          @ApiResponse(code = 404, message = "Cook not found")
+  })
+  public ResponseEntity<Cook> getCookByUserId(
+          @ApiParam(value = "ID of the user assigned to cook", required = true) @PathVariable Long id) {
+    return cookService
+            .getCookByUserId(id)
+            .map(cook -> new ResponseEntity<>(cook, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+  }
+
   @PostMapping
   @ApiOperation(value = "Create Cook", notes = "Create a new cook")
   @ApiResponses(value = {
