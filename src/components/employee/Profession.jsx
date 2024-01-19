@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from '/src/context/AuthProvider';
 import './Profession.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Profession() {
   const { auth } = useContext(AuthContext);
@@ -12,10 +13,10 @@ function Profession() {
       comprehensiveSchool: {
         comprehensiveSchoolCity: "",
         comprehensiveSchoolName: "",
-        comprehensiveSchoolType: "HIGH_SCHOOL",
+        comprehensiveSchoolType: "",
       },
       educationGraduationDate: "",
-      educationLevel: "DOCTORATE",
+      educationLevel: "",
       university: {
         universityCity: "",
         universityName: "",
@@ -27,7 +28,7 @@ function Profession() {
       endDate: "",
       jobDescription: "",
       position: "",
-      profession: "COOK",
+      profession: "",
       startDate: ""
     }],
     signatureDishes: [""],
@@ -35,35 +36,48 @@ function Profession() {
     yearsOfExperience: 0,
   });
 
-   const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
-useEffect(() => {
-  const fetchProfessionData = async () => {
-    // Konwertuj auth.id na liczbę i dodaj 1
-    const profileId = Number(auth.id) + 1;
+  useEffect(() => {
+    const fetchProfessionData = async () => {
+      const profileId = Number(auth.id) + 1;
 
-    try {
-      const response = await axios.get(`http://localhost:8080/api/v1/cooks/${profileId}`, {
-        headers: {
-          'Authorization': `Bearer ${auth.token}`
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/cooks/${profileId}`, {
+          headers: {
+            'Authorization': `Bearer ${auth.token}`
+          }
+        });
+
+        if (response.data) {
+          setFormData({
+            ...response.data,
+            cookingStyles: response.data.cookingStyles || [], // Ensure cookingStyles is an array
+            education: {
+              ...response.data.education,
+              educationGraduationDate: response.data.education.educationGraduationDate || '', // Prevent null or undefined
+            },
+            professionalExperiences: response.data.professionalExperiences.map(exp => ({
+              ...exp,
+              startDate: exp.startDate || '', // Prevent null or undefined
+              endDate: exp.endDate || '', // Prevent null or undefined
+            })),
+            signatureDishes: response.data.signatureDishes || [''], // Ensure signatureDishes is an array with at least an empty string
+          });
+          setIsEdit(true);
         }
-      });
-      if (response.data) {
-        setFormData(response.data);
-        setIsEdit(true);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          console.log("Profil zawodowy nie istnieje, tworzenie nowego.");
+          setIsEdit(false);
+        } else {
+          console.error("Błąd przy ładowaniu danych", error);
+        }
       }
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        console.log("Profil zawodowy nie istnieje, tworzenie nowego.");
-        setIsEdit(false);
-      } else {
-        console.error("Błąd przy ładowaniu danych", error);
-      }
-    }
-  };
+    };
 
-  fetchProfessionData();
-}, [auth.id, auth.token]);
+    fetchProfessionData();
+  }, [auth.id, auth.token]);
 
 
 
@@ -72,48 +86,75 @@ const handleChange = (e) => {
   const { name, value, type, checked } = e.target;
 
   if (type === 'checkbox' && name === 'cookingStyles') {
-    const newStyles = checked 
-      ? [...formData.cookingStyles, value] 
-      : formData.cookingStyles.filter(style => style !== value);
-    
-    setFormData({ ...formData, cookingStyles: newStyles });
+    // Tworzenie nowej tablicy stylów gotowania w zależności od tego, czy checkbox został zaznaczony czy nie.
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      cookingStyles: checked 
+        ? [...prevFormData.cookingStyles, value] 
+        : prevFormData.cookingStyles.filter(style => style !== value),
+    }));
   } else if (type === 'checkbox') {
-    setFormData({ ...formData, [name]: checked });
+    // Aktualizacja dla innych checkboxów, które nie są częścią tablicy cookingStyles.
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: checked,
+    }));
   } else {
-    setFormData({ ...formData, [name]: value });
+    // Aktualizacja dla innych pól input, które nie są checkboxami.
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   }
 };
 
 
-const handleNestedChange = (e, nestedField, subField) => {
+
+const handleNestedChange = (e, nestedField, subField = null) => {
   const { name, value } = e.target;
-  setFormData({
-    ...formData,
-    [nestedField]: {
-      ...formData[nestedField],
-      [subField]: {
-        ...formData[nestedField][subField],
-        [name]: value
-      }
-    }
-  });
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    [nestedField]: subField
+      ? {
+          ...prevFormData[nestedField],
+          [subField]: {
+            ...prevFormData[nestedField][subField],
+            [name]: value,
+          },
+        }
+      : {
+          ...prevFormData[nestedField],
+          [name]: value,
+        },
+  }));
 };
+
 
 const handleComplexNestedChange = (e, nestedField, index) => {
   const { name, value } = e.target;
-  const updatedArray = [...formData[nestedField]];
-  updatedArray[index] = { ...updatedArray[index], [name]: value };
-  setFormData({
-    ...formData,
-    [nestedField]: updatedArray,
+  setFormData((prevFormData) => {
+    const updatedArray = [...prevFormData[nestedField]];
+    updatedArray[index] = { ...updatedArray[index], [name]: value };
+    return {
+      ...prevFormData,
+      [nestedField]: updatedArray,
+    };
   });
 };
 
 const handleArrayChange = (e, index, field) => {
-  const newArray = [...formData[field]];
-  newArray[index] = e.target.value;
-  setFormData({ ...formData, [field]: newArray });
+  const { value } = e.target;
+  setFormData((prevFormData) => {
+    const newArray = [...prevFormData[field]];
+    newArray[index] = value;
+    return {
+      ...prevFormData,
+      [field]: newArray,
+    };
+  });
 };
+
+
 
 
 const handleSubmit = async (e) => {
@@ -141,24 +182,24 @@ const handleSubmit = async (e) => {
 
 
   
-
-  return (
-    <div className="profession-form-container">
-      <form onSubmit={handleSubmit} className="profession-form">
-        {/* ... (inne pola formularza) */}
- <label htmlFor="canHandlePressure">Can Handle Pressure:</label>
-   <input 
-            type="checkbox" 
-            id="canHandlePressure"
-            name="canHandlePressure" 
-            checked={formData.canHandlePressure}
-            onChange={handleChange} 
-            />
-       
-
-        {/* Style gotowania */}
-        <div className="form-group">
-           <label>Style gotowania:</label>
+return (
+  <div className="profession-form-container">
+    <h2>Formularz Profesji</h2>
+    <form onSubmit={handleSubmit} className="profession-form">
+        <div className=" form-group">
+        <input 
+          type="checkbox" 
+          id="canHandlePressure"
+          name="canHandlePressure" 
+          className="form-check-input"
+          checked={formData.canHandlePressure}
+          onChange={handleChange} 
+        />
+        <label htmlFor="canHandlePressure" className="form-check-label">Can Handle Pressure</label>
+      </div>
+       <div className="mb-3">
+          <label className="form-label">Style gotowania:</label>
+          <div className="d-flex flex-wrap"></div>
   {[
     'POLISH_CUISINE', 'FRENCH_CUISINE', 'ITALIAN_CUISINE', 'SPANISH_CUISINE',
     'MEXICAN_CUISINE', 'JAPANESE_CUISINE', 'INDIAN_CUISINE', 'THAI_CUISINE',
@@ -167,29 +208,34 @@ const handleSubmit = async (e) => {
     'MOROCCAN_CUISINE', 'ETHIOPIAN_CUISINE', 'CAJUN_CUISINE', 'CARIBBEAN_CUISINE',
     'AUSTRALIAN_CUISINE'
   ].map(style => (
-    <div key={style}>
-      <label>
-        <input 
-          type="checkbox" 
-          name="cookingStyles" 
-          value={style}
-          onChange={handleChange} 
-        /> {style.replace(/_/g, ' ').toLowerCase()}
+    <div key={style} className="form-check">
+      <input 
+        type="checkbox" 
+        name="cookingStyles" 
+        value={style}
+        checked={formData.cookingStyles.includes(style)} // to sprawdza, czy dany styl jest już zaznaczony
+        onChange={handleChange} 
+        className="form-check-input" 
+      />
+      <label className="form-check-label">
+        {style.replace(/_/g, ' ').toLowerCase()}
       </label>
-            </div>
-          ))}
+    </div>
+  ))
+}
         </div>
          {/* Typ ukończonej szkoły */}
         <div className="form-group">
           <label htmlFor="comprehensiveSchoolType">Typ ukończonej szkoły:</label>
           <select 
-            name="comprehensiveSchoolType"
-            value={formData.education.comprehensiveSchool.comprehensiveSchoolType}
-            onChange={(e) => handleNestedChange(e, 'education')}>
-            <option value="HIGH_SCHOOL">Liceum</option>
-            <option value="TECHNICAL_SCHOOL">Technikum</option>
-            <option value="VOCATIONAL_SCHOOL">Szkoła zawodowa</option>
-          </select>
+  name="comprehensiveSchoolType"
+  value={formData.education.comprehensiveSchool.comprehensiveSchoolType}
+  onChange={(e) => handleNestedChange(e, 'education', 'comprehensiveSchool')}>
+  <option value="HIGH_SCHOOL">Liceum</option>
+  <option value="TECHNICAL_SCHOOL">Technikum</option>
+  <option value="VOCATIONAL_SCHOOL">Szkoła zawodowa</option>
+</select>
+
         </div>
        {/* Miasto szkoły */}
 <div className="form-group">
@@ -260,7 +306,7 @@ const handleSubmit = async (e) => {
 
         {/* Doświadczenie zawodowe */}
        {formData.professionalExperiences.map((experience, index) => (
-  <div key={index} className="form-group">
+  <div key={index} className="form-group mb-3">
     <label htmlFor={`company-${index}`}>Firma:</label>
     <input 
       type="text" 
@@ -343,7 +389,7 @@ const handleSubmit = async (e) => {
         </div>
 
        {/* Potrawy sygnaturowe */}
-<div className="form-group">
+<div className="form-group mb-3">
   <label htmlFor="signatureDishes">Potrawy sygnaturowe:</label>
   {formData.signatureDishes.map((dish, index) => (
     <input 
@@ -358,7 +404,7 @@ const handleSubmit = async (e) => {
 
 
         {/* Lata doświadczenia */}
-        <div className="form-group">
+        <div className="form-group mb-3">
           <label htmlFor="yearsOfExperience">Lata doświadczenia:</label>
           <input 
             type="number" 
@@ -369,7 +415,11 @@ const handleSubmit = async (e) => {
         </div>
 
         {/* Przycisk wysyłania */}
-        <button type="submit" className="submit-button">Utwórz Profesję</button>
+         <div className="text-center">
+          <button type="submit" className="btn btn-primary">
+            Utwórz Profesję
+          </button>
+        </div>
       </form>
     </div>
   );

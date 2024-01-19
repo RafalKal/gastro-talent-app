@@ -1,196 +1,163 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import './user.css';
+import 'font-awesome/css/font-awesome.min.css';
+import AuthContext from '/src/context/AuthProvider';
 
-function Ustawienia() {
-  const [formData, setFormData] = useState({
-    imie: 'Grażyna',
-    nazwisko: 'Kowalska',
-    email: 'grazyna.kowalska@gmail.com',
-    numerTelefonu: '123 456 789',
-    zawod: 'kucharz',
-    umiejetnosci: {
-      projektowanieStron: 4,
-      programowanieWeb: 5,
-      wordpress: 3,
-      wooCommerce: 4,
-      phpDotNet: 3,
-    },
-    wymagania: 'Wymagania użytkownika',
-    zdjecieProfilowe: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog',
+function Settings() {
+  const { auth } = useContext(AuthContext);
+
+  // Inicjalizacja stanu danych użytkownika
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    street: "",
+    city: "",
+    postal_code: "",
+    // Dodaj inne pola, jeśli są dostępne
   });
 
-  const handleChange = (e) => {
+  // Inicjalizacja stanu danych zawodu
+ 
+
+  // Efekt pobierający dane użytkownika
+  useEffect(() => {
+    // Tutaj możesz użyć tokena do uwierzytelnienia i pobrania danych użytkownika
+    const userId = auth.id;
+    axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
+      }
+    })
+      .then(response => {
+        setUserData(response.data);
+      })
+      .catch(error => {
+        console.error("Błąd przy pobieraniu danych użytkownika", error);
+      });
+  }, [auth.id, auth.token]);
+
+  // Efekt pobierający dane zawodu
+  
+
+  // Obsługa zmiany danych użytkownika
+  const handleUserDataChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setUserData(prevUserData => ({
+      ...prevUserData,
+      [name]: value
+    }));
   };
 
-  const handleSkillChange = (nazwaUmiejetnosci, nowaWartosc) => {
-    setFormData({
-      ...formData,
-      umiejetnosci: {
-        ...formData.umiejetnosci,
-        [nazwaUmiejetnosci]: nowaWartosc,
-      },
-    });
-  };
+  // Obsługa zmiany danych zawodu
+  
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData({ ...formData, zdjecieProfilowe: reader.result });
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Przetwarzaj dane formularza lub wysyłaj je na serwer
+  // Obsługa przycisku "Submit" do zapisu zmian
+  const handleFormSubmit = () => {
+     const userId = auth.id;
+    // Tutaj możesz wysłać dane do serwera, aby zapisać zmiany
+    // Przykład użycia axios do wysłania danych
+    axios.put(`http://localhost:8080/api/v1/users/${userId}`, {
+      userData, // Dane użytkownik
+    }, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}`
+      }
+    })
+      .then(response => {
+        console.log("Zapisano zmiany!", response.data);
+        // Możesz dodać logikę do obsługi sukcesu zapisu
+      })
+      .catch(error => {
+        console.error("Błąd przy zapisywaniu zmian", error);
+        // Możesz dodać logikę do obsługi błędów zapisu
+      });
   };
 
   return (
-    <div className="container rounded bg-white mt-5 mb-5">
-      <div className="row">
-        <div className="col-md-3 border-right">
-          <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img
-              className="rounded-circle mt-5"
-              width="150px"
-              src={formData.zdjecieProfilowe}
-              alt="Profile"
-            />
-            <input
-              type="file"
-              className="file btn btn-lg btn-primary"
-              onChange={handleFileChange}
-              accept="image/*"
-            />
+    <div className="container emp-profile">
+      <form method="post">
+        <div className="row">
+          <div className="col-md-4">
+            <div className="profile-img">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt="" />
+              <div className="file btn btn-lg btn-primary">
+                Zmień zdjęcie
+                <input type="file" name="file" />
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="profile-head">
+              <h5>{userData.firstName} {userData.lastName}</h5>
+             
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item">
+                  <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">O mnie</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-md-2">
+            {/* Usunięty link do edycji profilu */}
           </div>
         </div>
-       <div className="col-md-3 border-right">
-          {/* Zdjęcie profilowe i dane użytkownika */}
-        </div>
-        <div className="col-md-5 border-right">
-          <div className="p-3 py-5">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="text-right">Ustawienia profilu</h4>
-            </div>
-            <form onSubmit={handleSubmit}>
-              <div className="row mt-2">
-                <div className="col-md-6">
-                  <label className="labels">Imię</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Imię"
-                    name="imie"
-                    value={formData.imie}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="labels">Nazwisko</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Nazwisko"
-                    name="nazwisko"
-                    value={formData.nazwisko}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-3">
-                <div className="col-md-12">
-                  <label className="labels">Numer Telefonu</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Wprowadź numer telefonu"
-                    name="numerTelefonu"
-                    value={formData.numerTelefonu}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <label className="labels">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Wprowadź adres email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <label className="labels">Zawód</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Wprowadź zawód"
-                    name="zawod"
-                    value={formData.zawod}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-5">
-                <div className="col-md-12">
-                  <label className="labels">Umiejętności</label>
-                  <div>
-                    <div className="d-flex align-items-center">
-                      <span className="mr-2"> kuchnia:</span>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="projektowanieStron"
-                        value={formData.umiejetnosci.projektowanieStron}
-                        onChange={(e) =>
-                          handleSkillChange('projektowanieStron', parseInt(e.target.value, 10))
-                        }
-                        min="0"
-                        max="5"
-                      />
-                    </div>
-                    {/* Powtórz powyższy blok dla innych umiejętności */}
+        <div className="row">
+          
+          <div className="col-md-8">
+            <div className="tab-content profile-tab" id="myTabContent">
+              <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>Imię</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="Imię" value={userData.firstname} onChange={handleUserDataChange}  name="firstname"/>
                   </div>
                 </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <label className="labels">Wymagania</label>
-                  <textarea
-                    className="form-control"
-                    placeholder="Wymagania użytkownika"
-                    name="wymagania"
-                    value={formData.wymagania}
-                    onChange={handleChange}
-                  />
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>Nazwisko</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="Nazwisko" value={userData.lastname} onChange={handleUserDataChange}  name="lastname"/>
+                  </div>
                 </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>Email</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="email" className="form-control" placeholder="Email" value={userData.email} onChange={handleUserDataChange}   name="email"/>
+                  </div>
+                   
+                </div>
+                 <div className="row">
+                  <div className="col-md-6">
+                    <label>numer telefonu</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="numer" value={userData.phoneNumber} onChange={handleUserDataChange}  name="phoneNumber"/>
+                  </div>
+                   
+                </div>
+                
+                {/* Pozostałe pola do zmiany */}
               </div>
-              <div className="mt-5 text-center">
-                <button className="btn btn-primary profile-button" type="submit">
-                  Zapisz profil
-                </button>
+              <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                {/* Dodaj inne dane użytkownika do zmiany, jeśli są dostępne */}
               </div>
-            </form>
+            </div>
           </div>
         </div>
-        <div className="col-md-4">
-          {/* Edycja doświadczenia lub innych informacji */}
+         <div className="mt-5 text-center">
+          <button className="btn btn-primary profile-button" type="button" onClick={handleFormSubmit}>Save Profile</button>
         </div>
-        <div className="col-md-4">
-          {/* Edycja doświadczenia lub innych informacji */}
-        </div>
-      </div>
+      </form>
     </div>
   );
 }
 
-export default Ustawienia;
+export default Settings;
