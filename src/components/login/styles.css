@@ -105,6 +105,7 @@
     border: none;
     padding: 6px 2px;
     width: 100%;
+    color: black;
   }
 
   .loginInput:focus-visible {
@@ -293,4 +294,5 @@ span#registerFormSpan{
     border: none;
     padding: 6px 2px;
     width: 100%;
+color: black;
 }

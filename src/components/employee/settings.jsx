@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import './user.css';
+import './settings.css';
 import 'font-awesome/css/font-awesome.min.css';
 import AuthContext from '/src/context/AuthProvider';
 
 function Settings() {
   const { auth } = useContext(AuthContext);
 
-  // Inicjalizacja stanu danych użytkownika
   const [userData, setUserData] = useState({
     firstname: '',
     lastname: '',
@@ -30,8 +29,7 @@ function Settings() {
       }
     })
     .then(response => {
-      const fetchedData = response.data;
-      setUserData(fetchedData);
+      setUserData(response.data || {});
     })
     .catch(error => {
       console.error("Błąd przy pobieraniu danych użytkownika", error);
@@ -39,22 +37,26 @@ function Settings() {
   }, [auth.id, auth.token]);
 
   const handleUserDataChange = (e) => {
-  const { name, value } = e.target;
-  const updatedUserData = { ...userData };
+    const { name, value } = e.target;
+    if (name.startsWith("address.")) {
+      const addressField = name.split(".")[1];
+      setUserData(prevState => ({
+        ...prevState,
+        address: {
+          ...prevState.address,
+          [addressField]: value
+        }
+      }));
+    } else {
+      setUserData({
+        ...userData,
+        [name]: value
+      });
+    }
+  };
 
-  // Jeśli pole dotyczy adresu, zaktualizuj odpowiednią część obiektu address
-  if (name.startsWith("address.")) {
-    const addressField = name.split(".")[1];
-    updatedUserData.address[addressField] = value;
-  } else {
-    updatedUserData[name] = value;
-  }
-
-  setUserData(updatedUserData);
-};
-
-  // Obsługa przycisku "Save Profile" do zapisu zmian
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     if (!userData.firstname || !userData.lastname || !/^[1-9]\d{8}$/.test(userData.phoneNumber)) {
       console.error("Błędne dane");
       return;
@@ -165,10 +167,14 @@ function Settings() {
                   <label>Miasto</label>
                 </div>
                 <div className="col-md-6">
-                  <input type="text" className="form-control" placeholder="Miasto" 
-                    value={userData.address && userData.address.city ? userData.address.city : ''} 
-                    onChange={handleUserDataChange} 
-                    name="address.city"/>
+                   <input 
+          type="text" 
+          className="form-control" 
+          placeholder="Miasto" 
+          value={userData.address?.city || ''} 
+          onChange={handleUserDataChange} 
+          name="address.city"
+        />
                 </div>
 
 
@@ -178,10 +184,14 @@ function Settings() {
                   <label>Ulica</label>
                 </div>
                 <div className="col-md-6">
-                  <input type="text" className="form-control" placeholder="Ulica" 
-                    value={userData.address && userData.address.street ? userData.address.street : ''} 
-                    onChange={handleUserDataChange} 
-                    name="address.street"/>
+                  <input 
+          type="text" 
+          className="form-control" 
+          placeholder="Ulica" 
+          value={userData.address?.street || ''} 
+          onChange={handleUserDataChange} 
+          name="address.street"
+        />
                 </div>
               </div>
 
@@ -191,10 +201,14 @@ function Settings() {
                   <label>Numer domu</label>
                 </div>
                 <div className="col-md-6">
-                  <input type="text" className="form-control" placeholder="Numer domu" 
-                    value={userData.address && userData.address.houseNumber ? userData.address.houseNumber : ''} 
-                    onChange={handleUserDataChange} 
-                    name="address.houseNumber"/>
+                 <input 
+          type="text" 
+          className="form-control" 
+          placeholder="Numer domu" 
+          value={userData.address?.houseNumber || ''} 
+          onChange={handleUserDataChange} 
+          name="address.houseNumber"
+        />
                 </div>
               </div>
 
@@ -204,10 +218,14 @@ function Settings() {
                   <label>Kod pocztowy</label>
                 </div>
                 <div className="col-md-6">
-                  <input type="text" className="form-control" placeholder="Kod pocztowy" 
-                    value={userData.address && userData.address.postalCode ? userData.address.postalCode : ''} 
-                    onChange={handleUserDataChange} 
-                    name="address.postalCode"/>
+                 <input 
+          type="text" 
+          className="form-control" 
+          placeholder="Kod pocztowy" 
+          value={userData.address?.postalCode || ''} 
+          onChange={handleUserDataChange} 
+          name="address.postalCode"
+        />
                 </div>
 
 
