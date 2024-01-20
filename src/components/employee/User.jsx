@@ -135,37 +135,42 @@ useEffect(() => {
                   </div>
                 </div>
                  <div className="row">
-                  <div className="col-md-6">
-                    <label>Miasto</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>{userData.address.city}</p>
-                  </div>
-                </div>
-                 <div className="row">
-                  <div className="col-md-6">
-                    <label>Kod pocztowy</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>{userData.address.postalCode}</p>
-                  </div>
-                </div>
-                 <div className="row">
-                  <div className="col-md-6">
-                    <label>Ulica</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>{userData.address.street}</p>
-                  </div>
-                </div>
-                 <div className="row">
-                  <div className="col-md-6">
-                    <label>nr domu</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>{userData.address.houseNumber}</p>
-                  </div>
-                </div>
+  <div className="col-md-6">
+    <label>Miasto</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.city ? userData.address.city : ''}</p>
+  </div>
+</div>
+
+{/* Powtórz to dla innych pól, takich jak ulica, kod pocztowy itp. */}
+<div className="row">
+  <div className="col-md-6">
+    <label>Kod pocztowy</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.postalCode ? userData.address.postalCode : ''}</p>
+  </div>
+</div>
+
+<div className="row">
+  <div className="col-md-6">
+    <label>Ulica</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.street ? userData.address.street : ''}</p>
+  </div>
+</div>
+
+{/* Pole numeru domu */}
+<div className="row">
+  <div className="col-md-6">
+    <label>Numer domu</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.houseNumber ? userData.address.houseNumber : ''}</p>
+  </div>
+</div>
                 
               </div>
               <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">

@@ -9,100 +9,71 @@ function Settings() {
 
   // Inicjalizacja stanu danych użytkownika
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    dateOfBirth: "",
-    phoneNumber: "",
-  address: {
-    city: "",
-    postalCode: "",
-    street: "",
-    houseNumber: ""
-  }
-    // Dodaj inne pola, jeśli są dostępne
+    firstname: '',
+    lastname: '',
+    email: '',
+    dateOfBirth: '',
+    phoneNumber: '',
+    address: {
+      city: '',
+      postalCode: '',
+      street: '',
+      houseNumber: ''
+    }
   });
 
-  // Inicjalizacja stanu danych zawodu
- 
-
-  // Efekt pobierający dane użytkownika
   useEffect(() => {
-    // Tutaj możesz użyć tokena do uwierzytelnienia i pobrania danych użytkownika
     const userId = auth.id;
-    
     axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
+        'Authorization': `Bearer ${auth.token}`
       }
     })
-      .then(response => {
-        setUserData(response.data);
-      })
-      .catch(error => {
-        console.error("Błąd przy pobieraniu danych użytkownika", error);
-      });
+    .then(response => {
+      const fetchedData = response.data;
+      setUserData(fetchedData);
+    })
+    .catch(error => {
+      console.error("Błąd przy pobieraniu danych użytkownika", error);
+    });
   }, [auth.id, auth.token]);
 
-  // Efekt pobierający dane zawodu
-  
-
-  // Obsługa zmiany danych użytkownika
- const handleUserDataChange = (e) => {
+  const handleUserDataChange = (e) => {
   const { name, value } = e.target;
+  const updatedUserData = { ...userData };
+
+  // Jeśli pole dotyczy adresu, zaktualizuj odpowiednią część obiektu address
   if (name.startsWith("address.")) {
-    // Obsługa zagnieżdżonych pól adresu
-    const addressKey = name.split(".")[1];
-    setUserData(prevUserData => ({
-      ...prevUserData,
-      address: {
-        ...prevUserData.address,
-        [addressKey]: value
-      }
-    }));
+    const addressField = name.split(".")[1];
+    updatedUserData.address[addressField] = value;
   } else {
-    // Obsługa pozostałych pól
-    setUserData(prevUserData => ({
-      ...prevUserData,
-      [name]: value
-    }));
+    updatedUserData[name] = value;
   }
+
+  setUserData(updatedUserData);
 };
 
-
-  // Obsługa zmiany danych zawodu
-  
-
-  // Obsługa przycisku "Submit" do zapisu zmian
+  // Obsługa przycisku "Save Profile" do zapisu zmian
   const handleFormSubmit = () => {
-  const userId = auth.id;
-  const payload = {
-    ...userData,
-    address: {
-      ...userData.address,
-      houseNumber: parseInt(userData.address.houseNumber),
-    },
-    // Usuń lub zakomentuj pola, które nie są potrzebne lub powodują problemy
-    // authorities: undefined,
-    // profiles: undefined,
-    // role: undefined,
-  };
-console.log(userData);
-  axios.put(`http://localhost:8080/api/v1/employees/${userId}`, payload, {
-    headers: {
-      'Authorization': `Bearer ${auth.token}`
+    if (!userData.firstname || !userData.lastname || !/^[1-9]\d{8}$/.test(userData.phoneNumber)) {
+      console.error("Błędne dane");
+      return;
     }
-  })
-  .then(response => {
-    console.log("Zapisano zmiany!", response.data);
-    // Logika po udanej aktualizacji
-  })
-  .catch(error => {
-    console.error("Błąd przy zapisywaniu zmian", error);
-    // Logika obsługi błędów
-  });
-};
-
+    const userId = auth.id;
+    axios.put(`http://localhost:8080/api/v1/users/${userId}`, userData, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}`
+      }
+    })
+    .then(response => {
+      console.log("Zapisano zmiany!", response.data);
+      // Dodaj logikę po udanej aktualizacji
+    })
+    .catch(error => {
+      console.error("Błąd przy zapisywaniu zmian", error);
+      // Dodaj logikę obsługi błędów
+    });
+  };
 
   return (
     <div className="container emp-profile">
@@ -129,7 +100,7 @@ console.log(userData);
             </div>
           </div>
           <div className="col-md-2">
-            {/* Usunięty link do edycji profilu */}
+           
           </div>
         </div>
         <div className="row">
@@ -177,49 +148,68 @@ console.log(userData);
                   </div>
                   <div className="col-md-6">
                     <input
-  type="date"
-  className="form-control"
-  placeholder="data"
-  value={userData.dateOfBirth}
-  onChange={handleUserDataChange}
-  name="dateOfBirth" // Zmień tutaj
-/>
+                      type="date"
+                      className="form-control"
+                      placeholder="data"
+                      value={userData.dateOfBirth}
+                      onChange={handleUserDataChange}
+                      name="dateOfBirth"
+                    />
                   </div>
                    {/* Pole numeru telefonu */}
   
 
-  {/* Pole miasta */}
- {/* Pole miasta */}
-<div className="col-md-6">
-  <label>Miasto</label>
-</div>
-<div className="col-md-6">
-  <input type="text" className="form-control" placeholder="Miasto" value={userData.address.city} onChange={handleUserDataChange} name="address.city"/>
-</div>
+  
+              {/* Pole miasta */}
+                <div className="col-md-6">
+                  <label>Miasto</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Miasto" 
+                    value={userData.address && userData.address.city ? userData.address.city : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.city"/>
+                </div>
 
-{/* Pole ulicy */}
-<div className="col-md-6">
-  <label>Ulica</label>
-</div>
-<div className="col-md-6">
-  <input type="text" className="form-control" placeholder="Ulica" value={userData.address.street} onChange={handleUserDataChange} name="address.street"/>
-</div>
 
-{/* Pole numeru domu */}
-<div className="col-md-6">
-  <label>Numer domu</label>
-</div>
-<div className="col-md-6">
-  <input type="text" className="form-control" placeholder="Numer domu" value={userData.address.houseNumber} onChange={handleUserDataChange} name="address.houseNumber"/>
-</div>
+              {/* Pole ulicy */}
 
-{/* Pole kodu pocztowego */}
-<div className="col-md-6">
-  <label>Kod pocztowy</label>
-</div>
-<div className="col-md-6">
-  <input type="text" className="form-control" placeholder="Kod pocztowy" value={userData.address.postalCode} onChange={handleUserDataChange} name="address.postalCode"/>
-</div>
+                <div className="col-md-6">
+                  <label>Ulica</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Ulica" 
+                    value={userData.address && userData.address.street ? userData.address.street : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.street"/>
+                </div>
+              </div>
+
+              {/* Pole numeru domu */}
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Numer domu</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Numer domu" 
+                    value={userData.address && userData.address.houseNumber ? userData.address.houseNumber : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.houseNumber"/>
+                </div>
+              </div>
+
+              {/* Pole kodu pocztowego */}
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Kod pocztowy</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Kod pocztowy" 
+                    value={userData.address && userData.address.postalCode ? userData.address.postalCode : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.postalCode"/>
+                </div>
+
 
                 </div>
                 
