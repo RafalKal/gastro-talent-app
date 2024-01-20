@@ -24,4 +24,6 @@ public class CookRequest {
   private Set<String> signatureDishes;
 
   private Boolean canHandlePressure;
+
+  private Boolean isVisible;
 }

@@ -2,43 +2,40 @@ package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.exception.InvalidRoleException;
 import com.java.gastrotalentapp.model.Address;
-import com.java.gastrotalentapp.model.entity.Admin;
-import com.java.gastrotalentapp.model.entity.Employee;
-import com.java.gastrotalentapp.model.entity.Employer;
-import com.java.gastrotalentapp.model.entity.User;
-import com.java.gastrotalentapp.model.entity.criteria.UserSearchCriteria;
-import com.java.gastrotalentapp.model.entity.page.UserPage;
+import com.java.gastrotalentapp.model.entity.*;
 import com.java.gastrotalentapp.repository.AdminRepository;
 import com.java.gastrotalentapp.repository.EmployeeRepository;
 import com.java.gastrotalentapp.repository.EmployerRepository;
 import com.java.gastrotalentapp.repository.UserRepository;
-import com.java.gastrotalentapp.repository.criteria.UserCriteriaRepository;
 import com.java.gastrotalentapp.requests_responses.requests.UserPasswordRequest;
 import com.java.gastrotalentapp.requests_responses.requests.UserUpdateRequest;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
   private final UserRepository userRepository;
-  private final UserCriteriaRepository userCriteriaRepository;
+//  private final UserCriteriaRepository userCriteriaRepository;
   private final EmployeeRepository employeeRepository;
   private final EmployerRepository employerRepository;
   private final AdminRepository adminRepository;
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
 
-  public Page<User> getUsers(UserPage userPage, UserSearchCriteria userSearchCriteria) {
-    return userCriteriaRepository.findAllWithFilters(userPage, userSearchCriteria);
+//  public Page<User> getUsers(UserPage userPage, UserSearchCriteria userSearchCriteria) {
+//    return userCriteriaRepository.findAllWithFilters(userPage, userSearchCriteria);
+//  }
+
+  public List<User> getAllUsers() {
+    return userRepository.findAll();
   }
 
   public Optional<User> getUserById(Long id) {

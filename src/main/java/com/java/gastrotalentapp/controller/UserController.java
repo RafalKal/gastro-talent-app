@@ -1,16 +1,13 @@
 package com.java.gastrotalentapp.controller;
 
 import com.java.gastrotalentapp.model.entity.User;
-import com.java.gastrotalentapp.model.entity.criteria.UserSearchCriteria;
-import com.java.gastrotalentapp.model.entity.page.UserPage;
 import com.java.gastrotalentapp.requests_responses.requests.UserPasswordRequest;
 import com.java.gastrotalentapp.requests_responses.requests.UserUpdateRequest;
 import com.java.gastrotalentapp.service.UserService;
-import javax.validation.Valid;
-
 import io.swagger.annotations.*;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -30,11 +26,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @ApiOperation(value = "Get Users", notes = "Retrieve a paginated list of users based on search criteria")
-    public ResponseEntity<Page<User>> getUsers(
-            @ApiParam(value = "Page information", required = true) UserPage userPage,
-            @ApiParam(value = "Search criteria", required = true) UserSearchCriteria userSearchCriteria) {
-        return new ResponseEntity<>(userService.getUsers(userPage, userSearchCriteria), HttpStatus.OK);
+    @ApiOperation(value = "Get Users", notes = "Retrieve a  list of users")
+    public ResponseEntity<List<User>> getUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

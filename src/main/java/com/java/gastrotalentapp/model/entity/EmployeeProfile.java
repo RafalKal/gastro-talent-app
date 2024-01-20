@@ -35,9 +35,9 @@ public abstract class EmployeeProfile {
       joinColumns = @JoinColumn(name = "employee_id"))
   private Set<ProfessionalExperience> professionalExperiences;
 
-  @JsonIgnore
-  @ManyToMany(mappedBy = "applicants", fetch = FetchType.LAZY)
-  private Set<JobPosting> jobApplications;
+//  @JsonIgnore
+//  @ManyToMany(mappedBy = "applicants", fetch = FetchType.LAZY)
+//  private Set<JobPosting> jobApplications;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreatedDate

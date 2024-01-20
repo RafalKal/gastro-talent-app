@@ -14,9 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Cook extends EmployeeProfile {
 
-
-  private Long empId;
-
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "cook_cooking_styles", joinColumns = @JoinColumn(name = "cook_id"))
   @Enumerated(EnumType.STRING)
@@ -35,4 +32,8 @@ public class Cook extends EmployeeProfile {
       signatureDishes;                                   // Zbiór sygnaturowych (popisowych) dań kucharza ograniczony do 3 pozycji
 
   private Boolean canHandlePressure;                     // Czy potrafi pracować pod presją
+
+  private Long empId;
+
+  private Boolean isVisible;
 }

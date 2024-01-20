@@ -14,10 +14,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CookBuilder {
 
-
-
   // builder method for creating new object.
-  public static Cook buildUsingRequest(CookRequest request, UserRepository userRepository, EmployeeRepository employeeRepository) {
+  public static Cook buildUsingRequest(
+      CookRequest request, UserRepository userRepository, EmployeeRepository employeeRepository) {
 
     return Cook.builder()
         .education(request.getEducation())
@@ -39,6 +38,7 @@ public class CookBuilder {
         //                                "User not found with id: " + request.getUserId())))
         .employee(null)
         .empId(request.getUserId())
+        .isVisible(false)
         .cookingStyles(request.getCookingStyles())
         .canHandlePressure(request.getCanHandlePressure())
         .isCertifiedSousChef(request.getIsCertifiedSousChef())
@@ -63,7 +63,8 @@ public class CookBuilder {
         //                        new EntityNotFoundException(
         //                            "User not found with id: " + request.getUserId())))
         .employee(null)
-            .empId(request.getUserId())
+        .empId(request.getUserId())
+        .isVisible(request.getIsVisible())
         .cookingStyles(request.getCookingStyles())
         .canHandlePressure(request.getCanHandlePressure())
         .isCertifiedSousChef(request.getIsCertifiedSousChef())
