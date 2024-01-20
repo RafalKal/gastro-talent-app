@@ -1,5 +1,7 @@
 package com.java.gastrotalentapp.enums;
 
+
+//TODO zostawiamy tylko Cook'a prawdopodobnie
 public enum Profession {
   COOK("Cook"),                                                  // Kucharz
   WAITER("Waitress"),                                            // Kelner

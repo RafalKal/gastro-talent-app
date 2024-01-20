@@ -5,18 +5,33 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 @Service
 public class JwtService {
-  private static final String SECRET_KEY =
-      "5A7134743777397A244325466294A404E635266556A586E3272357538782F4125";
+  private static final String SECRET_KEY = loadSecretKey();
+
+
+  private static String loadSecretKey() {
+    try {
+      ClassPathResource resource = new ClassPathResource("scrt_key");
+      return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8).trim();
+    } catch (IOException e) {
+      throw new IllegalStateException("Nie można załadować klucza tajnego", e);
+    }
+  }
 
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);

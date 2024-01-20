@@ -2,7 +2,6 @@ package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.model.entity.Employee;
 import com.java.gastrotalentapp.model.entity.EmployeeProfile;
-import com.java.gastrotalentapp.model.entity.Waiter;
 import com.java.gastrotalentapp.repository.EmployeeProfileRepository;
 import com.java.gastrotalentapp.repository.EmployeeRepository;
 import com.java.gastrotalentapp.repository.UserRepository;

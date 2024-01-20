@@ -1,15 +1,12 @@
 package com.java.gastrotalentapp.enums;
 
 public enum Role {
-  VISITOR,                    // ODWIEDZAJĄCY STRONĄ INTERNETOWĄ (NIEZALOGOWANY)
   POTENTIAL_EMPLOYEE,         // POTENCJALNY PRACOWNIK / SZUKAJĄCY PRACY
   POTENTIAL_EMPLOYER,         // POTENCJALNY PRACODAWCA / SZUKAJĄCY PRACOWNIKA
   ADMIN;                      // ADMIN
 
   public String getDescription() {
     switch (this) {
-      case VISITOR:
-        return "Odwiedzający stronę internetową (niezalogowany)";
       case POTENTIAL_EMPLOYEE:
         return "Potencjalny pracownik / Szukający pracy";
       case POTENTIAL_EMPLOYER:
@@ -33,11 +30,7 @@ public enum Role {
     return this == POTENTIAL_EMPLOYER;
   }
 
-  public boolean isVisitorType() {
-    return this == POTENTIAL_EMPLOYER;
-  }
-
   public boolean isAdminType() {
-    return this == POTENTIAL_EMPLOYER;
+    return this == ADMIN;
   }
 }

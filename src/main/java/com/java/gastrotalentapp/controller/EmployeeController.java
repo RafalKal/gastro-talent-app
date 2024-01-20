@@ -39,38 +39,38 @@ public class EmployeeController {
             .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  @PostMapping
-  @ApiOperation(value = "Create Employee", notes = "Create a new employee")
-  @ApiResponses(value = {
-          @ApiResponse(code = 201, message = "Employee created"),
-          @ApiResponse(code = 400, message = "Bad Request - Invalid input data")
-  })
-  public ResponseEntity<Employee> createEmployee(
-          @ApiParam(value = "Employee details", required = true) @RequestBody Employee employee) {
-    Employee savedEmployee = employeeService.saveEmployee(employee);
-    return ResponseEntity.ok(savedEmployee);
-  }
+//  @PostMapping
+//  @ApiOperation(value = "Create Employee", notes = "Create a new employee")
+//  @ApiResponses(value = {
+//          @ApiResponse(code = 201, message = "Employee created"),
+//          @ApiResponse(code = 400, message = "Bad Request - Invalid input data")
+//  })
+//  public ResponseEntity<Employee> createEmployee(
+//          @ApiParam(value = "Employee details", required = true) @RequestBody Employee employee) {
+//    Employee savedEmployee = employeeService.saveEmployee(employee);
+//    return ResponseEntity.ok(savedEmployee);
+//  }
 
-  @PutMapping("/{id}")
-  @ApiOperation(value = "Update Employee", notes = "Update information about an employee by their ID")
-  @ApiResponses(value = {
-          @ApiResponse(code = 200, message = "Employee updated"),
-          @ApiResponse(code = 400, message = "Bad Request - Invalid input data"),
-          @ApiResponse(code = 404, message = "Employee not found")
-  })
-  public ResponseEntity<Employee> updateEmployee(
-          @ApiParam(value = "ID of the employee", required = true) @PathVariable Long id,
-          @ApiParam(value = "Updated employee details", required = true) @RequestBody Employee employee) {
-    return employeeService
-            .getEmployeeById(id)
-            .map(
-                    existingEmployee -> {
-                      employee.setId(existingEmployee.getId());
-                      Employee updatedEmployee = employeeService.saveEmployee(employee);
-                      return ResponseEntity.ok(updatedEmployee);
-                    })
-            .orElseGet(() -> ResponseEntity.notFound().build());
-  }
+//  @PutMapping("/{id}")
+//  @ApiOperation(value = "Update Employee", notes = "Update information about an employee by their ID")
+//  @ApiResponses(value = {
+//          @ApiResponse(code = 200, message = "Employee updated"),
+//          @ApiResponse(code = 400, message = "Bad Request - Invalid input data"),
+//          @ApiResponse(code = 404, message = "Employee not found")
+//  })
+//  public ResponseEntity<Employee> updateEmployee(
+//          @ApiParam(value = "ID of the employee", required = true) @PathVariable Long id,
+//          @ApiParam(value = "Updated employee details", required = true) @RequestBody Employee employee) {
+//    return employeeService
+//            .getEmployeeById(id)
+//            .map(
+//                    existingEmployee -> {
+//                      employee.setId(existingEmployee.getId());
+//                      Employee updatedEmployee = employeeService.saveEmployee(employee);
+//                      return ResponseEntity.ok(updatedEmployee);
+//                    })
+//            .orElseGet(() -> ResponseEntity.notFound().build());
+//  }
 
   @DeleteMapping("/{id}")
   @ApiOperation(value = "Delete Employee", notes = "Delete an employee by their ID")

@@ -1,6 +1,7 @@
 package com.java.gastrotalentapp.service;
 
 import com.java.gastrotalentapp.exception.InvalidRoleException;
+import com.java.gastrotalentapp.model.Address;
 import com.java.gastrotalentapp.model.entity.Admin;
 import com.java.gastrotalentapp.model.entity.Employee;
 import com.java.gastrotalentapp.model.entity.Employer;
@@ -61,6 +62,17 @@ public class UserService {
         employee.setFirstname(request.getFirstname());
         employee.setLastname(request.getLastname());
         employee.setDateOfBirth(request.getDateOfBirth());
+        employee.setPhoneNumber(request.getPhoneNumber());
+
+        Address address =
+            Address.builder()
+                .city(request.getAddress().getCity())
+                .street(request.getAddress().getStreet())
+                .postalCode(request.getAddress().getPostalCode())
+                .houseNumber(request.getAddress().getHouseNumber())
+                .build();
+
+        employee.setAddress(address);
 
         updatedUser = employee;
         break;

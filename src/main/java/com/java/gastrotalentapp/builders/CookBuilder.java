@@ -63,6 +63,7 @@ public class CookBuilder {
         //                        new EntityNotFoundException(
         //                            "User not found with id: " + request.getUserId())))
         .employee(null)
+            .empId(request.getUserId())
         .cookingStyles(request.getCookingStyles())
         .canHandlePressure(request.getCanHandlePressure())
         .isCertifiedSousChef(request.getIsCertifiedSousChef())
