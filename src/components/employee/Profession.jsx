@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from '/src/context/AuthProvider';
 import './Profession.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Profession() {
   const { auth } = useContext(AuthContext);
@@ -13,10 +12,10 @@ function Profession() {
       comprehensiveSchool: {
         comprehensiveSchoolCity: "",
         comprehensiveSchoolName: "",
-        comprehensiveSchoolType: "",
+        comprehensiveSchoolType: "HIGH_SCHOOL",
       },
       educationGraduationDate: "",
-      educationLevel: "",
+      educationLevel: "DOCTORATE",
       university: {
         universityCity: "",
         universityName: "",
@@ -28,7 +27,7 @@ function Profession() {
       endDate: "",
       jobDescription: "",
       position: "",
-      profession: "",
+      profession: "COOK",
       startDate: ""
     }],
     signatureDishes: [""],
@@ -36,48 +35,35 @@ function Profession() {
     yearsOfExperience: 0,
   });
 
-  const [isEdit, setIsEdit] = useState(false);
+   const [isEdit, setIsEdit] = useState(false);
 
-  useEffect(() => {
-    const fetchProfessionData = async () => {
-      const profileId = Number(auth.id) + 1;
+useEffect(() => {
+  const fetchProfessionData = async () => {
+    // Konwertuj auth.id na liczbę i dodaj 1
+    const profileId = Number(auth.id) + 1;
 
-      try {
-        const response = await axios.get(`http://localhost:8080/api/v1/cooks/${profileId}`, {
-          headers: {
-            'Authorization': `Bearer ${auth.token}`
-          }
-        });
-
-        if (response.data) {
-          setFormData({
-            ...response.data,
-            cookingStyles: response.data.cookingStyles || [], // Ensure cookingStyles is an array
-            education: {
-              ...response.data.education,
-              educationGraduationDate: response.data.education.educationGraduationDate || '', // Prevent null or undefined
-            },
-            professionalExperiences: response.data.professionalExperiences.map(exp => ({
-              ...exp,
-              startDate: exp.startDate || '', // Prevent null or undefined
-              endDate: exp.endDate || '', // Prevent null or undefined
-            })),
-            signatureDishes: response.data.signatureDishes || [''], // Ensure signatureDishes is an array with at least an empty string
-          });
-          setIsEdit(true);
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/cooks/${profileId}`, {
+        headers: {
+          'Authorization': `Bearer ${auth.token}`
         }
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          console.log("Profil zawodowy nie istnieje, tworzenie nowego.");
-          setIsEdit(false);
-        } else {
-          console.error("Błąd przy ładowaniu danych", error);
-        }
+      });
+      if (response.data) {
+        setFormData(response.data);
+        setIsEdit(true);
       }
-    };
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log("Profil zawodowy nie istnieje, tworzenie nowego.");
+        setIsEdit(false);
+      } else {
+        console.error("Błąd przy ładowaniu danych", error);
+      }
+    }
+  };
 
-    fetchProfessionData();
-  }, [auth.id, auth.token]);
+  fetchProfessionData();
+}, [auth.id, auth.token]);
 
 
 
@@ -86,28 +72,17 @@ const handleChange = (e) => {
   const { name, value, type, checked } = e.target;
 
   if (type === 'checkbox' && name === 'cookingStyles') {
-    // Tworzenie nowej tablicy stylów gotowania w zależności od tego, czy checkbox został zaznaczony czy nie.
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      cookingStyles: checked 
-        ? [...prevFormData.cookingStyles, value] 
-        : prevFormData.cookingStyles.filter(style => style !== value),
-    }));
+    const newStyles = checked 
+      ? [...formData.cookingStyles, value] 
+      : formData.cookingStyles.filter(style => style !== value);
+    
+    setFormData({ ...formData, cookingStyles: newStyles });
   } else if (type === 'checkbox') {
-    // Aktualizacja dla innych checkboxów, które nie są częścią tablicy cookingStyles.
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: checked,
-    }));
+    setFormData({ ...formData, [name]: checked });
   } else {
-    // Aktualizacja dla innych pól input, które nie są checkboxami.
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [name]: value });
   }
 };
-
 
 
 const handleNestedChange = (e, nestedField, subField = null) => {
@@ -129,32 +104,21 @@ const handleNestedChange = (e, nestedField, subField = null) => {
   }));
 };
 
-
 const handleComplexNestedChange = (e, nestedField, index) => {
   const { name, value } = e.target;
-  setFormData((prevFormData) => {
-    const updatedArray = [...prevFormData[nestedField]];
-    updatedArray[index] = { ...updatedArray[index], [name]: value };
-    return {
-      ...prevFormData,
-      [nestedField]: updatedArray,
-    };
+  const updatedArray = [...formData[nestedField]];
+  updatedArray[index] = { ...updatedArray[index], [name]: value };
+  setFormData({
+    ...formData,
+    [nestedField]: updatedArray,
   });
 };
 
 const handleArrayChange = (e, index, field) => {
-  const { value } = e.target;
-  setFormData((prevFormData) => {
-    const newArray = [...prevFormData[field]];
-    newArray[index] = value;
-    return {
-      ...prevFormData,
-      [field]: newArray,
-    };
-  });
+  const newArray = [...formData[field]];
+  newArray[index] = e.target.value;
+  setFormData({ ...formData, [field]: newArray });
 };
-
-
 
 
 const handleSubmit = async (e) => {
@@ -175,7 +139,6 @@ const handleSubmit = async (e) => {
     console.error("Błąd przy wysyłaniu formularza", error);
   }
 };
-
 
 
 
