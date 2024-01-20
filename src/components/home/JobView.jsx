@@ -8,41 +8,33 @@ import axios from 'axios';
 
 function JobView() {
     const { id } = useParams();
-    const [employeeInfo, setEmployeeInfo] = useState({
-        name: '',
-        position: '',
-        experience: {
-            company: '',
-            start_date: '',
-            end_date: '',
-            job_description: '',
-            position: '',
-            profession: '',
-        },
-        email: '',
-        skills: [],
-        aboutMe: '',
-        is_certified_sous_chef: false,
-        can_handle_pressure: false,
-        cooking_style: '',
-    });
-
+    const [employeeInfo, setEmployeeInfo] = useState({});
     const [selectedOption, setSelectedOption] = useState('');
     const [CompanyEmail, setEmail] = useState('');
     const [meetingDate, setMeetingDate] = useState(null);
 
     useEffect(() => {
-        const fetchEmployeeData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`/api/v1/users/${id}`);
-                const data = response.data;
-                setEmployeeInfo(data);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('JWT token is missing');
+                    return;
+                }
+
+                const response = await axios.get('/api/v1/cooks/${id}', {
+                    headers: {
+                        Authorization: 'Bearer ${token}'
+                    },
+                });
+
+                setEmployeeInfo(response.data);
             } catch (error) {
                 console.error('Error fetching employee data:', error);
             }
         };
 
-        fetchEmployeeData();
+        fetchData();
     }, [id]);
 
     const handleOptionChange = (event) => {
@@ -84,51 +76,59 @@ function JobView() {
         }
     };
 
+    // Wyciąganie danych z employeeInfo
+    const {
+        firstname, 
+        lastname, 
+        email,
+        canHandlePressure,
+        isCertifiedSousChef,
+        professionalExperiences = []
+    } = employeeInfo;
+
+    // Zakładając, że interesuje nas tylko pierwsze doświadczenie zawodowe
+    const firstExperience = professionalExperiences.length > 0 ? professionalExperiences[0] : {};
+
     return (
         <Container fluid className="px-3">
             <Row className="mb-4 align-items-center">
-                <Col className="">
-                    <strong>Imie i Nazwisko:</strong><h1>{employeeInfo.name}</h1>
-                    <strong>Stanowisko:</strong><h3>{employeeInfo.position}</h3>
-                    <strong>Email:</strong><h2>{employeeInfo.email}</h2>
+                <Col>
+                    <strong>Imię i Nazwisko:</strong><h1>{firstname} {lastname}</h1>
+                    <strong>Email:</strong><h2>{email}</h2>
                 </Col>
                 <Col className="col-6">
-                <h4>Doświadczenie:</h4>
-                <Table striped bordered hover style={{ width: '80%', margin: 'auto' }}>
-                    <tbody>
-                        <tr>
-                            <td style={{ width: '20%' }}><strong>Miejsce pracy:</strong></td>
-                            <td>{employeeInfo.experience.company}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Opis pracy:</strong></td>
-                            <td>{employeeInfo.experience.job_description}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Data rozpoczęcia:</strong></td>
-                            <td>{employeeInfo.experience.start_date}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Data zakończenia:</strong></td>
-                            <td>{employeeInfo.experience.end_date}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Stanowisko:</strong></td>
-                            <td>{employeeInfo.experience.profession}</td>
-                        </tr>
-                    </tbody>
-                </Table>
+                    <h4>Doświadczenie:</h4>
+                    <Table striped bordered hover style={{ width: '80%', margin: 'auto' }}>
+                        <tbody>
+                            <tr>
+                                <td style={{ width: '20%' }}><strong>Miejsce pracy:</strong></td>
+                                <td>{firstExperience.company}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Opis pracy:</strong></td>
+                                <td>{firstExperience.jobDescription}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data rozpoczęcia:</strong></td>
+                                <td>{firstExperience.startDate}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data zakończenia:</strong></td>
+                                <td>{firstExperience.endDate}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stanowisko:</strong></td>
+                                <td>{firstExperience.position}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
                     <h4>Umiejętności:</h4>
                     <ul>
-                        {employeeInfo.skills.map((skill, index) => (
-                            <li key={index}>{skill}</li>
-                        ))}
+                        <li>Czy potrafię znieść presję: {canHandlePressure ? 'Tak' : 'Nie'}</li>
+                        <li>Czy jestem certyfikowanym pomocnikiem szefa kuchni: {isCertifiedSousChef ? 'Tak' : 'Nie'}</li>
                     </ul>
-                    <h4>O mnie:</h4>
-                    <p>{employeeInfo.aboutMe}</p>
-
                 </Col>
-                <Col className="">
+                <Col>
                     <Form>
                         <label htmlFor="selectOption">Zaplanuj spotkanie z kandydatem:</label>
                         <Form.Select
@@ -136,7 +136,7 @@ function JobView() {
                             value={selectedOption}
                             onChange={handleOptionChange}
                         >
-                            <option value="">-- Select --</option>
+                            <option value="">-- Wybierz opcję --</option>
                             <option value="option1">Umów rozmowę</option>
                             <option value="option2">Odrzuć kandydata</option>
                             <option value="option3">Zaakceptuj kandydata</option>
@@ -147,7 +147,7 @@ function JobView() {
                             id="CompanyEmail"
                             value={CompanyEmail}
                             onChange={handleEmailChange}
-                            placeholder="Enter company email"
+                            placeholder="Wprowadź e-mail firmy"
                         />
                         <label htmlFor="meetingDate">Data:</label>
                         <DatePicker
@@ -157,13 +157,13 @@ function JobView() {
                             showTimeSelect
                             timeFormat="HH:mm"
                             timeIntervals={15}
-                            timeCaption="Time"
+                            timeCaption="Czas"
                             dateFormat="MMMM d, yyyy h:mm aa"
                             placeholderText="Wybierz datę spotkania"
                             minDate={new Date()}
                         />
                         <button type="button" onClick={handleSubmitButtonClick}>
-                            Submit
+                            Zatwierdź
                         </button>
                     </Form>
                 </Col>
