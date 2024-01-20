@@ -1,196 +1,232 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import './user.css';
+import 'font-awesome/css/font-awesome.min.css';
+import AuthContext from '/src/context/AuthProvider';
 
-function Ustawienia() {
-  const [formData, setFormData] = useState({
-    imie: 'Grażyna',
-    nazwisko: 'Kowalska',
-    email: 'grazyna.kowalska@gmail.com',
-    numerTelefonu: '123 456 789',
-    zawod: 'kucharz',
-    umiejetnosci: {
-      projektowanieStron: 4,
-      programowanieWeb: 5,
-      wordpress: 3,
-      wooCommerce: 4,
-      phpDotNet: 3,
-    },
-    wymagania: 'Wymagania użytkownika',
-    zdjecieProfilowe: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog',
+function Settings() {
+  const { auth } = useContext(AuthContext);
+
+  // Inicjalizacja stanu danych użytkownika
+  const [userData, setUserData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    dateOfBirth: '',
+    phoneNumber: '',
+    address: {
+      city: '',
+      postalCode: '',
+      street: '',
+      houseNumber: ''
+    }
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  useEffect(() => {
+    const userId = auth.id;
+    axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}`
+      }
+    })
+    .then(response => {
+      const fetchedData = response.data;
+      setUserData(fetchedData);
+    })
+    .catch(error => {
+      console.error("Błąd przy pobieraniu danych użytkownika", error);
+    });
+  }, [auth.id, auth.token]);
 
-  const handleSkillChange = (nazwaUmiejetnosci, nowaWartosc) => {
-    setFormData({
-      ...formData,
-      umiejetnosci: {
-        ...formData.umiejetnosci,
-        [nazwaUmiejetnosci]: nowaWartosc,
-      },
+  const handleUserDataChange = (e) => {
+  const { name, value } = e.target;
+  const updatedUserData = { ...userData };
+
+  // Jeśli pole dotyczy adresu, zaktualizuj odpowiednią część obiektu address
+  if (name.startsWith("address.")) {
+    const addressField = name.split(".")[1];
+    updatedUserData.address[addressField] = value;
+  } else {
+    updatedUserData[name] = value;
+  }
+
+  setUserData(updatedUserData);
+};
+
+  // Obsługa przycisku "Save Profile" do zapisu zmian
+  const handleFormSubmit = () => {
+    if (!userData.firstname || !userData.lastname || !/^[1-9]\d{8}$/.test(userData.phoneNumber)) {
+      console.error("Błędne dane");
+      return;
+    }
+    const userId = auth.id;
+    axios.put(`http://localhost:8080/api/v1/users/${userId}`, userData, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}`
+      }
+    })
+    .then(response => {
+      console.log("Zapisano zmiany!", response.data);
+      // Dodaj logikę po udanej aktualizacji
+    })
+    .catch(error => {
+      console.error("Błąd przy zapisywaniu zmian", error);
+      // Dodaj logikę obsługi błędów
     });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData({ ...formData, zdjecieProfilowe: reader.result });
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Przetwarzaj dane formularza lub wysyłaj je na serwer
-  };
-
   return (
-    <div className="container rounded bg-white mt-5 mb-5">
-      <div className="row">
-        <div className="col-md-3 border-right">
-          <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img
-              className="rounded-circle mt-5"
-              width="150px"
-              src={formData.zdjecieProfilowe}
-              alt="Profile"
-            />
-            <input
-              type="file"
-              className="file btn btn-lg btn-primary"
-              onChange={handleFileChange}
-              accept="image/*"
-            />
+    <div className="container emp-profile">
+      <form method="post">
+        <div className="row">
+          <div className="col-md-4">
+            <div className="profile-img">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt="" />
+              <div className="file btn btn-lg btn-primary">
+                Zmień zdjęcie
+                <input type="file" name="file" />
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="profile-head">
+              <h5>{userData.firstName} {userData.lastName}</h5>
+             
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item">
+                  <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">O mnie</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-md-2">
+           
           </div>
         </div>
-       <div className="col-md-3 border-right">
-          {/* Zdjęcie profilowe i dane użytkownika */}
-        </div>
-        <div className="col-md-5 border-right">
-          <div className="p-3 py-5">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="text-right">Ustawienia profilu</h4>
-            </div>
-            <form onSubmit={handleSubmit}>
-              <div className="row mt-2">
-                <div className="col-md-6">
-                  <label className="labels">Imię</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Imię"
-                    name="imie"
-                    value={formData.imie}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="labels">Nazwisko</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Nazwisko"
-                    name="nazwisko"
-                    value={formData.nazwisko}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-3">
-                <div className="col-md-12">
-                  <label className="labels">Numer Telefonu</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Wprowadź numer telefonu"
-                    name="numerTelefonu"
-                    value={formData.numerTelefonu}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <label className="labels">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Wprowadź adres email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <label className="labels">Zawód</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Wprowadź zawód"
-                    name="zawod"
-                    value={formData.zawod}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mt-5">
-                <div className="col-md-12">
-                  <label className="labels">Umiejętności</label>
-                  <div>
-                    <div className="d-flex align-items-center">
-                      <span className="mr-2"> kuchnia:</span>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="projektowanieStron"
-                        value={formData.umiejetnosci.projektowanieStron}
-                        onChange={(e) =>
-                          handleSkillChange('projektowanieStron', parseInt(e.target.value, 10))
-                        }
-                        min="0"
-                        max="5"
-                      />
-                    </div>
-                    {/* Powtórz powyższy blok dla innych umiejętności */}
+        <div className="row">
+          
+          <div className="col-md-8">
+            <div className="tab-content profile-tab" id="myTabContent">
+              <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>Imię</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="Imię" value={userData.firstname} onChange={handleUserDataChange}  name="firstname"/>
                   </div>
                 </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <label className="labels">Wymagania</label>
-                  <textarea
-                    className="form-control"
-                    placeholder="Wymagania użytkownika"
-                    name="wymagania"
-                    value={formData.wymagania}
-                    onChange={handleChange}
-                  />
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>Nazwisko</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="Nazwisko" value={userData.lastname} onChange={handleUserDataChange}  name="lastname"/>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>Email</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="email" className="form-control" placeholder="Email" value={userData.email} onChange={handleUserDataChange}   name="email"/>
+                  </div>
+                   
+                </div>
+                 <div className="row">
+                  <div className="col-md-6">
+                    <label>numer telefonu</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="numer" value={userData.phoneNumber} onChange={handleUserDataChange}  name="phoneNumber"/>
+                  </div>
+                   
+                </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <label>data urodzin</label>
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      type="date"
+                      className="form-control"
+                      placeholder="data"
+                      value={userData.dateOfBirth}
+                      onChange={handleUserDataChange}
+                      name="dateOfBirth"
+                    />
+                  </div>
+                   {/* Pole numeru telefonu */}
+  
+
+  
+              {/* Pole miasta */}
+                <div className="col-md-6">
+                  <label>Miasto</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Miasto" 
+                    value={userData.address && userData.address.city ? userData.address.city : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.city"/>
+                </div>
+
+
+              {/* Pole ulicy */}
+
+                <div className="col-md-6">
+                  <label>Ulica</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Ulica" 
+                    value={userData.address && userData.address.street ? userData.address.street : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.street"/>
                 </div>
               </div>
-              <div className="mt-5 text-center">
-                <button className="btn btn-primary profile-button" type="submit">
-                  Zapisz profil
-                </button>
+
+              {/* Pole numeru domu */}
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Numer domu</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Numer domu" 
+                    value={userData.address && userData.address.houseNumber ? userData.address.houseNumber : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.houseNumber"/>
+                </div>
               </div>
-            </form>
+
+              {/* Pole kodu pocztowego */}
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Kod pocztowy</label>
+                </div>
+                <div className="col-md-6">
+                  <input type="text" className="form-control" placeholder="Kod pocztowy" 
+                    value={userData.address && userData.address.postalCode ? userData.address.postalCode : ''} 
+                    onChange={handleUserDataChange} 
+                    name="address.postalCode"/>
+                </div>
+
+
+                </div>
+                
+               
+              </div>
+              <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                {/* Dodaj inne dane użytkownika do zmiany, jeśli są dostępne */}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="col-md-4">
-          {/* Edycja doświadczenia lub innych informacji */}
+         <div className="mt-5 text-center">
+          <button className="btn btn-primary profile-button" type="button" onClick={handleFormSubmit}>Save Profile</button>
         </div>
-        <div className="col-md-4">
-          {/* Edycja doświadczenia lub innych informacji */}
-        </div>
-      </div>
+      </form>
     </div>
   );
 }
 
-export default Ustawienia;
+export default Settings;

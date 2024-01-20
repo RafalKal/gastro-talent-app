@@ -1,39 +1,82 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import './user.css';
 import 'font-awesome/css/font-awesome.min.css';
+import AuthContext from '/src/context/AuthProvider';
 import { Link } from 'react-router-dom';
 
-function createRatingStars(rating) {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (i <= rating) {
-      stars.push(<i key={i} className="fa fa-star yellow-star"></i>);
-    } else {
-      stars.push(<i key={i} className="fa fa-star text-secondary"></i>);
-    }
-  }
-  return stars;
-}
-
 function User() {
+const { auth } = useContext(AuthContext);
+  const [userData, setUserData] = useState({
+  firstName: "",
+  lastName: "",
+  email: "",
+  address: {
+    city: "",
+    postalCode: "",
+    street: "",
+    houseNumber: ""
+  }
     
+    
+  });
+
+const [chiefData, setChiefData] = useState({
+  professionalexperiences:{
+    profession: "",
+  }
+  });
+
+  useEffect(() => {
+    // Tutaj możesz użyć tokena do uwierzytelnienia i pobrania danych użytkownika
+    const userId = auth.id;
+    axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
+      }
+    })
+      .then(response => {
+        setUserData(response.data);
+      })
+      .catch(error => {
+        console.error("Błąd przy pobieraniu danych użytkownika", error);
+      });
+  }, [auth.id,auth.token]);
+
+useEffect(() => {
+    // Tutaj możesz użyć tokena do uwierzytelnienia i pobrania danych użytkownika
+    const profileId = Number(auth.id) + 1;
+    axios.get(`http://localhost:8080/api/v1/cooks/${profileId}`, {
+      headers: {
+        'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
+      }
+    })
+      .then(response => {
+        setChiefData(response.data);
+      })
+      .catch(error => {
+        console.error("Błąd przy pobieraniu danych użytkownika", error);
+      });
+  }, [auth.id,auth.token]);
+
+  
   return (
     <div className="container emp-profile">
       <form method="post">
         <div className="row">
           <div className="col-md-4">
             <div className="profile-img">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt="" />
               <div className="file btn btn-lg btn-primary">
                 Zmień zdjęcie
-                <input type="file" name="file"/>
+                <input type="file" name="file" />
               </div>
             </div>
           </div>
           <div className="col-md-6">
             <div className="profile-head">
-              <h5>Grazyna Kowalska</h5>
-              <h6> kucharz</h6>
+              <h5>{userData.firstname} {userData.lastname}</h5>
+              <h6>{chiefData.profession}</h6>
               <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                   <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">O mnie</a>
@@ -42,33 +85,21 @@ function User() {
             </div>
           </div>
           <div className="col-md-2">
-            <Link to="/user/settings" className="profile-edit-btn">Edytuj profil</Link>
+      <Link to="/user/settings" className="profile-edit-btn">Edytuj profil</Link>
           </div>
         </div>
         <div className="row">
           <div className="col-md-4">
-            <div className="profile-work">
-              <p>LINKI DO PRAC</p>
-              <a href="">Link do swoich dań</a><br/>
-              <a href="">linkedin</a><br/>
-              <a href="">facebook</a>
-              <p>UMIEJĘTNOŚCI</p>
-              <p>kuchnia polska: {createRatingStars(4)}</p>
-              <p>kuchnia włoska: {createRatingStars(5)}</p>
-              <p>kuchnia niemiecka: {createRatingStars(3)}</p>
-              <p>kuchnia tajska: {createRatingStars(4)}</p>
-              <p>kuchnia indysjska: {createRatingStars(3)}</p>
-            </div>
           </div>
           <div className="col-md-8">
             <div className="tab-content profile-tab" id="myTabContent">
               <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div className="row">
                   <div className="col-md-6">
-                    <label>Imie</label>
+                    <label>Imię</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Grazyna</p>
+                    <p>{userData.firstname}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -76,7 +107,7 @@ function User() {
                     <label>Nazwisko</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Kowalska</p>
+                    <p>{userData.lastname}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -84,15 +115,7 @@ function User() {
                     <label>Email</label>
                   </div>
                   <div className="col-md-6">
-                    <p>Grazyna@gmail.com</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Telefon</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>123 456 789</p>
+                    <p>{userData.email}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -100,50 +123,58 @@ function User() {
                     <label>Zawód</label>
                   </div>
                   <div className="col-md-6">
-                    <p>kucharz</p>
+                    <p>{chiefData.profession}</p>
                   </div>
                 </div>
+                 <div className="row">
+                  <div className="col-md-6">
+                    <label>nr telefonu</label>
+                  </div>
+                  <div className="col-md-6">
+                    <p>{userData.phoneNumber}</p>
+                  </div>
+                </div>
+                 <div className="row">
+  <div className="col-md-6">
+    <label>Miasto</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.city ? userData.address.city : ''}</p>
+  </div>
+</div>
+
+{/* Powtórz to dla innych pól, takich jak ulica, kod pocztowy itp. */}
+<div className="row">
+  <div className="col-md-6">
+    <label>Kod pocztowy</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.postalCode ? userData.address.postalCode : ''}</p>
+  </div>
+</div>
+
+<div className="row">
+  <div className="col-md-6">
+    <label>Ulica</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.street ? userData.address.street : ''}</p>
+  </div>
+</div>
+
+{/* Pole numeru domu */}
+<div className="row">
+  <div className="col-md-6">
+    <label>Numer domu</label>
+  </div>
+  <div className="col-md-6">
+    <p>{userData.address && userData.address.houseNumber ? userData.address.houseNumber : ''}</p>
+  </div>
+</div>
+                
               </div>
               <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Doświadczenie</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>4 lata</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Stawka za godzinę</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>30zł/h</p>
-                  </div>
-                </div>
                 
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Poziom języka angielskiego</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>Ekspert</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <label>Dostępność</label>
-                  </div>
-                  <div className="col-md-6">
-                    <p>pół etatu</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-12">
-                    <label>O sobie</label><br/>
-                    <p>Twoje szczegółowe informacje</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
