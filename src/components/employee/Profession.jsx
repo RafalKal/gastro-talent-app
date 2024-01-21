@@ -37,6 +37,10 @@ function Profession() {
   });
 
    const [isEdit, setIsEdit] = useState(false);
+   const [addProfileSuccess, setAddProfileSuccess] = useState(false);
+const [saveProfileSuccess, setSaveProfileSuccess] = useState(false);
+const [error, setError] = useState(null);
+const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
  const [cookId, setCookId] = useState(null); // Dodaj stan dla cookId
 
@@ -89,6 +93,7 @@ const handleChange = (e) => {
   } else {
     setFormData({ ...formData, [name]: value });
   }
+  setError(null);
 };
 
 
@@ -109,6 +114,7 @@ const handleNestedChange = (e, nestedField, subField = null) => {
           [name]: value,
         },
   }));
+  setError(null);
 };
 
 const handleComplexNestedChange = (e, nestedField, index) => {
@@ -119,19 +125,30 @@ const handleComplexNestedChange = (e, nestedField, index) => {
     ...formData,
     [nestedField]: updatedArray,
   });
+  setError(null);
 };
 
 const handleArrayChange = (e, index, field) => {
   const newArray = [...formData[field]];
   newArray[index] = e.target.value;
   setFormData({ ...formData, [field]: newArray });
+  setError(null);
 };
 
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  const profileId = isEdit ? Number(auth.id) + 1 : auth.id;
-   const url = isEdit && cookId ? `http://localhost:8080/api/v1/cooks/${cookId}` : 'http://localhost:8080/api/v1/cooks';
+
+  // Dodaj warunek sprawdzający daty rozpoczęcia i zakończenia
+  if (formData.professionalExperiences.some(experience => new Date(experience.startDate) >= new Date(experience.endDate))) {
+    setError("Data rozpoczęcia musi być przed datą zakończenia.");
+    setIsFormSubmitted(true); 
+    return;
+  } else {
+    setError(null); // resetuje błąd, jeśli wszystko jest w porządku
+  }
+
+  const url = isEdit && cookId ? `http://localhost:8080/api/v1/cooks/${cookId}` : 'http://localhost:8080/api/v1/cooks';
   const method = isEdit ? 'put' : 'post';
 
   try {
@@ -143,18 +160,25 @@ const handleSubmit = async (e) => {
     });
     console.log(response.data);
     setIsEdit(true);
- } catch (error) {
-  if (error.response) {
-    console.log(error.response.data); // Wiadomość błędu z serwera
-    console.log(error.response.status); // Kod statusu HTTP
-    console.log(error.response.headers); // Nagłówki odpowiedzi
-  } else if (error.request) {
-    console.log(error.request); // W przypadku braku odpowiedzi serwera
-  } else {
-    console.log('Error', error.message); // Inne błędy
+    if (isEdit) {
+      setSaveProfileSuccess(true); // Ustaw stan sukcesu zapisu profilu
+      setAddProfileSuccess(false); // Wyłącz stan sukcesu dodawania profilu
+    } else {
+      setAddProfileSuccess(true); // Ustaw stan sukcesu dodawania profilu
+      setSaveProfileSuccess(false); // Wyłącz stan sukcesu zapisu profilu
+    }
+  } catch (error) {
+    setError("Wystąpił błąd podczas zapisywania profilu.");
+    if (isEdit) {
+      setSaveProfileSuccess(false); // Wyłącz stan sukcesu zapisu profilu
+      setAddProfileSuccess(false); // Wyłącz stan sukcesu dodawania profilu
+    } else {
+      setAddProfileSuccess(false); // Wyłącz stan sukcesu dodawania profilu
+      setSaveProfileSuccess(false); // Wyłącz stan sukcesu zapisu profilu
+    }
   }
 }
-};
+
 
 
 
@@ -392,11 +416,30 @@ return (
         </div>
 
         {/* Przycisk wysyłania */}
-         <div className="text-center">
+        <div className="text-center">
   <button type="submit" className="btn btn-primary">
-    {isEdit ? "Edytuj Profesję" : "Utwórz Profesję"}
+    {isEdit ? "Zapisz Zmiany" : "Utwórz Profil Kucharza"}
   </button>
 </div>
+
+
+{addProfileSuccess && (
+  <div className="alert alert-success mt-3">
+    Dodano profil poprawnie!
+  </div>
+)}
+
+{saveProfileSuccess && (
+  <div className="alert alert-success mt-3">
+    Zapisano profil poprawnie!
+  </div>
+)}
+{error && isFormSubmitted && (
+  <div className="alert alert-danger mt-3">
+    {error}
+  </div>
+)}
+
       </form>
     </div>
   );
