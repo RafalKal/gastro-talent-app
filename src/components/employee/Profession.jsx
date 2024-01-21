@@ -76,30 +76,6 @@ function Profession() {
   }, [auth.id, auth.token]);
 
 
-
-
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    if (type === 'checkbox' && name === 'cookingStyles') {
-      const newStyles = checked
-        ? [...formData.cookingStyles, value]
-        : formData.cookingStyles.filter(style => style !== value);
-
-      setFormData({ ...formData, cookingStyles: newStyles });
-    } else if (type === 'checkbox') {
-      setFormData({ ...formData, [name]: checked });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-
-
-
-
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
