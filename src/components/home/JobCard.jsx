@@ -5,7 +5,7 @@ import { GrLocation } from 'react-icons/gr';
 import { HiOutlineClock } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 
-function JobCard({ cookData }) {
+function JobCard({ cookData, userData }) {
     const navigate = useNavigate();
 
     const handleMoreClick = () => {
@@ -31,12 +31,14 @@ function JobCard({ cookData }) {
                             <Card.Title className="jobTitle">{cookData.profession}</Card.Title>
                             <Button className="jobDetails" onClick={handleMoreClick}>Więcej</Button>
                         </div>
-                        <p className="jobName">Imie i Nazwisko: {cookData.employee?.firstname} {cookData.employee?.lastname}</p>
+                        <p className="jobName">Imie i Nazwisko: {cookData.user?.firstname} {cookData.user?.lastname}</p>
                         <div className="job-details">
                             <Row className="job-info ps-0">
                                 <Col md={12}>
                                     <GrLocation className="nav-icon mb-1 pw-1 " />
-                                    <span className="iconText">Miasto: {cookData.employee?.address?.city}</span>
+                                    <span className="iconText">
+                                        Miasto: {cookData.user?.address?.city ?? 'Brak danych'}
+                                    </span>
                                 </Col>
                             </Row>
                             <Row className="job-info ps-0">

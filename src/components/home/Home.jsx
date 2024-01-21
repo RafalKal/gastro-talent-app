@@ -7,9 +7,9 @@ import axios from '../../api/axios';
 
 function Home() {
     const [cooks, setCooks] = useState([]);
-
+    const [users, setUsers] = useState([]);
     useEffect(() => {
-        const fetchCooksData = async () => {
+        const fetchCooksAndUserData = async () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
@@ -17,20 +17,30 @@ function Home() {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:8080/api/v1/cooks/is-visible', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
+                // Pobierz listę kucharzy
+                const cooksResponse = await axios.get('http://localhost:8080/api/v1/cooks/is-visible', {
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                setCooks(response.data);
-                console.log(response.data);
+                const cooks = cooksResponse.data;
+                console.log(cooksResponse);
+                // Dla każdego kucharza pobierz dane użytkownika
+                const cooksDataWithUser = await Promise.all(cooks.map(async cook => {
+                    const userResponse = await axios.get(`http://localhost:8080/api/v1/users/39`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+
+                    return { ...cook, user: userResponse.data };
+                }));
+                console.log(cooksDataWithUser);
+                setCooks(cooksDataWithUser);
             } catch (error) {
-                console.error('Error fetching cooks data:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        fetchCooksData();
+        fetchCooksAndUserData();
     }, []);
+
     return (
         <Container fluid className="px-4">
             <Row className="mt-5 topContainer ">
