@@ -25,7 +25,7 @@ function Home() {
                 console.log(cooksResponse);
                 // Dla każdego kucharza pobierz dane użytkownika
                 const cooksDataWithUser = await Promise.all(cooks.map(async cook => {
-                    const userResponse = await axios.get(`http://localhost:8080/api/v1/users/39`, {
+                    const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${cook.empId}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
 
@@ -56,7 +56,7 @@ function Home() {
                 </Col>
             </Row>
             <Row className="searchTop">
-                <InputGroup className="mb-3 inputSearch">
+                {/* <InputGroup className="mb-3 inputSearch">
                     <Form.Control
                         type="text"
                         placeholder="Jakiej pracy szukasz"
@@ -68,7 +68,7 @@ function Home() {
                     <Button onClick={handleSearchButtonClick}>
                         Szukaj
                     </Button>
-                </InputGroup>
+                </InputGroup> */}
             </Row>
             <Row className="px-5 customFilterRow">
                 <Filter /> {/* Filter component */}
