@@ -1,18 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Navigate, useNavigate } from 'react-router-dom';
 import './jobcard.css';
 import { FaSignInAlt } from 'react-icons/fa';
 import { GrLocation } from 'react-icons/gr';
+import AuthContext from '/src/context/AuthProvider';
 import { HiOutlineClock } from 'react-icons/hi';
 import { TbPigMoney } from 'react-icons/tb';
+import axios from 'axios';
 import { BiCalendarCheck } from 'react-icons/bi';
 
 function JobCard({jobId}) {
-     const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [cookData, setCookData] = useState([]);
+    const [userData, setUserData] = useState([]);
+    const { auth } = useContext(AuthContext);
+
+    useEffect(() => {
+        const userId = auth.id;
+        axios.get(`http://localhost:8080/api/v1/users`, {
+            headers: {
+                'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
+              } 
+        })
+        .then(response => {
+            setUserData(response.data);
+        })
+        .catch(error => {
+            console.error("Błąd pobierania danych", error);
+        });
+
+    }, [auth.id, auth.token]);
+
+    useEffect(() => {
+        const cookId = auth.id;
+        axios.get(`http://localhost:8080/api/v1/cooks/by-user-id/${cookId}`, {
+        headers: {
+            'Authorization': `Bearer ${auth.token}`
+            }
+        })
+        .then(response => {
+            setCookData(response.data);
+        })
+        .catch(error => {
+            console.error("Błąd przy pobieraniu danych", error);
+        });
+    }, [auth.id, auth.token]);
 
      const handleCardClick = () => {
-         navigate(`/cook/${jobId}`)
+         navigate(`/cooks/by-user-id/${jobId}`)
      }
     
     return (
@@ -20,7 +56,7 @@ function JobCard({jobId}) {
             <Row>
                 <Col md={9}>
                     <Card.Body>
-                        <Card.Title className="jobTitle">Szkolna 17</Card.Title>
+                        <Card.Title className="jobTitle">{userData.firstname} {userData.lastname}</Card.Title>
                         <p className="jobName">Tester nitro </p>
                         <div className="job-details">
                             <Row className="job-info ps-0">
