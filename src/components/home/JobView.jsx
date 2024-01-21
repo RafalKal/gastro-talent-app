@@ -101,23 +101,23 @@ function JobView() {
                         <tbody>
                             <tr>
                                 <td style={{ width: '20%' }}><strong>Miejsce pracy:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].company : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.company || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Opis pracy:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].jobDescription : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.jobDescription || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Data rozpoczęcia:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].startDate : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.startDate || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Data zakończenia:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].endDate : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.endDate || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Stanowisko:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].position : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.position || ''}</td>
                             </tr>
                         </tbody>
                     </Table>
