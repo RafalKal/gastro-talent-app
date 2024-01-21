@@ -1,10 +1,23 @@
-import React from 'react'
+import React, {useState } from 'react'
 import { Container, Row, Col, Form, InputGroup, Dropdown, Button } from 'react-bootstrap';
 import './home.css';
 import JobCard from './JobCard';
 import Filter from './Filter';
 
 function Home() {
+
+    const [searchText, setSearchText] = useState('');
+    const [filteredJobs, setFilteredJobs] = useState([]);
+
+    const handleSearchButtonClick = () => {
+        // Tutaj dodaj logikę filtrowania na podstawie searchText
+        // Aktualizuj stan filteredJobs
+        // Możesz użyć metody .filter() do porównania tekstu z danymi job
+
+        // Przykładowa implementacja (dostosuj do struktury danych w JobCard):
+        const filtered = allJobs.filter(job => job.title.includes(searchText));
+        setFilteredJobs(filtered);
+    };
     return (
         <Container fluid className="px-4">
             <Row className="mt-5 topContainer ">
@@ -20,24 +33,17 @@ function Home() {
                 </Col>
             </Row>
             <Row className="searchTop">
-                <InputGroup className="mb-3 inputSearch" >
-                    <Form.Select aria-label="Default select example" >
-                        <option >Jakiej pracy szukasz</option>
-                        <option value="1">Kucharz</option>
-                        <option value="2">Kelner</option>
-                        <option value="3">Menedżer</option>
-                        <option value="4">Tester</option>
-                    </Form.Select>
-                    <Form.Select aria-label="Default select example">
-                        <option >Lokalizacja</option>
-                        <option value="a">Praca zdalna</option>
-                        <option value="b">Niedaleko mnie (5km)</option>
-                        <option value="c">W zasięgu 10 km</option>
-                        <option value="d">W zasięgu 25 km</option>
-                        <option value="e">W zasięgu 50 km</option>
-                    </Form.Select>
-                    <Button>
-                        Szukaj pracy
+                <InputGroup className="mb-3 inputSearch">
+                    <Form.Control
+                        type="text"
+                        placeholder="Jakiej pracy szukasz"
+                        aria-label="Job search input"
+                        aria-describedby="basic-addon1"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                    />
+                    <Button onClick={handleSearchButtonClick}>
+                        Szukaj
                     </Button>
                 </InputGroup>
             </Row>
