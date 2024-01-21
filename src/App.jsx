@@ -35,7 +35,7 @@ function App() {
         {/*Public routes*/}
         <Route path="/" element={<Home />} />
         <Route path="/unauthorized" element={<Unathorized />} />
-        <Route path="/jobs/:id" element={<JobView />} />
+        <Route path="/cook/:id" element={<JobView />} />
         {/*Protected routes*/}
         <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<Admin />} />

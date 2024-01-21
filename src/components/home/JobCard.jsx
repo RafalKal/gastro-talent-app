@@ -12,7 +12,7 @@ function JobCard({jobId}) {
      const navigate = useNavigate();
 
      const handleCardClick = () => {
-         navigate(`/jobs/${jobId}`)
+         navigate(`/cook/${jobId}`)
      }
     
     return (
