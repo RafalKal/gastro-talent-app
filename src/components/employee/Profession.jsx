@@ -33,24 +33,30 @@ function Profession() {
     signatureDishes: [""],
     userId: auth.id,
     yearsOfExperience: 0,
+    isVisible: false,
   });
 
    const [isEdit, setIsEdit] = useState(false);
 
+ const [cookId, setCookId] = useState(null); // Dodaj stan dla cookId
+
 useEffect(() => {
   const fetchProfessionData = async () => {
-    // Konwertuj auth.id na liczbę i dodaj 1
-    const profileId = Number(auth.id) + 1;
-
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/cooks/${profileId}`, {
+      const response = await axios.get(`http://localhost:8080/api/v1/cooks/by-user-id/${auth.id}`, {
         headers: {
           'Authorization': `Bearer ${auth.token}`
         }
       });
+
       if (response.data) {
-        setFormData(response.data);
-        setIsEdit(true);
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          ...response.data,
+          empId: response.data.empId || prevFormData.empId, // Użyj empId z odpowiedzi, jeśli istnieje; w przeciwnym razie zachowaj obecne empId
+        }));
+         setCookId(response.data.id); // Ustaw cookId z odpowiedzi
+          setIsEdit(true);
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -64,6 +70,7 @@ useEffect(() => {
 
   fetchProfessionData();
 }, [auth.id, auth.token]);
+
 
 
 
@@ -124,7 +131,7 @@ const handleArrayChange = (e, index, field) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   const profileId = isEdit ? Number(auth.id) + 1 : auth.id;
-  const url = isEdit ? `http://localhost:8080/api/v1/cooks/${profileId}` : 'http://localhost:8080/api/v1/cooks';
+   const url = isEdit && cookId ? `http://localhost:8080/api/v1/cooks/${cookId}` : 'http://localhost:8080/api/v1/cooks';
   const method = isEdit ? 'put' : 'post';
 
   try {
@@ -135,9 +142,18 @@ const handleSubmit = async (e) => {
       }
     });
     console.log(response.data);
-  } catch (error) {
-    console.error("Błąd przy wysyłaniu formularza", error);
+    setIsEdit(true);
+ } catch (error) {
+  if (error.response) {
+    console.log(error.response.data); // Wiadomość błędu z serwera
+    console.log(error.response.status); // Kod statusu HTTP
+    console.log(error.response.headers); // Nagłówki odpowiedzi
+  } else if (error.request) {
+    console.log(error.request); // W przypadku braku odpowiedzi serwera
+  } else {
+    console.log('Error', error.message); // Inne błędy
   }
+}
 };
 
 
@@ -377,16 +393,27 @@ return (
           />
         </div>
 
+
+ <div className="form-group">
+          <input
+            type="checkbox"
+            id="isVisible"
+            name="isVisible"
+            checked={formData.isVisible}
+            onChange={handleChange}
+          />
+          <label htmlFor="isVisible">Czy profil jest widoczny</label>
+        </div>
+
         {/* Przycisk wysyłania */}
          <div className="text-center">
-          <button type="submit" className="btn btn-primary">
-            Utwórz Profesję
-          </button>
-        </div>
+  <button type="submit" className="btn btn-primary">
+    {isEdit ? "Edytuj Profesję" : "Utwórz Profesję"}
+  </button>
+</div>
       </form>
     </div>
   );
 }
 
 export default Profession;
-
