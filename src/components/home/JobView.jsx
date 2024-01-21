@@ -6,6 +6,7 @@ import { Container, Row, Col, Form, Table } from 'react-bootstrap';
 import AuthContext from '/src/context/AuthProvider';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import './jobview.css';
 
 function JobView() {
     const { auth } = useContext(AuthContext);
@@ -89,18 +90,18 @@ function JobView() {
 
 
     return (
-        <Container fluid className="px-3">
+        <Container fluid className="main-content px-3">
             <Row className="mb-4 align-items-center">
-                <Col>
+                <Col className = "small-info">
                     <strong>Imię i Nazwisko:</strong><h1>{userData.firstname} {userData.lastname}</h1>
                     <strong>Email:</strong><h2>{userData.email}</h2>
                 </Col>
-                <Col className="col-6">
+                <Col className="big-info col-6">
                     <h4>Doświadczenie:</h4>
                     <Table striped bordered hover style={{ width: '80%', margin: 'auto' }}>
                         <tbody>
                             <tr>
-                                <td style={{ width: '20%' }}><strong>Miejsce pracy:</strong></td>
+                                <td style={{ width: '20%',  }}><strong>Miejsce pracy:</strong></td>
                                 <td>{cookData.professionalExperiences?.[0]?.company || ''}</td>
                             </tr>
                             <tr>
@@ -122,21 +123,21 @@ function JobView() {
                         </tbody>
                     </Table>
                     <h4>O mnie:</h4>
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
-                        <li>Ile pracuje w zawodzie: {cookData.yearsOfExperience}</li>
-                        <li>Czy potrafię znieść presję: {cookData.canHandlePressure ? 'Tak' : 'Nie'}</li>
-                        <li>Czy jestem certyfikowanym pomocnikiem szefa kuchni: {cookData.isCertifiedSousChef ? 'Tak' : 'Nie'}</li>
+                    <ul>
+                        <li>Ile lat pracuje w zawodzie: <b>{cookData.yearsOfExperience}</b></li>
+                        <li>Czy potrafię znieść presję: <b>{cookData.canHandlePressure ? 'Tak' : 'Nie'}</b></li>
+                        <li>Czy jestem certyfikowanym pomocnikiem szefa kuchni: <b>{cookData.isCertifiedSousChef ? 'Tak' : 'Nie'}</b></li>
                     </ul>
                     <h4>Style kulinarne:</h4>
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                    <ul>
                         {cookData.cookingStyles && cookData.cookingStyles.length > 0 && (
                             cookData.cookingStyles.map((style, index) => (
                                 <li key={index}>{style}</li>
                             ))
                         )}
                     </ul>
-                    <h4>Popisowe dania:</h4>
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                    <h4>Popisowe danie:</h4>
+                    <ul>
                         {cookData.signatureDishes && cookData.signatureDishes.length > 0 && (
                             cookData.signatureDishes.map((dish, index) => (
                                 <li key={index}>{dish}</li>
@@ -145,43 +146,54 @@ function JobView() {
                     </ul>
 
                 </Col>
-                <Col>
+                <Col className="form-panel">
                     <Form>
-                        <label htmlFor="selectOption">Zaplanuj spotkanie z kandydatem:</label>
-                        <Form.Select
-                            id="selectOption"
-                            value={selectedOption}
-                            onChange={handleOptionChange}
-                        >
-                            <option value="">-- Wybierz opcję --</option>
-                            <option value="option1">Umów rozmowę</option>
-                            <option value="option2">Odrzuć kandydata</option>
-                            <option value="option3">Zaakceptuj kandydata</option>
-                        </Form.Select>
-                        <label htmlFor="CompanyEmail">E-mail firmy:</label>
-                        <Form.Control
-                            type="text"
-                            id="CompanyEmail"
-                            value={CompanyEmail}
-                            onChange={handleEmailChange}
-                            placeholder="Wprowadź e-mail firmy"
-                        />
-                        <label htmlFor="meetingDate">Data:</label>
-                        <DatePicker
-                            id="meetingDate"
-                            selected={meetingDate}
-                            onChange={handleMeetingDateChange}
-                            showTimeSelect
-                            timeFormat="HH:mm"
-                            timeIntervals={15}
-                            timeCaption="Czas"
-                            dateFormat="MMMM d, yyyy h:mm aa"
-                            placeholderText="Wybierz datę spotkania"
-                            minDate={new Date()}
-                        />
-                        <button type="button" onClick={handleSubmitButtonClick}>
-                            Zatwierdź
-                        </button>
+                        <div className="form-panel-item">
+                            <h4><b>Zaproś kandydata</b></h4>
+                            <label htmlFor="selectOption"></label>
+                            <Form.Select
+                                id="selectOption"
+                                value={selectedOption}
+                                onChange={handleOptionChange}
+                            >
+                                <option value="">-- Wybierz opcję --</option>
+                                <option value="option1">Umów rozmowę</option>
+                                <option value="option2">Odrzuć kandydata</option>
+                                <option value="option3">Zaakceptuj kandydata</option>
+                            </Form.Select>
+                        </div>
+                        <div className="form-panel-item">
+                            <label htmlFor="CompanyEmail">E-mail firmy:</label>
+                            <Form.Control
+                                type="text"
+                                id="CompanyEmail"
+                                value={CompanyEmail}
+                                onChange={handleEmailChange}
+                                placeholder="Wprowadź e-mail firmy"
+                            />
+                        </div>
+                        <div className="form-panel-item">
+                            <div>
+                                <label htmlFor="meetingDate">Data:</label>
+                            </div>
+                            <DatePicker
+                                id="meetingDate"
+                                selected={meetingDate}
+                                onChange={handleMeetingDateChange}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="Czas"
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                placeholderText="Wybierz datę spotkania"
+                                minDate={new Date()}
+                            />
+                        </div>
+                        <div className="form-panel-item">
+                            <button type="button" onClick={handleSubmitButtonClick}>
+                                Zatwierdź
+                            </button>
+                        </div>
                     </Form>
                 </Col>
             </Row>
