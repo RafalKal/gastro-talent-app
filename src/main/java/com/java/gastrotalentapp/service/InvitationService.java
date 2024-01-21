@@ -1,8 +1,12 @@
 package com.java.gastrotalentapp.service;
 
+import com.java.gastrotalentapp.builders.InvitationBuilder;
 import com.java.gastrotalentapp.enums.InvitationStatus;
 import com.java.gastrotalentapp.model.entity.Invitation;
+import com.java.gastrotalentapp.repository.CookRepository;
+import com.java.gastrotalentapp.repository.EmployerRepository;
 import com.java.gastrotalentapp.repository.InvitationRepository;
+import com.java.gastrotalentapp.requests_responses.requests.InvitationRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,40 +19,42 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvitationService {
 
   private final InvitationRepository invitationRepository;
+  private final CookRepository cookRepository;
+  private final EmployerRepository employerRepository;
 
   @Autowired
-  public InvitationService(InvitationRepository invitationRepository) {
+  public InvitationService(
+      InvitationRepository invitationRepository,
+      CookRepository cookRepository,
+      EmployerRepository employerRepository) {
     this.invitationRepository = invitationRepository;
+    this.cookRepository = cookRepository;
+    this.employerRepository = employerRepository;
   }
 
   @Transactional
-  public Invitation createInvitation(Invitation invitation) {
-    return invitationRepository.save(invitation);
+  public Invitation createInvitation(InvitationRequest invitationRequest) {
+    Invitation newInvitation =
+        InvitationBuilder.buildUsingRequest(invitationRequest, cookRepository, employerRepository);
+    return invitationRepository.save(newInvitation);
   }
 
   @Transactional
-  public Optional<Invitation> updateInvitation(Long id, Invitation updatedInvitation) {
+  public Optional<Invitation> updateInvitation(
+      Long id, InvitationRequest updatedInvitationRequest) {
     return Optional.ofNullable(
         invitationRepository
             .findById(id)
             .map(
-                invitation -> {
-                  if (updatedInvitation.getEmployer() != null) {
-                    invitation.setEmployer(updatedInvitation.getEmployer());
-                  }
-                  if (updatedInvitation.getCook() != null) {
-                    invitation.setCook(updatedInvitation.getCook());
-                  }
-                  if (updatedInvitation.getStatus() != null) {
-                    invitation.setStatus(updatedInvitation.getStatus());
-                  }
-                  if (updatedInvitation.getInterviewDate() != null) {
-                    invitation.setInterviewDate(updatedInvitation.getInterviewDate());
-                  }
+                existingInvitation -> {
+                  Invitation updatedInvitation =
+                      InvitationBuilder.buildUsingRequest(
+                          updatedInvitationRequest,
+                          existingInvitation.getId(),
+                          cookRepository,
+                          employerRepository);
 
-                  invitation.setUpdatedAt(LocalDateTime.now());
-
-                  return invitationRepository.save(invitation);
+                  return invitationRepository.save(updatedInvitation);
                 })
             .orElseThrow(() -> new EntityNotFoundException("Invitation not found with id: " + id)));
   }

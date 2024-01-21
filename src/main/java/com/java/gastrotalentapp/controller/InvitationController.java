@@ -2,6 +2,7 @@ package com.java.gastrotalentapp.controller;
 
 import com.java.gastrotalentapp.enums.InvitationStatus;
 import com.java.gastrotalentapp.model.entity.Invitation;
+import com.java.gastrotalentapp.requests_responses.requests.InvitationRequest;
 import com.java.gastrotalentapp.service.InvitationService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,15 +22,15 @@ public class InvitationController {
   }
 
   @PostMapping
-  public Invitation createInvitation(@RequestBody Invitation invitation) {
-    return invitationService.createInvitation(invitation);
+  public Invitation createInvitation(@RequestBody InvitationRequest invitationRequest) {
+    return invitationService.createInvitation(invitationRequest);
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<Invitation> updateInvitation(
-      @PathVariable Long id, @RequestBody Invitation invitation) {
+      @PathVariable Long id, @RequestBody InvitationRequest invitationRequest) {
     return invitationService
-        .updateInvitation(id, invitation)
+        .updateInvitation(id, invitationRequest)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }

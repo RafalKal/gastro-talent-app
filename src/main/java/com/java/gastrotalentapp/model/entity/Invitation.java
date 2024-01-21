@@ -9,7 +9,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class Invitation {
 
   @Id
