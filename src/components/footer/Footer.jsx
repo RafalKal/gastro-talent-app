@@ -14,7 +14,7 @@ function Footer() {
                 </Row>
                 <Row className="mt-3">
                     <Col md={12} className="text-center">
-                        <p>Jesteśmy firmą Gastro zajebistą, kto chce pracować ten musi u nas harować</p>
+                        <p>GastroTalent</p>
                     </Col>
                 </Row>
                 <Row className="mt-5 justify-content-center">
@@ -23,7 +23,7 @@ function Footer() {
                         <span className="mx-5"></span>
                         <a href="#job" className=" mx-4 footer-link">Praca</a>
                         <span className="mx-5"></span>
-                        <a href="#fast" className=" mx-4 footer-link">Szybko</a>
+                        <a href="#fast" className=" mx-4 footer-link">Pracownicy</a>
                         <span className="mx-5"></span>
                         <a href="#help" className=" mx-4 footer-link">Pomoc</a>
                         <span className="mx-5"></span>

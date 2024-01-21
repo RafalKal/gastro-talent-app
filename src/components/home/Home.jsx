@@ -1,10 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, InputGroup, Dropdown, Button } from 'react-bootstrap';
 import './home.css';
 import JobCard from './JobCard';
 import Filter from './Filter';
+import axios from '../../api/axios';
 
 function Home() {
+    const [cooks, setCooks] = useState([]);
+
+    useEffect(() => {
+        const fetchCooksData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('JWT token is missing');
+                    return;
+                }
+
+                const response = await axios.get('http://localhost:8080/api/v1/cooks/is-visible', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                });
+                setCooks(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching cooks data:', error);
+            }
+        };
+
+        fetchCooksData();
+    }, []);
     return (
         <Container fluid className="px-4">
             <Row className="mt-5 topContainer ">
@@ -60,10 +86,11 @@ function Home() {
                             </Dropdown>
                         </Col>
                     </Row>
-                    <JobCard /> {/* Card component */}
-                    <JobCard /> {/* Card component */}
-                    <JobCard /> {/* Card component */}
-                    <JobCard /> {/* Card component */}
+                    <Row>
+                        {cooks.map(cook => (
+                            <JobCard key={cook.id} cookData={cook} />
+                        ))}
+                    </Row>
                     <div>Pagination</div>
                 </Col>
                 <Col className="col-3">

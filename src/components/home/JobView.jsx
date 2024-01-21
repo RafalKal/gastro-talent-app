@@ -21,32 +21,32 @@ function JobView() {
         axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
-              } 
+            }
         })
-        .then(response => {
-            setUserData(response.data);
-        })
-        .catch(error => {
-            console.error("Błąd pobierania danych", error);
-        });
+            .then(response => {
+                setUserData(response.data);
+            })
+            .catch(error => {
+                console.error("Błąd pobierania danych", error);
+            });
 
     }, [auth.id, auth.token]);
 
     useEffect(() => {
         const cookId = auth.id;
         axios.get(`http://localhost:8080/api/v1/cooks/by-user-id/${cookId}`, {
-        headers: {
-            'Authorization': `Bearer ${auth.token}`
+            headers: {
+                'Authorization': `Bearer ${auth.token}`
             }
         })
-        .then(response => {
-            setCookData(response.data);
-        })
-        .catch(error => {
-            console.error("Błąd przy pobieraniu danych", error);
-        });
+            .then(response => {
+                setCookData(response.data);
+            })
+            .catch(error => {
+                console.error("Błąd przy pobieraniu danych", error);
+            });
     }, [auth.id, auth.token]);
-    
+
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -101,23 +101,23 @@ function JobView() {
                         <tbody>
                             <tr>
                                 <td style={{ width: '20%' }}><strong>Miejsce pracy:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].company : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.company || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Opis pracy:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].jobDescription : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.jobDescription || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Data rozpoczęcia:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].startDate : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.startDate || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Data zakończenia:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].endDate : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.endDate || ''}</td>
                             </tr>
                             <tr>
                                 <td><strong>Stanowisko:</strong></td>
-                                <td>{cookData.professionalExperiences.length > 0 ? cookData.professionalExperiences[0].position : ''}</td>
+                                <td>{cookData.professionalExperiences?.[0]?.position || ''}</td>
                             </tr>
                         </tbody>
                     </Table>
