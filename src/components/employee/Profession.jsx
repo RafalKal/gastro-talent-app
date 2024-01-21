@@ -331,27 +331,13 @@ return (
     />
 
 <label htmlFor={`profession-${index}`}>Profesja:</label>
-    <select 
-      name="profession" 
-      id={`profession-${index}`}
-      value={experience.profession}
-      onChange={(e) => handleComplexNestedChange(e, 'professionalExperiences', index)}>
-      <option value="COOK">Kucharz</option>
-      <option value="WAITER">Kelner</option>
-      <option value="BREWER">Piwowar</option>
-      <option value="NUTRITION_SPECIALIST">Specjalista Żywienia</option>
-      <option value="BARTENDER">Barman</option>
-      <option value="CULINARY_CRITIC">Krytyk Kulinarny</option>
-      <option value="ORGANIZER_OF_CATERING_SERVICES">Organizator Usług Cateringowych</option>
-      <option value="BARISTA">Barista</option>
-      <option value="RESTAURANT_MANAGER">Menedżer Restauracji</option>
-      <option value="FOOD_SUPPLIER">Dostawca Potraw</option>
-      <option value="SOMMELIER">Sommelier</option>
-      <option value="FOOD_TECHNOLOGIST">Technolog Żywności</option>
-      <option value="BAKER">Piekarz</option>
-      <option value="CONFECTIONER">Cukiernik</option>
-      <option value="DIETITIAN">Dietetyk</option>
-    </select>
+<input
+  type="text"
+  name="profession"
+  id={`profession-${index}`}
+  value="Kucharz"
+  readOnly
+/>
   </div>
 ))}
 
