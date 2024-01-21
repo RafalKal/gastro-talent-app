@@ -8,6 +8,8 @@ import com.java.gastrotalentapp.repository.UserRepository;
 import com.java.gastrotalentapp.requests_responses.requests.CookRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,12 @@ public class CookService {
     return cookRepository.findAll();
   }
 
+  public List<Cook> getAllVisibleCooks() {
+    return cookRepository.findAll().stream()
+        .filter(Cook::getIsVisible)
+        .collect(Collectors.toList());
+  }
+
   public Optional<Cook> getCookById(Long id) {
     return cookRepository.findById(id);
   }
@@ -32,8 +40,6 @@ public class CookService {
   public Optional<Cook> getCookByUserId(Long id) {
     return cookRepository.findByEmpId(id);
   }
-
-
 
   public Cook createCook(CookRequest request) {
     Cook cook = CookBuilder.buildUsingRequest(request, userRepository, employeeRepository);
@@ -49,6 +55,14 @@ public class CookService {
     } else {
       throw new IllegalArgumentException("Cook with ID " + id + " not found.");
     }
+  }
+
+  public boolean existsByUserId(Long id) {
+    return cookRepository.existsByEmpId(id);
+  }
+
+  public boolean existsById(Long id) {
+    return cookRepository.existsById(id);
   }
 
   public boolean deleteCook(Long id) {

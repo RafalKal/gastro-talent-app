@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface CookRepository extends JpaRepository<Cook, Long> {
 
      Optional<Cook> findByEmpId(Long id);
+
+     Boolean existsByEmpId(Long id);
+
 }

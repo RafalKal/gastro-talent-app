@@ -5,8 +5,10 @@ import com.java.gastrotalentapp.model.Education;
 import com.java.gastrotalentapp.model.ProfessionalExperience;
 import java.util.Set;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class CookRequest {
 
   private Education education;
