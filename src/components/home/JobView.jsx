@@ -22,32 +22,32 @@ function JobView() {
         axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
-            }
+              } 
         })
-            .then(response => {
-                setUserData(response.data);
-            })
-            .catch(error => {
-                console.error("Błąd pobierania danych", error);
-            });
+        .then(response => {
+            setUserData(response.data);
+        })
+        .catch(error => {
+            console.error("Błąd pobierania danych", error);
+        });
 
     }, [auth.id, auth.token]);
 
     useEffect(() => {
         const cookId = auth.id;
         axios.get(`http://localhost:8080/api/v1/cooks/by-user-id/${cookId}`, {
-            headers: {
-                'Authorization': `Bearer ${auth.token}`
+        headers: {
+            'Authorization': `Bearer ${auth.token}`
             }
         })
-            .then(response => {
-                setCookData(response.data);
-            })
-            .catch(error => {
-                console.error("Błąd przy pobieraniu danych", error);
-            });
+        .then(response => {
+            setCookData(response.data);
+        })
+        .catch(error => {
+            console.error("Błąd przy pobieraniu danych", error);
+        });
     }, [auth.id, auth.token]);
-
+    
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -92,7 +92,7 @@ function JobView() {
     return (
         <Container fluid className="main-content px-3">
             <Row className="mb-4 align-items-center">
-                <Col className="small-info">
+                <Col className = "small-info">
                     <strong>Imię i Nazwisko:</strong><h1>{userData.firstname} {userData.lastname}</h1>
                     <strong>Email:</strong><h2>{userData.email}</h2>
                 </Col>
@@ -101,7 +101,7 @@ function JobView() {
                     <Table striped bordered hover style={{ width: '80%', margin: 'auto' }}>
                         <tbody>
                             <tr>
-                                <td style={{ width: '20%', }}><strong>Miejsce pracy:</strong></td>
+                                <td style={{ width: '20%',  }}><strong>Miejsce pracy:</strong></td>
                                 <td>{cookData.professionalExperiences?.[0]?.company || ''}</td>
                             </tr>
                             <tr>

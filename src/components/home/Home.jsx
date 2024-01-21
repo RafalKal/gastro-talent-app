@@ -56,24 +56,17 @@ function Home() {
                 </Col>
             </Row>
             <Row className="searchTop">
-                <InputGroup className="mb-3 inputSearch" >
-                    <Form.Select aria-label="Default select example" >
-                        <option >Jakiej pracy szukasz</option>
-                        <option value="1">Kucharz</option>
-                        <option value="2">Kelner</option>
-                        <option value="3">Menedżer</option>
-                        <option value="4">Tester</option>
-                    </Form.Select>
-                    <Form.Select aria-label="Default select example">
-                        <option >Lokalizacja</option>
-                        <option value="a">Praca zdalna</option>
-                        <option value="b">Niedaleko mnie (5km)</option>
-                        <option value="c">W zasięgu 10 km</option>
-                        <option value="d">W zasięgu 25 km</option>
-                        <option value="e">W zasięgu 50 km</option>
-                    </Form.Select>
-                    <Button>
-                        Szukaj pracy
+                <InputGroup className="mb-3 inputSearch">
+                    <Form.Control
+                        type="text"
+                        placeholder="Jakiej pracy szukasz"
+                        aria-label="Job search input"
+                        aria-describedby="basic-addon1"
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                    />
+                    <Button onClick={handleSearchButtonClick}>
+                        Szukaj
                     </Button>
                 </InputGroup>
             </Row>

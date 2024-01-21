@@ -18,7 +18,6 @@ import UserIdProfile from './components/admin/userspage/UserIdProfile';
 import ForgotPassword from './components/login/ForgotPassword';
 import JobView from './components/home/JobView';
 import Profession from './components/employee/Profession';
-import JobCard from './components/home/JobCard';
 
 const ROLES = {
   VISITOR: 'VISITOR',
