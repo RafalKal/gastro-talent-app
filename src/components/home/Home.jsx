@@ -10,11 +10,12 @@ import Pagination from '../Pagination';
 
 function Home() {
     const [cooks, setCooks] = useState([]);
+    const [originalCooks, setOriginalCooks] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5; // maksymalnie 5 obiektów na stronę
     const [users, setUsers] = useState([]);
     const [sortOrder, setSortOrder] = useState(''); 
-    
+    const [searchText, setSearchText] = useState('');
 
     
     useEffect(() => {
@@ -48,6 +49,7 @@ function Home() {
                
                 console.log(cooks);
                 setCooks(cooksDataWithUser);
+                setOriginalCooks(cooksDataWithUser);
             } catch (error) {
                 console.error('Error fetching cooks data:', error);
             }
@@ -103,6 +105,18 @@ function Home() {
 
     const cooksOnCurrentPage = cooks.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
+    const handleSearchButtonClick = () => {
+        // Logika filtrowania po tekście, używając oryginalnej listy kucharzy
+        const filtered = originalCooks.filter(cook => (
+            cook.profession.toLowerCase().includes(searchText.toLowerCase()) ||
+            cook.user?.firstname.toLowerCase().includes(searchText.toLowerCase()) ||
+            cook.user?.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
+            cook.user?.address?.city.toLowerCase().includes(searchText.toLowerCase()) ||
+            cook.signatureDishes.some(dish => dish.toLowerCase().includes(searchText.toLowerCase()))
+        ));
+        setCooks(filtered);
+    };
+
     return (
         <Container fluid className="px-4">
             <Row className="mt-5 topContainer ">
@@ -118,7 +132,7 @@ function Home() {
                 </Col>
             </Row>
             <Row className="searchTop">
-                {/* <InputGroup className="mb-3 inputSearch">
+                <InputGroup className="mb-3 inputSearch">
                     <Form.Control
                         type="text"
                         placeholder="Jakiej pracy szukasz"
@@ -130,7 +144,7 @@ function Home() {
                     <Button onClick={handleSearchButtonClick}>
                         Szukaj
                     </Button>
-                </InputGroup> */}
+                </InputGroup>
             </Row>
             <Row className="px-5 customFilterRow">
                 <Filter /> {/* Filter component */}
