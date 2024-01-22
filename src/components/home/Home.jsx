@@ -6,11 +6,36 @@ import Filter from './Filter';
 import axios from '../../api/axios';
 import Pagination from '../Pagination';
 
+const sortCooks = (order, cooksToSort) => {
+    const sortedCooks = [...cooksToSort].sort((a, b) => {
+      switch (order) {
+        case 'newest':
+          return new Date(b.created_at) - new Date(a.created_at);
+        case 'oldest':
+          return new Date(a.created_at) - new Date(b.created_at);
+        case 'name-asc':
+          return a.user.firstname.localeCompare(b.user.firstname) ||
+                 a.user.lastname.localeCompare(b.user.lastname);
+        case 'name-desc':
+          return b.user.firstname.localeCompare(a.user.firstname) ||
+                 b.user.lastname.localeCompare(a.user.lastname);
+        case 'experience-asc':
+          return a.yearsOfExperience - b.yearsOfExperience;
+        case 'experience-desc':
+          return b.yearsOfExperience - a.yearsOfExperience;
+        default:
+          return 0;
+      }
+    });
+    return sortedCooks;
+  };
+
 function Home() {
     const [cooks, setCooks] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 5; // maksymalnie 5 obiektów na stronę
     const [users, setUsers] = useState([]);
+    const [sortOrder, setSortOrder] = useState(''); 
     
     useEffect(() => {
         const fetchCooksAndUserData = async () => {
@@ -33,21 +58,37 @@ function Home() {
                         const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${cook.empId}`, {
                             headers: { Authorization: `Bearer ${token}` },
                         });
+                        console.log(userResponse.data);
                         cooksDataWithUser.push({ ...cook, user: userResponse.data });
                     } catch (error) {
                         console.error(`Error fetching user data for empId ${cook.empId}:`, error);
                         cooksDataWithUser.push({ ...cook, user: null });
                     }
                 }
+               
+                console.log(cooks);
                 setCooks(cooksDataWithUser);
             } catch (error) {
                 console.error('Error fetching cooks data:', error);
             }
+          
         };
 
         fetchCooksAndUserData();
+        
     }, []);
 
+
+    useEffect(() => {
+        const sortedCooks = sortCooks(sortOrder, cooks);
+        // Tylko zaktualizuj stan, jeśli posortowane dane różnią się od obecnych
+        if (JSON.stringify(sortedCooks) !== JSON.stringify(cooks)) {
+          setCooks(sortedCooks);
+        }
+      }, [sortOrder, cooks]); //
+    const handleSortChange = (order) => {
+        setSortOrder(order); // Wystarczy ustawić kolejność sortowania
+      };
 
 
     const handlePageChange = (pageNumber) => {
@@ -99,11 +140,15 @@ function Home() {
                         <Col xs={6} className="text-end">
                             <Dropdown>
                                 <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    Filtruj po
+                                    Sortuj po
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item>Lokalizacja</Dropdown.Item>
-                                    <Dropdown.Item>Wynagrodzenie</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleSortChange('newest')}>Od najnowszych</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleSortChange('oldest')}>Od najstarszych</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleSortChange('name-asc')}>Imię A-Z</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleSortChange('name-desc')}>Imię Z-A</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleSortChange('experience-asc')}>Najmniej doświadczenia</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleSortChange('experience-desc')}>Najwięcej doświadczenia</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Col>
