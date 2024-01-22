@@ -14,8 +14,6 @@ function JobView() {
     const [cookData, setCookData] = useState([]);
     const [userData, setUserData] = useState([]);
 
-    const [selectedOption, setSelectedOption] = useState('');
-    const [CompanyEmail, setEmail] = useState('');
     const [meetingDate, setMeetingDate] = useState(null);
 
     useEffect(() => {
@@ -47,14 +45,6 @@ function JobView() {
       }, [id, auth.token]);
 
 
-
-    const handleOptionChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
-
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
 
     const handleMeetingDateChange = (date) => {
         if (date >= new Date()) {
