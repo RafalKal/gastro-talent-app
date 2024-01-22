@@ -4,10 +4,14 @@ import './home.css';
 import JobCard from './JobCard';
 import Filter from './Filter';
 import axios from '../../api/axios';
+import Pagination from '../Pagination';
 
 function Home() {
     const [cooks, setCooks] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 5; // maksymalnie 5 obiektów na stronę
     const [users, setUsers] = useState([]);
+    
     useEffect(() => {
         const fetchCooksAndUserData = async () => {
             try {
@@ -43,6 +47,18 @@ function Home() {
 
         fetchCooksAndUserData();
     }, []);
+
+
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Obliczanie liczby stron
+    const totalPages = Math.ceil(cooks.length / itemsPerPage);
+
+
+    const cooksOnCurrentPage = cooks.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     return (
         <Container fluid className="px-4">
@@ -93,11 +109,15 @@ function Home() {
                         </Col>
                     </Row>
                     <Row>
-                        {cooks.map(cook => (
+                        {cooksOnCurrentPage.map(cook => (
                             <JobCard key={cook.id} cookData={cook} />
                         ))}
                     </Row>
-                    <div>Pagination</div>
+                    <Pagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
                 </Col>
                 <Col className="col-3">
                     <div className="customEmail">
