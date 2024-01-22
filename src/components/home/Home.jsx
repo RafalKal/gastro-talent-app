@@ -6,29 +6,7 @@ import Filter from './Filter';
 import axios from '../../api/axios';
 import Pagination from '../Pagination';
 
-const sortCooks = (order, cooksToSort) => {
-    const sortedCooks = [...cooksToSort].sort((a, b) => {
-      switch (order) {
-        case 'newest':
-          return new Date(b.created_at) - new Date(a.created_at);
-        case 'oldest':
-          return new Date(a.created_at) - new Date(b.created_at);
-        case 'name-asc':
-          return a.user.firstname.localeCompare(b.user.firstname) ||
-                 a.user.lastname.localeCompare(b.user.lastname);
-        case 'name-desc':
-          return b.user.firstname.localeCompare(a.user.firstname) ||
-                 b.user.lastname.localeCompare(a.user.lastname);
-        case 'experience-asc':
-          return a.yearsOfExperience - b.yearsOfExperience;
-        case 'experience-desc':
-          return b.yearsOfExperience - a.yearsOfExperience;
-        default:
-          return 0;
-      }
-    });
-    return sortedCooks;
-  };
+
 
 function Home() {
     const [cooks, setCooks] = useState([]);
@@ -36,6 +14,8 @@ function Home() {
     const itemsPerPage = 5; // maksymalnie 5 obiektów na stronę
     const [users, setUsers] = useState([]);
     const [sortOrder, setSortOrder] = useState(''); 
+    
+
     
     useEffect(() => {
         const fetchCooksAndUserData = async () => {
@@ -79,15 +59,37 @@ function Home() {
     }, []);
 
 
-    useEffect(() => {
-        const sortedCooks = sortCooks(sortOrder, cooks);
-        // Tylko zaktualizuj stan, jeśli posortowane dane różnią się od obecnych
-        if (JSON.stringify(sortedCooks) !== JSON.stringify(cooks)) {
-          setCooks(sortedCooks);
-        }
-      }, [sortOrder, cooks]); //
+ 
+
     const handleSortChange = (order) => {
-        setSortOrder(order); // Wystarczy ustawić kolejność sortowania
+        setSortOrder(order);
+        const sortedCooks = sortCooks(order, cooks);
+        setCooks(sortedCooks);
+    };
+    
+
+    const sortCooks = (order, cooksToSort) => {
+        return [...cooksToSort].sort((a, b) => {
+            switch (order) {
+                case 'newest':
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                case 'oldest':
+                    return new Date(a.createdAt) - new Date(b.createdAt);
+            case 'name-asc':
+              return a.user.firstname.localeCompare(b.user.firstname) ||
+                     a.user.lastname.localeCompare(b.user.lastname);
+            case 'name-desc':
+              return b.user.firstname.localeCompare(a.user.firstname) ||
+                     b.user.lastname.localeCompare(a.user.lastname);
+            case 'experience-asc':
+              return a.yearsOfExperience - b.yearsOfExperience;
+            case 'experience-desc':
+              return b.yearsOfExperience - a.yearsOfExperience;
+            default:
+              return 0;
+          }
+        });
+        
       };
 
 
