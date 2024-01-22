@@ -17,24 +17,27 @@ function Home() {
                     return;
                 }
 
-                // Pobierz listę kucharzy
                 const cooksResponse = await axios.get('http://localhost:8080/api/v1/cooks/is-visible', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
-                const cooks = cooksResponse.data;
-                console.log(cooksResponse);
-                // Dla każdego kucharza pobierz dane użytkownika
-                const cooksDataWithUser = await Promise.all(cooks.map(async cook => {
-                    const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${cook.empId}`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
 
-                    return { ...cook, user: userResponse.data };
-                }));
-                console.log(cooksDataWithUser);
+                const cooks = cooksResponse.data;
+                const cooksDataWithUser = [];
+
+                for (let cook of cooks) {
+                    try {
+                        const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${cook.empId}`, {
+                            headers: { Authorization: `Bearer ${token}` },
+                        });
+                        cooksDataWithUser.push({ ...cook, user: userResponse.data });
+                    } catch (error) {
+                        console.error(`Error fetching user data for empId ${cook.empId}:`, error);
+                        cooksDataWithUser.push({ ...cook, user: null });
+                    }
+                }
                 setCooks(cooksDataWithUser);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching cooks data:', error);
             }
         };
 
