@@ -12,77 +12,71 @@ function Home() {
     const [cooks, setCooks] = useState([]);
     const [originalCooks, setOriginalCooks] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 5; // maksymalnie 5 obiektów na stronę
+    const itemsPerPage = 5;
     const [users, setUsers] = useState([]);
-    const [sortOrder, setSortOrder] = useState(''); 
+    const [sortOrder, setSortOrder] = useState('');
     const [searchText, setSearchText] = useState('');
+    const [selectedExperience, setSelectedExperience] = useState(null);
+
 
     
     useEffect(() => {
         const fetchCooksAndUserData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('JWT token is missing');
-                    return;
-                }
-
-                const cooksResponse = await axios.get('http://localhost:8080/api/v1/cooks/is-visible', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                const cooks = cooksResponse.data;
-                const cooksDataWithUser = [];
-
-                for (let cook of cooks) {
-                    try {
-                        const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${cook.empId}`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                        });
-                        console.log(userResponse.data);
-                        cooksDataWithUser.push({ ...cook, user: userResponse.data });
-                    } catch (error) {
-                        console.error(`Error fetching user data for empId ${cook.empId}:`, error);
-                        cooksDataWithUser.push({ ...cook, user: null });
-                    }
-                }
-               
-                console.log(cooks);
-                setCooks(cooksDataWithUser);
-                setOriginalCooks(cooksDataWithUser);
-            } catch (error) {
-                console.error('Error fetching cooks data:', error);
+          try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+              console.error('JWT token is missing');
+              return;
             }
-          
+    
+            const cooksResponse = await axios.get('http://localhost:8080/api/v1/cooks/is-visible', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+    
+            const cooks = cooksResponse.data;
+            const cooksDataWithUser = [];
+    
+            for (let cook of cooks) {
+              try {
+                const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${cook.empId}`, {
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                console.log(userResponse.data);
+                cooksDataWithUser.push({ ...cook, user: userResponse.data });
+              } catch (error) {
+                console.error(`Error fetching user data for empId ${cook.empId}:`, error);
+                cooksDataWithUser.push({ ...cook, user: null });
+              }
+            }
+    
+            console.log(cooks);
+            setCooks(cooksDataWithUser);
+            setOriginalCooks(cooksDataWithUser);
+          } catch (error) {
+            console.error('Error fetching cooks data:', error);
+          }
         };
-
+    
         fetchCooksAndUserData();
-        
-    }, []);
-
-
- 
-
-    const handleSortChange = (order) => {
+      }, []);
+    
+      const handleSortChange = (order) => {
         setSortOrder(order);
         const sortedCooks = sortCooks(order, cooks);
         setCooks(sortedCooks);
-    };
+      };
     
-
-    const sortCooks = (order, cooksToSort) => {
+      const sortCooks = (order, cooksToSort) => {
         return [...cooksToSort].sort((a, b) => {
-            switch (order) {
-                case 'newest':
-                    return new Date(b.createdAt) - new Date(a.createdAt);
-                case 'oldest':
-                    return new Date(a.createdAt) - new Date(b.createdAt);
+          switch (order) {
+            case 'newest':
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            case 'oldest':
+              return new Date(a.createdAt) - new Date(b.createdAt);
             case 'name-asc':
-              return a.user.firstname.localeCompare(b.user.firstname) ||
-                     a.user.lastname.localeCompare(b.user.lastname);
+              return a.user.firstname.localeCompare(b.user.firstname) || a.user.lastname.localeCompare(b.user.lastname);
             case 'name-desc':
-              return b.user.firstname.localeCompare(a.user.firstname) ||
-                     b.user.lastname.localeCompare(a.user.lastname);
+              return b.user.firstname.localeCompare(a.user.firstname) || b.user.lastname.localeCompare(b.user.lastname);
             case 'experience-asc':
               return a.yearsOfExperience - b.yearsOfExperience;
             case 'experience-desc':
@@ -91,31 +85,59 @@ function Home() {
               return 0;
           }
         });
-        
       };
-
-
-    const handlePageChange = (pageNumber) => {
+    
+      const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    // Obliczanie liczby stron
-    const totalPages = Math.ceil(cooks.length / itemsPerPage);
-
-
-    const cooksOnCurrentPage = cooks.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-
-    const handleSearchButtonClick = () => {
-        // Logika filtrowania po tekście, używając oryginalnej listy kucharzy
-        const filtered = originalCooks.filter(cook => (
+      };
+    
+      const totalPages = Math.ceil(cooks.length / itemsPerPage);
+      const cooksOnCurrentPage = cooks.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    
+      const handleSearchButtonClick = () => {
+        const filtered = originalCooks.filter((cook) => (
+          cook.profession.toLowerCase().includes(searchText.toLowerCase()) ||
+          cook.user?.firstname.toLowerCase().includes(searchText.toLowerCase()) ||
+          cook.user?.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
+          cook.user?.address?.city.toLowerCase().includes(searchText.toLowerCase()) ||
+          cook.signatureDishes.some((dish) => dish.toLowerCase().includes(searchText.toLowerCase()))
+        ));
+        setCooks(filtered);
+      };
+    
+      const handleFilterChange = (filterName, value) => {
+        if (filterName === 'workExperience') {
+          setSelectedExperience(value);
+        }
+      };
+    
+      useEffect(() => {
+        applyFilters();
+      }, [selectedExperience, sortOrder, searchText]);
+    
+      const applyFilters = () => {
+        let filteredCooks = [...originalCooks];
+    
+        if (selectedExperience !== null) {
+          filteredCooks = filteredCooks.filter((cook) => cook.yearsOfExperience >= selectedExperience);
+        }
+    
+        if (searchText.trim() !== "") {
+          filteredCooks = filteredCooks.filter((cook) =>
             cook.profession.toLowerCase().includes(searchText.toLowerCase()) ||
             cook.user?.firstname.toLowerCase().includes(searchText.toLowerCase()) ||
             cook.user?.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
             cook.user?.address?.city.toLowerCase().includes(searchText.toLowerCase()) ||
-            cook.signatureDishes.some(dish => dish.toLowerCase().includes(searchText.toLowerCase()))
-        ));
-        setCooks(filtered);
-    };
+            cook.signatureDishes.some((dish) => dish.toLowerCase().includes(searchText.toLowerCase()))
+          );
+        }
+    
+        const sortedCooks = sortCooks(sortOrder, filteredCooks);
+        setCooks(sortedCooks);
+      };
+
+
+
 
     return (
         <Container fluid className="px-4">
@@ -147,7 +169,7 @@ function Home() {
                 </InputGroup>
             </Row>
             <Row className="px-5 customFilterRow">
-                <Filter /> {/* Filter component */}
+                <Filter onFilterChange={handleFilterChange} selectedExperience={selectedExperience} />
                 <Col>
                     <Row>
                         <Col xs={6}>
