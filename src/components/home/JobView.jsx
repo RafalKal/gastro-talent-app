@@ -19,7 +19,6 @@ function JobView() {
     const [meetingDate, setMeetingDate] = useState(null);
 
     useEffect(() => {
-        // Użyj ID z URL (id), aby pobrać dane kucharza
         axios.get(`http://localhost:8080/api/v1/cooks/${id}`, {
           headers: {
             'Authorization': `Bearer ${auth.token}`
@@ -29,7 +28,6 @@ function JobView() {
             setCookData(response.data);
 
             const empId = response.data.empId;
-            // Użyj empId do pobrania danych użytkownika
             axios.get(`http://localhost:8080/api/v1/users/${empId}`, {
               headers: {
                 'Authorization': `Bearer ${auth.token}`
@@ -71,23 +69,47 @@ function JobView() {
     };
 
     const handleSubmitButtonClick = () => {
-        if (selectedOption && CompanyEmail && meetingDate) {
-            const isConfirmed = window.confirm('Czy zatwierdzasz swoją decyzję?');
-            if (isConfirmed) {
-                console.log('Selected Option:', selectedOption);
-                console.log('E-mail firmy:', CompanyEmail);
-                console.log('Data spotkania:', meetingDate);
+        if (meetingDate) {
+          Swal.fire({
+            title: 'Czy na pewno chcesz zaprosić kandydata na rozmowę?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Tak',
+            cancelButtonText: 'Nie'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const invitationData = {
+                cookId: parseInt(id),
+                employerId: auth.id,
+                interviewDate: meetingDate.toISOString(),
+                status: 'INVITED'
+              };
+      
+              axios.post('http://localhost:8080/api/v1/invitations', invitationData, {
+                headers: {
+                  'Authorization': `Bearer ${auth.token}`
+                }
+              })
+                .then(response => {
+                  console.log('Dane zostały wysłane pomyślnie', response.data);
+                  Swal.fire('Sukces!', 'Zaproszenie zostało wysłane.', 'success');
+                })
+                .catch(error => {
+                  console.error('Błąd podczas wysyłania danych', error);
+                  Swal.fire('Błąd!', 'Wystąpił błąd podczas wysyłania danych.', 'error');
+                });
             } else {
-                console.log('Decyzja anulowana');
+              console.log('Decyzja anulowana');
             }
+          });
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Błąd',
-                text: 'Wypełnij wszystkie pola formularza!',
-            });
+          Swal.fire({
+            icon: 'error',
+            title: 'Błąd',
+            text: 'Wybierz datę spotkania!',
+          });
         }
-    };
+      };
 
 
     return (
@@ -151,27 +173,6 @@ function JobView() {
                     <Form>
                         <div className="form-panel-item">
                             <h4><b>Zaproś kandydata</b></h4>
-                            <label htmlFor="selectOption"></label>
-                            <Form.Select
-                                id="selectOption"
-                                value={selectedOption}
-                                onChange={handleOptionChange}
-                            >
-                                <option value="">-- Wybierz opcję --</option>
-                                <option value="option1">Umów rozmowę</option>
-                                <option value="option2">Odrzuć kandydata</option>
-                                <option value="option3">Zaakceptuj kandydata</option>
-                            </Form.Select>
-                        </div>
-                        <div className="form-panel-item">
-                            <label htmlFor="CompanyEmail">E-mail firmy:</label>
-                            <Form.Control
-                                type="text"
-                                id="CompanyEmail"
-                                value={CompanyEmail}
-                                onChange={handleEmailChange}
-                                placeholder="Wprowadź e-mail firmy"
-                            />
                         </div>
                         <div className="form-panel-item">
                             <div>
