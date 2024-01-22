@@ -9,6 +9,7 @@ import axios from 'axios';
 import './jobview.css';
 
 function JobView() {
+    const { id } = useParams();
     const { auth } = useContext(AuthContext);
     const [cookData, setCookData] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -18,36 +19,36 @@ function JobView() {
     const [meetingDate, setMeetingDate] = useState(null);
 
     useEffect(() => {
-        const userId = auth.id;
-        axios.get(`http://localhost:8080/api/v1/users/${userId}`, {
-            headers: {
-                'Authorization': `Bearer ${auth.token}` // Dodaj token do nagłówka
-              } 
-        })
-        .then(response => {
-            setUserData(response.data);
-        })
-        .catch(error => {
-            console.error("Błąd pobierania danych", error);
-        });
-
-    }, [auth.id, auth.token]);
-
-    useEffect(() => {
-        const cookId = auth.id;
-        axios.get(`http://localhost:8080/api/v1/cooks/by-user-id/${cookId}`, {
-        headers: {
+        // Użyj ID z URL (id), aby pobrać dane kucharza
+        axios.get(`http://localhost:8080/api/v1/cooks/${id}`, {
+          headers: {
             'Authorization': `Bearer ${auth.token}`
-            }
+          }
         })
-        .then(response => {
+          .then(response => {
             setCookData(response.data);
-        })
-        .catch(error => {
+
+            const empId = response.data.empId;
+            // Użyj empId do pobrania danych użytkownika
+            axios.get(`http://localhost:8080/api/v1/users/${empId}`, {
+              headers: {
+                'Authorization': `Bearer ${auth.token}`
+              }
+            })
+              .then(userResponse => {
+                setUserData(userResponse.data);
+                console.log(userResponse.data);
+              })
+              .catch(userError => {
+                console.error("Błąd przy pobieraniu danych użytkownika", userError);
+              });
+          })
+          .catch(error => {
             console.error("Błąd przy pobieraniu danych", error);
-        });
-    }, [auth.id, auth.token]);
-    
+          });
+      }, [id, auth.token]);
+
+
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
