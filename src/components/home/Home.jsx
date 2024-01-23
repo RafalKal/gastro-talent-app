@@ -196,11 +196,13 @@ function Home() {
                             <JobCard key={cook.id} cookData={cook} />
                         ))}
                     </Row>
-                    <Pagination 
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
+                    {totalPages > 1 && (
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+            />
+        )}
                 </Col>
                 <Col className="col-3">
                     <div className="customEmail">
