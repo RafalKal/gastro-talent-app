@@ -173,7 +173,7 @@ function Home() {
                 <Col>
                     <Row>
                         <Col xs={6}>
-                            <h3 className="jobCount">3177 Ofert Pracy</h3>
+                            <h3 className="jobCount">Oferty Pracy</h3>
                         </Col>
                         <Col xs={6} className="text-end">
                             <Dropdown>

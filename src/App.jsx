@@ -19,6 +19,7 @@ import ForgotPassword from './components/login/ForgotPassword';
 import JobView from './components/home/JobView';
 import Profession from './components/employee/Profession';
 import Invitations from './components/employee/invitations';
+import EmployerInvitations from './components/employer/EmployerInvitations';
 
 
 const ROLES = {
@@ -53,8 +54,9 @@ function App() {
           <Route path="invitations" element={<Invitations />} />
 
         </Route>
-        <Route element={<RequireAuth allowedRoles={['POTENTIAL_EMPLOYER']} />}>
+        <Route element={<RequireAuth allowedRoles={[ROLES.POTENTIAL_EMPLOYER]} />}>
           <Route path="employer" element={<Employer />} />
+          <Route path="employer/EmployerInvitations" element={<EmployerInvitations />} />
         </Route>
 
         {/*Catch all*/}

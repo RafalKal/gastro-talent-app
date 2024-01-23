@@ -18,10 +18,12 @@ function Invitations() {
                     headers: { 'Authorization': `Bearer ${auth.token}` }
                 });
                 const cookId = responseCook.data.id;
+                console.log(responseCook.data);
 
                 const responseInvitations = await axios.get(`http://localhost:8080/api/v1/invitations/cook/${cookId}`, {
                     headers: { 'Authorization': `Bearer ${auth.token}` }
                 });
+                console.log(responseInvitations.data);
                 setInvitations(responseInvitations.data);
             } catch (error) {
                 console.error("Błąd przy pobieraniu danych", error);

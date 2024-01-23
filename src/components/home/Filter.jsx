@@ -24,7 +24,7 @@ function Filter({ onFilterChange, selectedExperience }) {
             <Form.Check
               name="workExperience"
               className="checkElements"
-              label="1 rok"
+              label="Minimum 1 rok"
               type="radio"
               checked={selectedExperience === 1}
               onChange={() => handleExperienceChange(1)}
@@ -32,7 +32,7 @@ function Filter({ onFilterChange, selectedExperience }) {
             <Form.Check
               name="workExperience"
               className="checkElements"
-              label="2 lata"
+              label="Minimum 2 lata"
               type="radio"
               checked={selectedExperience === 2}
               onChange={() => handleExperienceChange(2)}
@@ -40,7 +40,7 @@ function Filter({ onFilterChange, selectedExperience }) {
             <Form.Check
               name="workExperience"
               className="checkElements"
-              label="5 lat"
+              label="Minimum 5 lat"
               type="radio"
               checked={selectedExperience === 5}
               onChange={() => handleExperienceChange(5)}
