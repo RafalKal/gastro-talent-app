@@ -112,7 +112,7 @@ public class CookController {
       @ApiParam(value = "ID of the cook", required = true) @PathVariable Long id,
       @ApiParam(value = "Updated cook details", required = true) @RequestBody CookRequest request) {
     // safety first
-    request.setUserId(id);
+//    request.setUserId(id);
     if (cookService.existsById(id)) {
       Cook updatedCook = cookService.updateCook(id, request);
       return new ResponseEntity<>(updatedCook, HttpStatus.OK);
