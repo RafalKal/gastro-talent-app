@@ -38,7 +38,7 @@ public class CookBuilder {
         //                                "User not found with id: " + request.getUserId())))
         .employee(null)
         .empId(request.getUserId())
-        .isVisible(false)
+        .isVisible(request.getIsVisible())
         .cookingStyles(request.getCookingStyles())
         .canHandlePressure(request.getCanHandlePressure())
         .isCertifiedSousChef(request.getIsCertifiedSousChef())
