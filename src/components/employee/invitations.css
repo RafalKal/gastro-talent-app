@@ -1,0 +1,61 @@
+
+
+
+#star {
+    margin-left: -5px;
+    vertical-align: bottom;
+    opacity: 0.5;
+}
+
+
+.more {
+    opacity: 0.5;
+}
+
+.btn:hover {
+    color: black;
+}
+
+.vl {
+    margin: 8px;
+    width: 2px;
+    border-right: 1px solid #aaaaaa;
+    height: 25px;
+}
+
+
+#plus {
+    opacity: 0.8;
+}
+
+
+.card {
+    border-radius: 10px;
+}
+
+a:hover {
+    background-color: #ccc;
+}
+
+
+
+.btn-outlined:active {
+    color: #FFF;
+    border-color: #fff;
+}
+
+
+
+
+.btn:focus,
+.btn:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.container{
+margin-top:50px;
+margin-bottom: 50px;
+}
+/* invitations.css */
+

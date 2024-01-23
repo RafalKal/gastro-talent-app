@@ -52,6 +52,7 @@ const NavApp = () => {
                         >
                             <NavDropdown.Item href="/user">Strona pracownika</NavDropdown.Item>
                             <NavDropdown.Item href="/profession">Profesja</NavDropdown.Item>
+                            <NavDropdown.Item href="/invitations">Zaproszenia na rozmowe</NavDropdown.Item>
                             <NavDropdown.Item onClick={logout}>Wyloguj się</NavDropdown.Item>
                         </NavDropdown>
                     )}

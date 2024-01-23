@@ -18,6 +18,8 @@ import UserIdProfile from './components/admin/userspage/UserIdProfile';
 import ForgotPassword from './components/login/ForgotPassword';
 import JobView from './components/home/JobView';
 import Profession from './components/employee/Profession';
+import Invitations from './components/employee/invitations';
+
 
 const ROLES = {
   VISITOR: 'VISITOR',
@@ -48,6 +50,8 @@ function App() {
           <Route path="user" element={<User />} />
           <Route path="user/settings" element={<Settings />} />
           <Route path="profession" element={<Profession />} />
+          <Route path="invitations" element={<Invitations />} />
+
         </Route>
         <Route element={<RequireAuth allowedRoles={['POTENTIAL_EMPLOYER']} />}>
           <Route path="employer" element={<Employer />} />
